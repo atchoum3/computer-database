@@ -13,8 +13,8 @@ public class Computer {
 			LocalDateTime discontinued, long idCompany) {
 		this.id = id;
 		this.setName(name);
-		this.introduced = introduced;
-		this.discontinued = discontinued;
+		setIntroduced(introduced);
+		setDiscontinued(discontinued);
 		this.setIdCompany(idCompany);
 	}
 	
@@ -36,6 +36,10 @@ public class Computer {
 		return introduced;
 	}
 	public void setIntroduced(LocalDateTime introduced) {
+		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
+			throw new IllegalArgumentException(
+					"The discontinued date have to be greater than introduced date");
+		}
 		this.introduced = introduced;
 	}
 	
@@ -43,6 +47,10 @@ public class Computer {
 		return discontinued;
 	}
 	public void setDiscontinued(LocalDateTime discontinued) {
+		if (discontinued != null && introduced != null && discontinued.isBefore(introduced)) {
+			throw new IllegalArgumentException(
+					"The discontinued date have to be greater than introduced date");
+		}
 		this.discontinued = discontinued;
 	}
 
