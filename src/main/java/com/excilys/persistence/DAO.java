@@ -1,5 +1,13 @@
 package com.excilys.persistence;
 
-public class DAO {
+import java.sql.Connection;
 
+public class DAO {
+	
+	protected Connection con;
+	
+	public DAO() {
+		con = DatabaseImpl.getInstance().getConnection();
+	}
+	
 }

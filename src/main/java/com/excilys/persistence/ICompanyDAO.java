@@ -1,5 +1,9 @@
 package com.excilys.persistence;
 
-public interface ICompanyDAO {
+import java.util.Set;
 
+import com.excilys.model.Company;
+
+public interface ICompanyDAO {
+	public Set<Company> getAllCompanies();
 }
