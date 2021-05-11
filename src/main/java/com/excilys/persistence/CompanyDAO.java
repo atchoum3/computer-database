@@ -11,26 +11,25 @@ import com.excilys.mapper.ComputerMapper;
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
 
-public class CompanyDAOImpl extends DAO implements ICompanyDAO {
-	private static CompanyDAOImpl instance = null;
+public class CompanyDAO extends DAO {
+	private static CompanyDAO instance = null;
 	
+	private static final String QUERY_SELECT_ALL = "SELECT * FROM company";
 	
-	private CompanyDAOImpl() {
-		// noting to initialize
+	private CompanyDAO() {
+		super();
 	}
 	
-	public static CompanyDAOImpl getIsntance() {
+	public static CompanyDAO getIsntance() {
 		if (instance == null)
-			instance = new CompanyDAOImpl();
+			instance = new CompanyDAO();
 		return instance;
 	}
 
-	@Override
 	public Set<Company> getAllCompanies() {
-		String query = "SELECT * FROM company";
 		Set<Company> companies = new HashSet<>();
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {

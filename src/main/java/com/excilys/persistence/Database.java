@@ -4,25 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseImpl implements IDatabase {
+public class Database {
 	private static final String urlDatabase = "jdbc:mysql://127.0.0.1/computer-database-db?serverTimezone=UTC";
 	private static final String user = "admincdb";
 	private static final String password = "qwerty1234";
 	
 	private Connection con;
-	private static DatabaseImpl instance = null;
+	private static Database instance = null;
 	
-	private DatabaseImpl() {
+	private Database() {
 		// nothing to initialize
 	}
 	
-	public static DatabaseImpl getInstance() {
+	public static Database getInstance() {
 		if (instance == null)
-			instance = new DatabaseImpl();
+			instance = new Database();
 		return instance;
 	}
 
-	@Override
 	public void connection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -37,7 +36,6 @@ public class DatabaseImpl implements IDatabase {
 		}
 	}
 
-	@Override
 	public void close() {
 		try {
 			con.close();

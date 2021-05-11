@@ -3,16 +3,15 @@ package com.excilys.target;
 import java.sql.SQLException;
 
 import com.excilys.model.Computer;
-import com.excilys.persistence.ComputerDAOImpl;
-import com.excilys.persistence.DatabaseImpl;
-import com.excilys.persistence.IComputerDAO;
+import com.excilys.persistence.ComputerDAO;
+import com.excilys.persistence.Database;
 
 
 public class Console {
 	public static void main(String[] args) throws SQLException {
-		DatabaseImpl.getInstance().connection();
+		Database.getInstance().connection();
 		
-		IComputerDAO c = ComputerDAOImpl.getInstance();
+		ComputerDAO c = ComputerDAO.getInstance();
 		System.out.println(c.getById(67L));
 			
 	}

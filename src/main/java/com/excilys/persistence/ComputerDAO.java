@@ -11,25 +11,29 @@ import java.util.Set;
 import com.excilys.mapper.ComputerMapper;
 import com.excilys.model.Computer;
 
-public class ComputerDAOImpl extends DAO implements IComputerDAO {
-	private static ComputerDAOImpl instance = null;
+public class ComputerDAO extends DAO {
+	private static ComputerDAO instance = null;
 	
-	private ComputerDAOImpl() {
+	private static final String QUERY_SELECT_ALL = "SELECT * FROM computer";
+	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM computer WHERE id = ?";
+	private static final String QUERY_INSERT = "INSERT INTO computer VALUES (?,?,?,?,?)";
+	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
+	private static final String QUERY_DELETE = "DELETE computer WHERE id=?";
+	
+	private ComputerDAO() {
 		super();
 	}
 	
-	public static ComputerDAOImpl getInstance() {
+	public static ComputerDAO getInstance() {
 		if (instance == null)
-			instance = new ComputerDAOImpl();
+			instance = new ComputerDAO();
 		return instance;
 	}
 
-	@Override
 	public Set<Computer> getAllComputers() {
-		String query = "SELECT * FROM computer";
 		Set<Computer> computers = new HashSet<>();
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
@@ -42,12 +46,10 @@ public class ComputerDAOImpl extends DAO implements IComputerDAO {
 		return computers;
 	}
 
-	@Override
 	public Optional<Computer> getById(long id) {
-		String query = "SELECT * FROM computer WHERE id = ?";
 		Optional<Computer> computer = Optional.empty();
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID);
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			
@@ -61,11 +63,9 @@ public class ComputerDAOImpl extends DAO implements IComputerDAO {
 		return computer;
 	}
 
-	@Override
 	public void save(Computer c) {
-		String query = "INSERT INTO computer VALUES (?,?,?,?,?)";
 		try {
-			PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, c.getId());
 			ps.setString(2, c.getName());
 			ps.setTimestamp(3, Timestamp.valueOf(c.getIntroduced()));
@@ -78,11 +78,9 @@ public class ComputerDAOImpl extends DAO implements IComputerDAO {
 		}
 	}
 
-	@Override
 	public void update(Computer c) {
-		String query = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(QUERY_UPDATE);
 			ps.setString(1, c.getName());
 			ps.setTimestamp(2, Timestamp.valueOf(c.getIntroduced()));
 			ps.setTimestamp(3, Timestamp.valueOf(c.getDiscontinued()));
@@ -94,11 +92,9 @@ public class ComputerDAOImpl extends DAO implements IComputerDAO {
 		}
 	}
 
-	@Override
 	public void delete(Computer c) {
-		String query = "DELETE computer WHERE id=?";
 		try {
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(QUERY_DELETE);
 			ps.setLong(1, c.getId());
 			ps.executeUpdate();
 		}catch(Exception e){

@@ -7,7 +7,7 @@ public class DAO {
 	protected Connection con;
 	
 	public DAO() {
-		con = DatabaseImpl.getInstance().getConnection();
+		con = Database.getInstance().getConnection();
 	}
 	
 }
