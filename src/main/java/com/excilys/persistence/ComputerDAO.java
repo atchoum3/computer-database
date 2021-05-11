@@ -16,9 +16,9 @@ public class ComputerDAO extends DAO {
 	
 	private static final String QUERY_SELECT_ALL = "SELECT * FROM computer";
 	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM computer WHERE id = ?";
-	private static final String QUERY_INSERT = "INSERT INTO computer VALUES (?,?,?,?,?)";
+	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
-	private static final String QUERY_DELETE = "DELETE computer WHERE id=?";
+	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
 	
 	private ComputerDAO() {
 		super();
@@ -63,16 +63,21 @@ public class ComputerDAO extends DAO {
 		return computer;
 	}
 
-	public void save(Computer c) {
+	public void create(Computer c) {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
-			ps.setLong(1, c.getId());
-			ps.setString(2, c.getName());
-			ps.setTimestamp(3, Timestamp.valueOf(c.getIntroduced()));
-			ps.setTimestamp(4, Timestamp.valueOf(c.getDiscontinued()));
-			ps.setLong(5, c.getIdCompany());
+			ps.setString(1, c.getName());
+			ComputerMapper.setTimestampOrNull(ps, 2, c.getIntroduced());
+			ComputerMapper.setTimestampOrNull(ps, 3, c.getDiscontinued());
+			ps.setLong(4, c.getIdCompany());
+			ps.executeUpdate();
 			
-			c.setId(ps.executeUpdate());
+			//get id
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.first()) {
+				long id = rs.getLong(1);
+				c.setId(id);
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -82,8 +87,8 @@ public class ComputerDAO extends DAO {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_UPDATE);
 			ps.setString(1, c.getName());
-			ps.setTimestamp(2, Timestamp.valueOf(c.getIntroduced()));
-			ps.setTimestamp(3, Timestamp.valueOf(c.getDiscontinued()));
+			ComputerMapper.setTimestampOrNull(ps, 2, c.getIntroduced());
+			ComputerMapper.setTimestampOrNull(ps, 3, c.getDiscontinued());
 			ps.setLong(4, c.getIdCompany());
 			ps.setLong(5, c.getId());
 			ps.executeUpdate();
@@ -92,10 +97,10 @@ public class ComputerDAO extends DAO {
 		}
 	}
 
-	public void delete(Computer c) {
+	public void delete(long id) {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_DELETE);
-			ps.setLong(1, c.getId());
+			ps.setLong(1, id);
 			ps.executeUpdate();
 		}catch(Exception e){
 			e.printStackTrace();

@@ -18,6 +18,11 @@ public class Computer {
 		this.setIdCompany(idCompany);
 	}
 	
+	public Computer(String name, LocalDateTime introduced, 
+			LocalDateTime discontinued, long idCompany) {
+		this(-1, name, introduced, discontinued, idCompany);
+	}
+	
 	@Override
 	public String toString() {
 		return "" + id + "," + name + "," + introduced + "," + discontinued + "," + idCompany;

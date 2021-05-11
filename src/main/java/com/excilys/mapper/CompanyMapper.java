@@ -12,7 +12,7 @@ public class CompanyMapper {
 	
 	private CompanyMapper() {} // static class, all methods are static
 	
-	private static Company toCompany(ResultSet rs) throws SQLException {
+	public static Company toCompany(ResultSet rs) throws SQLException {
 		long id = rs.getLong(1);
 		String name = rs.getString(2);
 		return new Company(id, name);

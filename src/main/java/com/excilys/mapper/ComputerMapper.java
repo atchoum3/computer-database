@@ -1,5 +1,6 @@
 package com.excilys.mapper;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -39,5 +40,12 @@ public class ComputerMapper {
 		return computers;
 	}
 	
+	public static void setTimestampOrNull(PreparedStatement ps, int pos, LocalDateTime localDateTime) throws SQLException {
+		if (localDateTime == null) {
+			ps.setNull(pos, java.sql.Types.TIMESTAMP);
+		} else {
+			ps.setTimestamp(pos, Timestamp.valueOf(localDateTime));
+		}
+	}
 
 }
