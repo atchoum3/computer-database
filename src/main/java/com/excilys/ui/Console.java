@@ -39,14 +39,19 @@ public class Console {
 		System.out.println("4 : insert one computer");
 		System.out.println("5 <id> : update one computer");
 		System.out.println("6 <id> : delete one computer");
+		System.out.println("----------");
+		System.out.println("0 : quit");
 		System.out.println("");
 	}
 	
 	private void selectChoice(String line) {
-		line = line.trim();
-		String number = line.substring(0,1);
+		String number = "";
 		Optional<Long> optionalId;
 		Computer computer;
+		
+		line = line.trim();
+		if (line.length() >= 1)
+			number = line.trim().substring(0,1);
 		
 		switch (number) {
 		case "1":
@@ -62,7 +67,7 @@ public class Console {
 			if (optionalId.isPresent()) {
 				Optional<Computer> optionalComputer = computerControler.getComputerById(optionalId.get());
 				if (optionalComputer.isPresent()) {
-					DisplayComputer.displayComputer(optionalComputer.get(), true);
+					DisplayComputer.displayComputer(optionalComputer.get());
 				} else {
 					System.out.println("This id is not on the database.");
 				}
@@ -93,6 +98,10 @@ public class Console {
 		case "6":
 			optionalId = getIdFromCommandLine(line);
 			optionalId.ifPresent(id -> computerControler.deleteComputer(id));
+			break;
+			
+		case "0":
+			System.exit(0);
 			break;
 			
 		default:
