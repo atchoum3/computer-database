@@ -22,6 +22,9 @@ public class Database {
 		return instance;
 	}
 
+	/**
+	 * Connect to the database
+	 */
 	public void connection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -36,6 +39,9 @@ public class Database {
 		}
 	}
 
+	/**
+	 * Close connection with the database
+	 */
 	public void close() {
 		try {
 			con.close();

@@ -29,6 +29,11 @@ public class ComputerDAO extends DAO {
 		return instance;
 	}
 
+	/**
+	 * Get all Computer present on the range of the page
+	 * @param page  the page of values to take
+	 * @return
+	 */
 	public List<Computer> getAll(Page page) {
 		List<Computer> computers = new ArrayList<>();
 		try {
@@ -53,6 +58,11 @@ public class ComputerDAO extends DAO {
 		return computers;
 	}
 
+	/**
+	 * To get a computer by this id.
+	 * @param id the id of the computer
+	 * @return the optional is empty if there is no Computer with this id 
+	 */
 	public Optional<Computer> getById(long id) {
 		Optional<Computer> computer = Optional.empty();
 		try {
@@ -70,6 +80,11 @@ public class ComputerDAO extends DAO {
 		return computer;
 	}
 
+	/**
+	 * To create a computer 
+	 * @param c this computer will be create in the database. 
+	 * The id of the object will be determined and saved in this object
+	 */
 	public void create(Computer c) {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -90,6 +105,10 @@ public class ComputerDAO extends DAO {
 		}
 	}
 
+	/**
+	 * TO update a computer
+	 * @param computer to update
+	 */
 	public void update(Computer c) {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_UPDATE);
@@ -104,6 +123,10 @@ public class ComputerDAO extends DAO {
 		}
 	}
 
+	/**
+	 * To delete a Computer thanks to this id 
+	 * @param id the id of the computer
+	 */
 	public void delete(long id) {
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_DELETE);

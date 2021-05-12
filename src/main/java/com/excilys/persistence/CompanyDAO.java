@@ -31,6 +31,11 @@ public class CompanyDAO extends DAO {
 		return instance;
 	}
 
+	/**
+	 * Get all Company present on the range of the page
+	 * @param page the page of values to take
+	 * @return
+	 */
 	public List<Company> getAll(Page page) {
 		List<Company> companies = new ArrayList<>();
 		try {
@@ -46,6 +51,7 @@ public class CompanyDAO extends DAO {
 					page.setIsLastPage();
 				}
 			} else {
+				// indicate to page if it's last page
 				page.setIsLastPage();
 			}
 			
@@ -55,6 +61,11 @@ public class CompanyDAO extends DAO {
 		return companies;
 	}
 	
+	/**
+	 * get a company by this id
+	 * @param id the id of the company
+	 * @return the optional is empty if there is no company with this id
+	 */
 	public Optional<Company> getById(long id) {
 		Optional<Company> company = Optional.empty();
 		try {

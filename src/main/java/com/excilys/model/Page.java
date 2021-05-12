@@ -7,7 +7,13 @@ public class Page {
 	private int elementByPage;
 	private boolean isLastPage;
 	
-	public Page(int elementByPage, int currentPage) {
+	/**
+	 * Constructor
+	 * @param elementByPage
+	 * @param currentPage
+	 * @throws IllegalArgumentException is thrown if the elementByPage is negative
+	 */
+	public Page(int elementByPage, int currentPage) throws IllegalArgumentException {
 		setCurrentPage(currentPage);
 		setElementByPage(elementByPage);
 		isLastPage = false;
@@ -21,12 +27,18 @@ public class Page {
 		this(DEFAULT_ELEMENT_BY_PAGE, FIRST_PAGE);
 	}
 
+	/**
+	 * go to the next page if this page is not the last page
+	 */
 	public void nextPage() {
 		if ( !isLastPage) {
 			currentPage++;
 		}
 	}
 	
+	/**
+	 * go to the previous page if this page is not the first page
+	 */
 	public void previousPage() {
 		if (currentPage > FIRST_PAGE) {
 			isLastPage = false;
@@ -34,10 +46,18 @@ public class Page {
 		}
 	}
 	
+	/**
+	 * get the index of the first element of the current page
+	 * @return the index of the first element of the current page
+	 */
 	public int getIndexFirstElement() {
 		return elementByPage*(currentPage-1);
 	}
 	
+	/**
+	 * get the index of the first element of the last page
+	 * @return the index of the first element of the last page
+	 */
 	public int getIndexLastElement() {
 		return elementByPage*currentPage;
 	}
@@ -47,7 +67,13 @@ public class Page {
 	public int getCurrentPage() {
 		return currentPage;
 	}
-	public void setCurrentPage(int currentPage) {
+	
+	/**
+	 * set the current page
+	 * @param currentPage
+	 * @throws IndexOutOfBoundsException if the current page is before the first page
+	 */
+	public void setCurrentPage(int currentPage) throws IndexOutOfBoundsException {
 		if (currentPage < FIRST_PAGE) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -57,7 +83,12 @@ public class Page {
 	public int getElementByPage() {
 		return elementByPage;
 	}
-	public void setElementByPage(int elementByPage) {
+	/**
+	 * 
+	 * @param elementByPage
+	 * @throws IllegalArgumentException is thrown if the elementByPage is negative
+	 */
+	public void setElementByPage(int elementByPage) throws IllegalArgumentException {
 		if (elementByPage < 0) {
 			throw new IllegalArgumentException("This attribut need to be positive");
 		}

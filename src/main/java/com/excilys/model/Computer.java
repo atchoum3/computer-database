@@ -31,13 +31,28 @@ public class Computer {
 		return "" + id + "," + name + "," + introduced + "," + discontinued + "," + idCompany;
 	}
 	
-	public static void checkDateBefore1970(LocalDateTime date) {
+	/**
+	 * This method check if a LocalDateTime is before the 1st January 1970. 
+	 * This method is useful to know if the value can be or not converted in Timestamp.
+	 * @param date the date to check
+	 * @throws ComputerDateGreaterLessThan1970 if the date is before the 1st January 1970
+	 */
+	public static void checkDateBefore1970(LocalDateTime date) 
+			throws ComputerDateGreaterLessThan1970 {
 		if (date != null && date.isBefore(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))) {
-			throw new ComputerDateGreaterLessThan1970("The date need to be greater than the 1970-01-01");
+			throw new ComputerDateGreaterLessThan1970(
+					"The date need to be greater than the 1970-01-01");
 		}
 	}
 	
-	private void checkIntroducedlessThanDisontinued(LocalDateTime introduced, LocalDateTime discontinued) {
+	/**
+	 * Check if the introduced is before the discontinued date. If this is the case 
+	 * throw IllegalArgumentException
+	 * @param introduced the date to when the computer was introduced
+	 * @param discontinued the date to when the computer was discontinued
+	 */
+	private void checkIntroducedlessThanDisontinued(LocalDateTime introduced, 
+			LocalDateTime discontinued) {
 		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
 			throw new IllegalArgumentException(
 					"The discontinued date have to be greater than introduced date");	
@@ -56,7 +71,14 @@ public class Computer {
 	public LocalDateTime getIntroduced() {
 		return introduced;
 	}
-	public void setIntroduced(LocalDateTime introduced) {
+	/**
+	 * setter
+	 * @param introduced
+	 * @throws ComputerDateGreaterLessThan1970 if the time is before the 1st January 1970
+	 * @throws IllegalArgumentException if introduced date is after discontinued date
+	 */
+	public void setIntroduced(LocalDateTime introduced) 
+			throws ComputerDateGreaterLessThan1970, IllegalArgumentException {
 		checkDateBefore1970(introduced);
 		checkIntroducedlessThanDisontinued(introduced, discontinued);
 		this.introduced = introduced;
@@ -65,7 +87,14 @@ public class Computer {
 	public LocalDateTime getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(LocalDateTime discontinued) {
+	/**
+	 * 
+	 * @param discontinued
+	 * @throws ComputerDateGreaterLessThan1970 if the time is before the 1st January 1970
+	 * @throws IllegalArgumentException if introduced date is after discontinued date
+	 */
+	public void setDiscontinued(LocalDateTime discontinued) 
+			throws ComputerDateGreaterLessThan1970, IllegalArgumentException {
 		checkDateBefore1970(discontinued);
 		checkIntroducedlessThanDisontinued(introduced, discontinued);
 		this.discontinued = discontinued;

@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
 import com.excilys.model.Page;
-import com.excilys.persistence.CompanyDAO;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 

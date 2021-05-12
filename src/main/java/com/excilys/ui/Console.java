@@ -1,6 +1,5 @@
 package com.excilys.ui;
 
-import java.awt.Choice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +12,6 @@ import com.excilys.controler.ConsoleControler;
 import com.excilys.exception.ComputerDateGreaterLessThan1970;
 import com.excilys.model.Computer;
 import com.excilys.model.Page;
-import com.excilys.persistence.CompanyDAO;
 import com.excilys.persistence.Database;
 
 public class Console {
@@ -30,15 +28,20 @@ public class Console {
 		reader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
+	/**
+	 * start the menu of the console
+	 */
 	public void start() {
 		while (true) {
-			displayChoice();
-			readChoice();
+			displayMenuChoice();
+			readMenuChoice();
 		}
 	}
 	
-
-	private void displayChoice() {
+	/** 
+	 * display all possible choice
+	 */
+	private void displayMenuChoice() {
 		System.out.println("Possibilities :");
 		System.out.println("1 : see all companies");
 		System.out.println("----------");
@@ -52,7 +55,11 @@ public class Console {
 		System.out.println("");
 	}
 	
-	private void selectChoice(String line) {
+	/**
+	 * Read the answer of the user and call the concerned choice.
+	 * @param line the user input line
+	 */
+	private void selectMenuChoice(String line) {
 		String number = "";
 		Optional<Long> optionalId;
 		Computer computer;
@@ -71,7 +78,7 @@ public class Console {
 			break;
 			
 		case "3":
-			optionalId = getIdFromCommandLine(line);
+			optionalId = getIdFromCommandLineMenu(line);
 			if (optionalId.isPresent()) {
 				Optional<Computer> optionalComputer = consoleControler.getComputerById(optionalId.get());
 				if (optionalComputer.isPresent()) {
@@ -89,7 +96,7 @@ public class Console {
 			break;
 			
 		case "5":
-			 optionalId = getIdFromCommandLine(line);
+			 optionalId = getIdFromCommandLineMenu(line);
 			if (optionalId.isPresent()) {
 				Optional<Computer> optionalComputer = consoleControler.getComputerById(optionalId.get());
 				if (optionalComputer.isPresent()) {
@@ -104,7 +111,7 @@ public class Console {
 			break;
 			
 		case "6":
-			optionalId = getIdFromCommandLine(line);
+			optionalId = getIdFromCommandLineMenu(line);
 			optionalId.ifPresent(id -> consoleControler.deleteComputer(id));
 			break;
 			
@@ -119,11 +126,14 @@ public class Console {
 		}
 	}
 	
-	private void readChoice() {
+	/**
+	 * Read the input line of the user
+	 */
+	private void readMenuChoice() {
 		System.out.print("your choice: ");
 		try {
 			String line = reader.readLine();
-			selectChoice(line);
+			selectMenuChoice(line);
 			System.out.println("");
 			
 		} catch (IOException e) {
@@ -131,6 +141,10 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * method to update or create a computer
+	 * @param computer all values will be saved on this object
+	 */
 	private void updateComputer(Computer computer) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String line;
@@ -220,7 +234,13 @@ public class Console {
 		System.out.println("");
 	}
 	
-	private Optional<Long> getIdFromCommandLine(String line) {
+	
+	/**
+	 * get the id insert by the user on the menu command line
+	 * @param line input line of user
+	 * @return 
+	 */
+	private Optional<Long> getIdFromCommandLineMenu(String line) {
 		String[] splitLine = line.split(" ");
 		Optional<Long> l = Optional.empty();
 		
@@ -232,7 +252,11 @@ public class Console {
 		return l;
 	}
 	
-	
+	/**
+	 * To convert a string to a long. The string represent an id 
+	 * @param string
+	 * @return
+	 */
 	private Optional<Long> convertStringToId(String string) {
 		Optional<Long> l = Optional.empty();
 		try {
@@ -243,6 +267,9 @@ public class Console {
 		return l;
 	}
 	
+	/**
+	 * To display a table of all Companies selected by page
+	 */
 	private void displayAllCompanies() {
 		Page page = new Page();
 		do {
@@ -251,6 +278,9 @@ public class Console {
 		} while (selectPage(page));
 	}
 	
+	/**
+	 * To display a table of all computers selected by page
+	 */
 	private void displayAllComputers() {
 		Page page = new Page();
 		do {
@@ -259,6 +289,11 @@ public class Console {
 		} while (selectPage(page));
 	}
 	
+	/**
+	 * Read the answer of the user and call the concerned choice.
+	 * @param page
+	 * @return true if the user want to continue to see different page
+	 */
 	private boolean selectPage(Page page) {
 		try {
 			boolean loop = true;
@@ -269,8 +304,6 @@ public class Console {
 	
 				if (line.length() >= 1)
 					number = line.trim().substring(0,1);
-				
-				
 	
 				switch (number) {
 				case "+":
@@ -304,6 +337,10 @@ public class Console {
 		return true;
 	}
 	
+	/**
+	 * display the footer page of an table
+	 * @param page objet Page to display the index of the current page
+	 */
 	private void displayFooterPage(Page page) {
 		System.out.println("- : previous page");
 		System.out.println("+ : next page");
