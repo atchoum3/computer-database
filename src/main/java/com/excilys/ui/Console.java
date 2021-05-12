@@ -12,12 +12,18 @@ import com.excilys.controler.ConsoleControler;
 import com.excilys.exception.ComputerDateGreaterLessThan1970;
 import com.excilys.model.Computer;
 import com.excilys.persistence.CompanyDAO;
+import com.excilys.persistence.Database;
 
 public class Console {
 	private ConsoleControler consoleControler;
+	private Database database;
 
 	public Console() {
 		consoleControler = ConsoleControler.getInstance();
+		database = Database.getInstance();
+		
+		// connect to Database
+		database.connection();
 	}
 	
 	public void start() {
@@ -99,6 +105,7 @@ public class Console {
 			break;
 			
 		case "0":
+			database.close();
 			System.exit(0);
 			break;
 			
@@ -196,7 +203,7 @@ public class Console {
 				} while (optionalId.isEmpty());
 					
 				long id = optionalId.get();
-				if (CompanyDAO.getInstance().getById(id).isPresent()) {
+				if (consoleControler.getCompanyById(id).isPresent()) {
 					computer.setIdCompany(id);
 				} else {
 					System.out.println("This company does not exist.");

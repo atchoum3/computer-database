@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
+import com.excilys.persistence.CompanyDAO;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 
@@ -26,6 +27,10 @@ public class ConsoleControler {
 	
 	public List<Company> getAllCompanies() {
 		return companyService.getAll();
+	}
+	
+	public Optional<Company> getCompanyById(long id) {
+		return companyService.getById(id);
 	}
 	
 	public List<Computer> getAllComputers() {

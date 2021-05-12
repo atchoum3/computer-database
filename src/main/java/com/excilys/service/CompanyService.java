@@ -1,6 +1,7 @@
 package com.excilys.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.excilys.model.Company;
 import com.excilys.persistence.CompanyDAO;
@@ -20,5 +21,9 @@ public class CompanyService {
 	
 	public List<Company> getAll() {
 		return companyDAO.getAll();
+	}
+	
+	public Optional<Company> getById(long id) {
+		return companyDAO.getById(id);
 	}
 }

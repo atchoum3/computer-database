@@ -9,9 +9,7 @@ import com.excilys.ui.Console;
 
 
 public class LaunchConsole {
-	public static void main(String[] args) throws SQLException {
-		Database.getInstance().connection();
-		
+	public static void main(String[] args) throws SQLException {		
 		Console console = new Console();
 		console.start();
 	}
