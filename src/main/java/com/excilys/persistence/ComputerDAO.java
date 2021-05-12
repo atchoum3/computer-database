@@ -2,11 +2,9 @@ package com.excilys.persistence;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 
 import com.excilys.mapper.ComputerMapper;
 import com.excilys.model.Computer;
@@ -30,14 +28,14 @@ public class ComputerDAO extends DAO {
 		return instance;
 	}
 
-	public Set<Computer> getAllComputers() {
-		Set<Computer> computers = new HashSet<>();
+	public List<Computer> getAll() {
+		List<Computer> computers = new ArrayList<>();
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
-				computers = ComputerMapper.toComputers(rs);
+				ComputerMapper.toComputers(rs, computers);
 			}
 			
 		}catch(Exception e){

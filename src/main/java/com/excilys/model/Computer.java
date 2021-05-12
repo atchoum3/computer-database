@@ -1,6 +1,9 @@
 package com.excilys.model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
+import com.excilys.exception.ComputerDateGreaterLessThan1970;
 
 public class Computer {
 	private long id;
@@ -28,6 +31,19 @@ public class Computer {
 		return "" + id + "," + name + "," + introduced + "," + discontinued + "," + idCompany;
 	}
 	
+	public static void checkDateBefore1970(LocalDateTime date) {
+		if (date != null && date.isBefore(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))) {
+			throw new ComputerDateGreaterLessThan1970("The date need to be greater than the 1970-01-01");
+		}
+	}
+	
+	private void checkIntroducedlessThanDisontinued(LocalDateTime introduced, LocalDateTime discontinued) {
+		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
+			throw new IllegalArgumentException(
+					"The discontinued date have to be greater than introduced date");	
+		}
+	}
+	
 	/// setters and getters
 	
 	public long getId() {
@@ -41,10 +57,8 @@ public class Computer {
 		return introduced;
 	}
 	public void setIntroduced(LocalDateTime introduced) {
-		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
-			throw new IllegalArgumentException(
-					"The discontinued date have to be greater than introduced date");
-		}
+		checkDateBefore1970(introduced);
+		checkIntroducedlessThanDisontinued(introduced, discontinued);
 		this.introduced = introduced;
 	}
 	
@@ -52,10 +66,8 @@ public class Computer {
 		return discontinued;
 	}
 	public void setDiscontinued(LocalDateTime discontinued) {
-		if (discontinued != null && introduced != null && discontinued.isBefore(introduced)) {
-			throw new IllegalArgumentException(
-					"The discontinued date have to be greater than introduced date");
-		}
+		checkDateBefore1970(discontinued);
+		checkIntroducedlessThanDisontinued(introduced, discontinued);
 		this.discontinued = discontinued;
 	}
 

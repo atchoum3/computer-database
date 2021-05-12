@@ -8,18 +8,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
+import com.excilys.controler.ConsoleControler;
+import com.excilys.exception.ComputerDateGreaterLessThan1970;
 import com.excilys.model.Computer;
 import com.excilys.persistence.CompanyDAO;
-import com.excilys.service.CompanyControler;
-import com.excilys.service.ComputerControler;
 
 public class Console {
-	private CompanyControler companyControler;
-	private ComputerControler computerControler;
+	private ConsoleControler consoleControler;
 
 	public Console() {
-		companyControler = new CompanyControler();
-		computerControler = new ComputerControler();
+		consoleControler = ConsoleControler.getInstance();
 	}
 	
 	public void start() {
@@ -55,17 +53,17 @@ public class Console {
 		
 		switch (number) {
 		case "1":
-			DisplayCompany.displayCollection(companyControler.getAllCompany());
+			DisplayCompany.displayCollection(consoleControler.getAllCompanies());
 			break;
 			
 		case "2":
-			DisplayComputer.displayCollection(computerControler.getAllComputer());
+			DisplayComputer.displayCollection(consoleControler.getAllComputers());
 			break;
 			
 		case "3":
 			optionalId = getIdFromCommandLine(line);
 			if (optionalId.isPresent()) {
-				Optional<Computer> optionalComputer = computerControler.getComputerById(optionalId.get());
+				Optional<Computer> optionalComputer = consoleControler.getComputerById(optionalId.get());
 				if (optionalComputer.isPresent()) {
 					DisplayComputer.displayComputer(optionalComputer.get());
 				} else {
@@ -77,18 +75,18 @@ public class Console {
 		case "4":
 			computer = new Computer("", null, null, 0);
 			updateComputer(computer);
-			computerControler.createComputer(computer);
+			consoleControler.createComputer(computer);
 			break;
 			
 		case "5":
 			 optionalId = getIdFromCommandLine(line);
 			if (optionalId.isPresent()) {
-				Optional<Computer> optionalComputer = computerControler.getComputerById(optionalId.get());
+				Optional<Computer> optionalComputer = consoleControler.getComputerById(optionalId.get());
 				if (optionalComputer.isPresent()) {
 					// start update
 					computer = optionalComputer.get();
 					updateComputer(computer);
-					computerControler.updateComputer(computer);
+					consoleControler.updateComputer(computer);
 				} else {
 					System.out.println("This id is not on the database.");
 				}
@@ -97,7 +95,7 @@ public class Console {
 			
 		case "6":
 			optionalId = getIdFromCommandLine(line);
-			optionalId.ifPresent(id -> computerControler.deleteComputer(id));
+			optionalId.ifPresent(id -> consoleControler.deleteComputer(id));
 			break;
 			
 		case "0":
@@ -153,6 +151,9 @@ public class Console {
 					} catch(DateTimeParseException e) {
 						System.out.println("Not good format");
 						continueFlag = true;
+					} catch(ComputerDateGreaterLessThan1970 e) {
+						System.out.println("The date need to be greater than the 1970-01-01");
+						continueFlag = true;
 					}
 				}
 			} while(continueFlag);
@@ -163,18 +164,23 @@ public class Console {
 				System.out.print("Discontinued time (you can put nothing to do not enter this parameter, format: yyyy-MM-dd HH:mm:ss): ");
 				line = reader.readLine().trim();
 				
-				if (line.isEmpty()) {
-					computer.setDiscontinued(null);
-				} else {
-					try {
-						computer.setDiscontinued(LocalDateTime.parse(line, formatter));
-					} catch(DateTimeParseException e) {
-						System.out.println("Not good format");
-						continueFlag = true;
-					} catch(IllegalArgumentException e) {
-						System.out.println("The discontinued time have to be gretter than the introduced.");
-						continueFlag = true;
+				try {
+					if (line.isEmpty()) {
+						computer.setDiscontinued(null);
+					} else {
+						try {
+							computer.setDiscontinued(LocalDateTime.parse(line, formatter));
+						} catch(DateTimeParseException e) {
+							System.out.println("Not good format");
+							continueFlag = true;
+						} catch(ComputerDateGreaterLessThan1970 e) {
+							System.out.println("The date need to be greater than the 1970-01-01");
+							continueFlag = true;
+						}
 					}
+				} catch(IllegalArgumentException e) {
+					System.out.println("The discontinued time have to be gretter than the introduced.");
+					continueFlag = true;
 				}
 			} while(continueFlag);
 			

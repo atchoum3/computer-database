@@ -64,13 +64,13 @@ public class DisplayComputer extends DisplayTable {
 				.filter(Objects::nonNull)
 				.map(LocalDateTime::toString)
 				.mapToInt(String::length)
-				.max().getAsInt();
+				.max().orElse(SIZE_WORD_NULL);
 		array[3] = collection.stream()
 				.map(Computer::getDiscontinued)
 				.filter(Objects::nonNull)
 				.map(LocalDateTime::toString)
 				.mapToInt(String::length)
-				.max().getAsInt();
+				.max().orElse(SIZE_WORD_NULL);
 		array[4] = collection.stream()
 				.filter(Objects::nonNull)
 				.mapToLong(Computer::getId)

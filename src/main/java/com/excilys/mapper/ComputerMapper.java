@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
+import com.excilys.exception.ComputerDateGreaterLessThan1970;
 import com.excilys.model.Computer;
 
 public class ComputerMapper {
@@ -32,12 +32,10 @@ public class ComputerMapper {
 	}
 	
 	
-	public static Set<Computer> toComputers(ResultSet rs) throws SQLException {
-		Set<Computer> computers = new HashSet<>();
+	public static void toComputers(ResultSet rs, Collection<Computer> collection) throws SQLException {
 		do {
-			computers.add(ComputerMapper.toComputer(rs));
+			collection.add(ComputerMapper.toComputer(rs));
 		} while(rs.next());
-		return computers;
 	}
 	
 	public static void setTimestampOrNull(PreparedStatement ps, int pos, LocalDateTime localDateTime) throws SQLException {

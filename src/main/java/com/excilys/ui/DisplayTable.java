@@ -1,6 +1,7 @@
 package com.excilys.ui;
 
 public class DisplayTable {
+	protected static final int SIZE_WORD_NULL = 4;
 	
 	protected static void displayLine(int[] sizeColumn, String... values) {
 		for (int i=0; i<sizeColumn.length; i++) {

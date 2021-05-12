@@ -31,7 +31,7 @@ public class DisplayCompany extends DisplayTable {
 				.map(Company::getName)
 				.filter(Objects::nonNull)
 				.mapToInt(String::length)
-				.max().getAsInt();
+				.max().orElse(SIZE_WORD_NULL);
 		return array;
 	}
 }

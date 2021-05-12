@@ -3,7 +3,9 @@ package com.excilys.persistence;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,14 +30,14 @@ public class CompanyDAO extends DAO {
 		return instance;
 	}
 
-	public Set<Company> getAllCompanies() {
-		Set<Company> companies = new HashSet<>();
+	public List<Company> getAll() {
+		List<Company> companies = new ArrayList<>();
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
-				companies = CompanyMapper.toCompanies(rs);
+				CompanyMapper.toCompanies(rs, companies);
 			}
 			
 		}catch(Exception e){
