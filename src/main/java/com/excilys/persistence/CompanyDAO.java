@@ -13,11 +13,12 @@ import com.excilys.mapper.CompanyMapper;
 import com.excilys.mapper.ComputerMapper;
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
+import com.excilys.model.Page;
 
 public class CompanyDAO extends DAO {
 	private static CompanyDAO instance = null;
 	
-	private static final String QUERY_SELECT_ALL = "SELECT * FROM company";
+	private static final String QUERY_SELECT_ALL = "SELECT * FROM company LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM company WHERE id = ?";
 	
 	private CompanyDAO() {
@@ -30,14 +31,22 @@ public class CompanyDAO extends DAO {
 		return instance;
 	}
 
-	public List<Company> getAll() {
+	public List<Company> getAll(Page page) {
 		List<Company> companies = new ArrayList<>();
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
+			ps.setInt(1, page.getIndexFirstElement());
+			ps.setInt(2, page.getElementByPage());
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
 				CompanyMapper.toCompanies(rs, companies);
+				// indicate to page if it's last page
+				if (companies.size() < page.getElementByPage()) {
+					page.setIsLastPage();
+				}
+			} else {
+				page.setIsLastPage();
 			}
 			
 		}catch(Exception e){

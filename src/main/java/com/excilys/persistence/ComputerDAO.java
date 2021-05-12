@@ -8,11 +8,12 @@ import java.util.List;
 
 import com.excilys.mapper.ComputerMapper;
 import com.excilys.model.Computer;
+import com.excilys.model.Page;
 
 public class ComputerDAO extends DAO {
 	private static ComputerDAO instance = null;
 	
-	private static final String QUERY_SELECT_ALL = "SELECT * FROM computer";
+	private static final String QUERY_SELECT_ALL = "SELECT * FROM computer LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM computer WHERE id = ?";
 	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
@@ -28,14 +29,22 @@ public class ComputerDAO extends DAO {
 		return instance;
 	}
 
-	public List<Computer> getAll() {
+	public List<Computer> getAll(Page page) {
 		List<Computer> computers = new ArrayList<>();
 		try {
 			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
+			ps.setInt(1, page.getIndexFirstElement());
+			ps.setInt(2, page.getElementByPage());
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
 				ComputerMapper.toComputers(rs, computers);
+				// indicate to page if it's last page
+				if (computers.size() < page.getElementByPage()) {
+					page.setIsLastPage();
+				}
+			} else {
+				page.setIsLastPage();
 			}
 			
 		}catch(Exception e){

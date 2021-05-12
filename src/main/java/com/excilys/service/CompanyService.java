@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.excilys.model.Company;
+import com.excilys.model.Page;
 import com.excilys.persistence.CompanyDAO;
 public class CompanyService {
 	private static CompanyService instance = null;
@@ -19,8 +20,8 @@ public class CompanyService {
 		return instance;
 	}
 	
-	public List<Company> getAll() {
-		return companyDAO.getAll();
+	public List<Company> getAll(Page page) {
+		return companyDAO.getAll(page);
 	}
 	
 	public Optional<Company> getById(long id) {

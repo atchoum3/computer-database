@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
+import com.excilys.model.Page;
 import com.excilys.persistence.CompanyDAO;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
@@ -25,16 +26,16 @@ public class ConsoleControler {
 		return instance;
 	}
 	
-	public List<Company> getAllCompanies() {
-		return companyService.getAll();
+	public List<Company> getAllCompanies(Page page) {
+		return companyService.getAll(page);
 	}
 	
 	public Optional<Company> getCompanyById(long id) {
 		return companyService.getById(id);
 	}
 	
-	public List<Computer> getAllComputers() {
-		return computerService.getAll();
+	public List<Computer> getAllComputers(Page page) {
+		return computerService.getAll(page);
 	}
 	
 	public Optional<Computer> getComputerById(long id) {

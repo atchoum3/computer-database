@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.excilys.model.Computer;
+import com.excilys.model.Page;
 import com.excilys.persistence.ComputerDAO;
 
 public class ComputerService {
@@ -20,8 +21,8 @@ public class ComputerService {
 		return instance;
 	}
 	
-	public List<Computer> getAll() {
-		return computerDAO.getAll();
+	public List<Computer> getAll(Page page) {
+		return computerDAO.getAll(page);
 	}
 	
 	public Optional<Computer> getById(long id) {

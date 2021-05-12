@@ -15,30 +15,36 @@ public class DisplayComputer extends DisplayTable {
 	private DisplayComputer() {} // static class, all method are static
 	
 	public static void displayCollection(Collection<Computer> collection) {
-		int[] sizeColumn = maxCharEachColumn(collection);
-		String introduced, discontinued;
-		
-		displayHeader(sizeColumn, HEADER_COLLECTION);
-		for (Computer c : collection) {
-			 
-			if (c.getIntroduced() == null) {
-				introduced = "NULL";
-			} else {
-				introduced = c.getIntroduced().toString();
-			}
+		if (collection.isEmpty()) {
+			System.out.println("");
+			System.out.println("No data ¯\\_(ツ)_/¯");
+			System.out.println("");
+		} else {
+			int[] sizeColumn = maxCharEachColumn(collection);
+			String introduced, discontinued;
 			
-			if (c.getDiscontinued() == null) {
-				discontinued = "NULL";
-			} else {
-				discontinued = c.getDiscontinued().toString();
+			displayHeader(sizeColumn, HEADER_COLLECTION);
+			for (Computer c : collection) {
+				 
+				if (c.getIntroduced() == null) {
+					introduced = "NULL";
+				} else {
+					introduced = c.getIntroduced().toString();
+				}
+				
+				if (c.getDiscontinued() == null) {
+					discontinued = "NULL";
+				} else {
+					discontinued = c.getDiscontinued().toString();
+				}
+				
+				displayLine(sizeColumn, Long.toString(c.getId()), c.getName(), 
+						introduced, discontinued,
+						Long.toString(c.getIdCompany())
+				);
 			}
-			
-			displayLine(sizeColumn, Long.toString(c.getId()), c.getName(), 
-					introduced, discontinued,
-					Long.toString(c.getIdCompany())
-			);
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 	
 	public static void displayComputer(Computer c) {
@@ -77,6 +83,10 @@ public class DisplayComputer extends DisplayTable {
 				.mapToObj(Long::toString)
 				.mapToInt(String::length)
 				.max().getAsInt();
+		
+		for (int i=0; i<array.length; i++) {
+			array[i] = Math.max(array[i], HEADER_COLLECTION[i].length());
+		}
 		return array;
 	}
 }

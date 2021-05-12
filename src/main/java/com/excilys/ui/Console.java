@@ -1,5 +1,6 @@
 package com.excilys.ui;
 
+import java.awt.Choice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,19 +12,22 @@ import java.util.Optional;
 import com.excilys.controler.ConsoleControler;
 import com.excilys.exception.ComputerDateGreaterLessThan1970;
 import com.excilys.model.Computer;
+import com.excilys.model.Page;
 import com.excilys.persistence.CompanyDAO;
 import com.excilys.persistence.Database;
 
 public class Console {
 	private ConsoleControler consoleControler;
 	private Database database;
+	private BufferedReader reader;
 
 	public Console() {
-		consoleControler = ConsoleControler.getInstance();
 		database = Database.getInstance();
-		
 		// connect to Database
 		database.connection();
+		consoleControler = ConsoleControler.getInstance();
+		
+		reader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
 	public void start() {
@@ -35,7 +39,7 @@ public class Console {
 	
 
 	private void displayChoice() {
-		System.out.println("Select a choice :");
+		System.out.println("Possibilities :");
 		System.out.println("1 : see all companies");
 		System.out.println("----------");
 		System.out.println("2 : see all computers");
@@ -59,11 +63,11 @@ public class Console {
 		
 		switch (number) {
 		case "1":
-			DisplayCompany.displayCollection(consoleControler.getAllCompanies());
+			displayAllCompanies();
 			break;
 			
 		case "2":
-			DisplayComputer.displayCollection(consoleControler.getAllComputers());
+			displayAllComputers();
 			break;
 			
 		case "3":
@@ -117,8 +121,6 @@ public class Console {
 	
 	private void readChoice() {
 		System.out.print("your choice: ");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		
 		try {
 			String line = reader.readLine();
 			selectChoice(line);
@@ -239,6 +241,76 @@ public class Console {
 			System.out.println("Incorrect id.");
 		}
 		return l;
+	}
+	
+	private void displayAllCompanies() {
+		Page page = new Page();
+		do {
+			DisplayCompany.displayCollection(consoleControler.getAllCompanies(page));
+			displayFooterPage(page);
+		} while (selectPage(page));
+	}
+	
+	private void displayAllComputers() {
+		Page page = new Page();
+		do {
+			DisplayComputer.displayCollection(consoleControler.getAllComputers(page));
+			displayFooterPage(page);
+		} while (selectPage(page));
+	}
+	
+	private boolean selectPage(Page page) {
+		try {
+			boolean loop = true;
+			while (loop) {
+				System.out.print("Your choice: ");
+				String number = "";
+				String line = reader.readLine().trim();
+	
+				if (line.length() >= 1)
+					number = line.trim().substring(0,1);
+				
+				
+	
+				switch (number) {
+				case "+":
+					page.nextPage();
+					loop = false;
+					break;
+				case "-":
+					page.previousPage();
+					loop = false;
+					break;
+				case "q":
+					return false;
+				default:
+					try {
+						int pageNb = Integer.valueOf(line);
+						page.setCurrentPage(pageNb);
+						loop = false;
+					} catch (NumberFormatException e) {
+						// it's not a number, do nothing
+					}
+					// if the input don't match with anything
+					if (loop) {
+						System.out.println("I do not understand your choice");
+					}
+				}
+			}
+				
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	private void displayFooterPage(Page page) {
+		System.out.println("- : previous page");
+		System.out.println("+ : next page");
+		System.out.println("<number> : go to page <number>");
+		System.out.println("q : to quit");
+		System.out.println("current page: " + page.getCurrentPage());
+		
 	}
 }
 		
