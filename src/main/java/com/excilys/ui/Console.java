@@ -135,7 +135,6 @@ public class Console {
 			String line = reader.readLine();
 			selectMenuChoice(line);
 			System.out.println("");
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
