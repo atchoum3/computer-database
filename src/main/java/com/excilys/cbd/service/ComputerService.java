@@ -1,11 +1,11 @@
-package com.excilys.service;
+package com.excilys.cbd.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.model.Computer;
-import com.excilys.model.Page;
-import com.excilys.persistence.ComputerDAO;
+import com.excilys.cbd.model.Computer;
+import com.excilys.cbd.model.Page;
+import com.excilys.cbd.persistence.ComputerDAO;
 
 public class ComputerService {
 	private static ComputerService instance = null;

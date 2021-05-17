@@ -1,4 +1,4 @@
-package com.excilys.persistence;
+package com.excilys.cbd.persistence;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 
-import com.excilys.mapper.ComputerMapper;
-import com.excilys.model.Computer;
-import com.excilys.model.Page;
+import com.excilys.cbd.mapper.ComputerMapper;
+import com.excilys.cbd.model.Computer;
+import com.excilys.cbd.model.Page;
 
 public class ComputerDAO extends DAO {
 	private static ComputerDAO instance = null;

@@ -1,13 +1,13 @@
-package com.excilys.ui;
+package com.excilys.cbd.ui;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.excilys.model.Computer;
+import com.excilys.cbd.model.Computer;
 
 public class DisplayComputer extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id","name","introduced","discontinued","company_id"};
@@ -82,13 +82,13 @@ public class DisplayComputer extends DisplayTable {
 		array[2] = collection.stream()
 				.map(Computer::getIntroduced)
 				.filter(Objects::nonNull)
-				.map(LocalDateTime::toString)
+				.map(LocalDate::toString)
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);
 		array[3] = collection.stream()
 				.map(Computer::getDiscontinued)
 				.filter(Objects::nonNull)
-				.map(LocalDateTime::toString)
+				.map(LocalDate::toString)
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);
 		array[4] = collection.stream()

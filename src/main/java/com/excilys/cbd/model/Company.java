@@ -1,6 +1,4 @@
-package com.excilys.model;
-
-import java.util.Set;
+package com.excilys.cbd.model;
 
 public class Company {
 	private long id;

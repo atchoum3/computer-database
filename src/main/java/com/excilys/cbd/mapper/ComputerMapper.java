@@ -1,14 +1,13 @@
-package com.excilys.mapper;
+package com.excilys.cbd.mapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 
-import com.excilys.exception.ComputerDateGreaterLessThan1970;
-import com.excilys.model.Computer;
+import com.excilys.cbd.model.Computer;
 
 public class ComputerMapper {
 	
@@ -29,12 +28,12 @@ public class ComputerMapper {
 		Timestamp timestampIntroduced = rs.getTimestamp(3);
 		Timestamp timestampDiscontinued = rs.getTimestamp(4);
 		
-		LocalDateTime introduced = null;
-		LocalDateTime discontinued = null;
+		LocalDate introduced = null;
+		LocalDate discontinued = null;
 		if (timestampIntroduced != null) 
-			introduced = timestampIntroduced.toLocalDateTime();
+			introduced = timestampIntroduced.toLocalDateTime().toLocalDate();
 		if (timestampDiscontinued != null)
-			discontinued = timestampDiscontinued.toLocalDateTime();
+			discontinued = timestampDiscontinued.toLocalDateTime().toLocalDate();
 		
 		long idCompany = rs.getLong(5);
 		return new Computer(id, name, introduced, discontinued, idCompany);
@@ -60,12 +59,12 @@ public class ComputerMapper {
 	 * If this value is null, null value is insert on the prepared statement
 	 * @throws SQLException
 	 */
-	public static void setTimestampOrNull(PreparedStatement ps, int pos, LocalDateTime localDateTime) 
+	public static void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate) 
 			throws SQLException {
-		if (localDateTime == null) {
+		if (localDate == null) {
 			ps.setNull(pos, java.sql.Types.TIMESTAMP);
 		} else {
-			ps.setTimestamp(pos, Timestamp.valueOf(localDateTime));
+			ps.setTimestamp(pos, Timestamp.valueOf(localDate.atStartOfDay()));
 		}
 	}
 

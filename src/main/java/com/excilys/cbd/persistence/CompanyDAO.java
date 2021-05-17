@@ -1,19 +1,14 @@
-package com.excilys.persistence;
+package com.excilys.cbd.persistence;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import com.excilys.mapper.CompanyMapper;
-import com.excilys.mapper.ComputerMapper;
-import com.excilys.model.Company;
-import com.excilys.model.Computer;
-import com.excilys.model.Page;
+import com.excilys.cbd.mapper.CompanyMapper;
+import com.excilys.cbd.model.Company;
+import com.excilys.cbd.model.Page;
 
 public class CompanyDAO extends DAO {
 	private static CompanyDAO instance = null;
