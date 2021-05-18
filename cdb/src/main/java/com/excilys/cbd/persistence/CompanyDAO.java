@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cbd.mapper.CompanyMapper;
 import com.excilys.cbd.model.Company;
 import com.excilys.cbd.model.Page;
+import com.excilys.cbd.target.SimpleLog4J;
 
 public class CompanyDAO {
 	private static CompanyDAO instance = null;
+	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
 	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
@@ -55,7 +60,7 @@ public class CompanyDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return companies;
 	}
@@ -79,7 +84,7 @@ public class CompanyDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return company;
 	}

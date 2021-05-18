@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import com.excilys.cbd.exception.ComputerCompanyIdException;
@@ -16,6 +20,7 @@ import com.excilys.cbd.model.Page;
 
 public class ComputerDAO {
 	private static ComputerDAO instance = null;
+	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
 	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l JOIN company AS c ON l.company_id = c.id LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l JOIN company AS c ON l.company_id = c.id WHERE l.id=?;";
@@ -59,7 +64,7 @@ public class ComputerDAO {
 				}
 			}
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return computers;
 	}
@@ -83,7 +88,7 @@ public class ComputerDAO {
 				}
 			}
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return computer;
 	}
@@ -115,7 +120,7 @@ public class ComputerDAO {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			throw new ComputerCompanyIdException("This company id does not exist");
 		}catch(SQLException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -135,7 +140,7 @@ public class ComputerDAO {
 			ps.setLong(5, c.getId());
 			ps.executeUpdate();
 		} catch(SQLException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -151,7 +156,7 @@ public class ComputerDAO {
 			ps.setLong(1, id);
 			ps.executeUpdate();
 		} catch(SQLException e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 }
