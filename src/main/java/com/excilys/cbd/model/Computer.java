@@ -3,24 +3,62 @@ package com.excilys.cbd.model;
 import java.time.LocalDate;
 
 public class Computer {
+	private static final long DEFAULT_ID = -1;
 	private long id;
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
-	private long idCompany;
+	private Company company;
 	
-	public Computer(long id, String name, LocalDate introduced, 
-			LocalDate discontinued, long idCompany) {
+	private Computer(long id, String name, LocalDate introduced, 
+			LocalDate discontinued, Company company) {
 		this.id = id;
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
-		this.idCompany = idCompany;
+		this.company = company;
 	}
 	
-	public Computer(String name, LocalDate introduced, 
-			LocalDate discontinued, long idCompany) {
-		this(-1, name, introduced, discontinued, idCompany);
+	private Computer(String name, LocalDate introduced, 
+			LocalDate discontinued, Company company) {
+		this(DEFAULT_ID, name, introduced, discontinued, company);
+	}
+	
+	public static class Builder {
+		private long id;
+		private String name;
+		private LocalDate introduced;
+		private LocalDate discontinued;
+		private Company company;
+		
+		public Builder(String name) {
+			this.id = DEFAULT_ID;
+			this.name = name;
+		}
+		
+		public Builder(long id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+		
+		public Builder introduced(LocalDate introduced) {
+			this.introduced = introduced;
+			return this;
+		}
+		
+		public Builder discontinued(LocalDate discontinued) {
+			this.discontinued = discontinued;
+			return this;
+		}
+		
+		public Builder company(Company company) {
+			this.company = company;
+			return this;
+		}
+		
+		public Computer build() {
+			return new Computer(id, name, introduced, discontinued, company);
+		}
 	}
 	
 	/// setters & getters
@@ -54,11 +92,12 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public long getIdCompany() {
-		return idCompany;
+	
+	public void setCompany(Company company) {
+		this.company = company;
 	}
-	public void setIdCompany(long idCompany) {
-		this.idCompany = idCompany;
+
+	public Company getCompany() {
+		return company;
 	}
 }

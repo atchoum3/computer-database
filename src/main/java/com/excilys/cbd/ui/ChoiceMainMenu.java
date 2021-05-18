@@ -15,6 +15,6 @@ public enum ChoiceMainMenu {
 	}
 	
 	public static boolean isChoiceMenu(int i) {
-		return (i >= 0 && i < ChoiceMainMenu.values().length);
+		return (i > 0 && i < ChoiceMainMenu.values().length);
 	}
 }

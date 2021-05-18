@@ -1,7 +1,9 @@
 package com.excilys.cbd.persistence;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +12,11 @@ import com.excilys.cbd.mapper.CompanyMapper;
 import com.excilys.cbd.model.Company;
 import com.excilys.cbd.model.Page;
 
-public class CompanyDAO extends DAO {
+public class CompanyDAO {
 	private static CompanyDAO instance = null;
 	
-	private static final String QUERY_SELECT_ALL = "SELECT * FROM company LIMIT ?,?";
-	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM company WHERE id = ?";
+	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company LIMIT ?,?";
+	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 	
 	private CompanyDAO() {
 		super();
@@ -33,24 +35,26 @@ public class CompanyDAO extends DAO {
 	 */
 	public List<Company> getAll(Page page) {
 		List<Company> companies = new ArrayList<>();
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
+		) {	
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
-			ResultSet rs = ps.executeQuery();
-			
-			if (rs.next()) {
-				CompanyMapper.toCompanies(rs, companies);
-				// indicate to page if it's last page
-				if (companies.size() < page.getElementByPage()) {
+			try (ResultSet rs = ps.executeQuery()) {
+				
+				if (rs.next()) {
+					CompanyMapper.getInstance().toCompanies(rs, companies);
+					// indicate to page if it's last page
+					if (companies.size() < page.getElementByPage()) {
+						page.setIsLastPage();
+					}
+				} else {
+					// indicate to page if it's last page
 					page.setIsLastPage();
 				}
-			} else {
-				// indicate to page if it's last page
-				page.setIsLastPage();
 			}
-			
-		}catch(Exception e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return companies;
@@ -63,16 +67,18 @@ public class CompanyDAO extends DAO {
 	 */
 	public Optional<Company> getById(long id) {
 		Optional<Company> company = Optional.empty();
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
+		) {
 			ps.setLong(1, id);
-			ResultSet rs = ps.executeQuery();
-			
-			if (rs.next()) {
-				company = Optional.of(CompanyMapper.toCompany(rs));
+			try (ResultSet rs = ps.executeQuery()) {
+				
+				if (rs.next()) {
+					company = Optional.of(CompanyMapper.getInstance().toCompany(rs));
+				}
 			}
-			
-		}catch(Exception e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return company;

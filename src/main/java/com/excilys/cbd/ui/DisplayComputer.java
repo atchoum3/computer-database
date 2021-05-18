@@ -11,6 +11,7 @@ import com.excilys.cbd.model.Computer;
 
 public class DisplayComputer extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id","name","introduced","discontinued","company_id"};
+	private static final String PRINT_NO_VALUE = "NULL";
 	
 	private DisplayComputer() {} // static class, all method are static
 	
@@ -26,26 +27,32 @@ public class DisplayComputer extends DisplayTable {
 			System.out.println("");
 		} else {
 			int[] sizeColumn = maxCharEachColumn(collection);
-			String introduced, discontinued;
+			String introduced, discontinued, companyId;
 			
 			displayHeader(sizeColumn, HEADER_COLUMN);
 			for (Computer c : collection) {
 				
 				//to print introduced value if it's null
 				if (c.getIntroduced() == null) {
-					introduced = "NULL";
+					introduced = PRINT_NO_VALUE;
 				} else {
 					introduced = c.getIntroduced().toString();
 				}
 				//to print discontinued value if it's null
 				if (c.getDiscontinued() == null) {
-					discontinued = "NULL";
+					discontinued = PRINT_NO_VALUE;
 				} else {
 					discontinued = c.getDiscontinued().toString();
 				}
+				//to print companyId value if it's null
+				if (c.getCompany() != null) {
+					companyId = Long.toString(c.getCompany().getId());
+				} else {
+					companyId = PRINT_NO_VALUE;
+				}
 				
 				displayLine(sizeColumn, Long.toString(c.getId()), c.getName(), 
-						introduced, discontinued, Long.toString(c.getIdCompany()));
+						introduced, discontinued, companyId);
 			}
 			System.out.println("");
 		}

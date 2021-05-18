@@ -5,9 +5,7 @@ import com.excilys.cbd.model.Page;
 public class Console {
 	private static Console instance;
 
-	private Console() {
-		;
-	}
+	private Console() {;}
 	
 	public static Console getInstance() {
 		if (instance == null)
@@ -28,7 +26,7 @@ public class Console {
 		System.out.println("5 <id> : update one computer");
 		System.out.println("6 <id> : delete one computer");
 		System.out.println("----------");
-		System.out.println("0 : quit");
+		System.out.println("7 : quit");
 		System.out.println("");
 	}
 	
@@ -39,7 +37,6 @@ public class Console {
 	public void displayFooterPage(Page page) {
 		System.out.println("- : previous page");
 		System.out.println("+ : next page");
-		System.out.println("<number> : go to page <number>");
 		System.out.println("q : to quit");
 		System.out.println("current page: " + page.getCurrentPage());
 		

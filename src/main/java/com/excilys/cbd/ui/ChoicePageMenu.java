@@ -16,7 +16,7 @@ public enum ChoicePageMenu {
 	
 	public static ChoicePageMenu fromPropertyName(String x) throws Exception {
 		for (ChoicePageMenu currentType : ChoicePageMenu.values()) {
-			if (x.equals(currentType.getValue())) {
+			if (currentType.getValue().equals(x)) {
 				return currentType;
 			}
 		}

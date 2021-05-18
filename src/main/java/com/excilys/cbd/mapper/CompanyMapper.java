@@ -7,8 +7,15 @@ import java.util.Collection;
 import com.excilys.cbd.model.Company;
 
 public class CompanyMapper {
+	private static CompanyMapper instance = null;
 	
-	private CompanyMapper() {} // static class, all methods are static
+	private CompanyMapper() {;}
+	
+	public static CompanyMapper getInstance() {
+		if (instance == null)
+			instance = new CompanyMapper();
+		return instance;
+	}
 	
 	/**
 	 * Get data from a ResultSet to build a Company object.
@@ -16,7 +23,7 @@ public class CompanyMapper {
 	 * @return Company object
 	 * @throws SQLException
 	 */
-	public static Company toCompany(ResultSet rs) throws SQLException {
+	public Company toCompany(ResultSet rs) throws SQLException {
 		long id = rs.getLong(1);
 		String name = rs.getString(2);
 		return new Company(id, name);
@@ -28,9 +35,9 @@ public class CompanyMapper {
 	 * @param collection to fill in
 	 * @throws SQLException
 	 */
-	public static void toCompanies(ResultSet rs, Collection<Company> collection) throws SQLException {
+	public void toCompanies(ResultSet rs, Collection<Company> collection) throws SQLException {
 		do {
-			collection.add(CompanyMapper.toCompany(rs));
+			collection.add(this.toCompany(rs));
 		} while(rs.next());
 	}		
 }

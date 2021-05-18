@@ -1,12 +1,14 @@
 package com.excilys.cbd.target;
 
 import com.excilys.cbd.controler.ConsoleControler;
-import com.excilys.cbd.persistence.Database;
+import com.excilys.cbd.exception.DatabaseConnectionException;
 
 public class LaunchConsole {
 	public static void main(String[] args) {
-		Database.getInstance().connection();
-		
-		ConsoleControler.getInstance().start();
+		try {
+			ConsoleControler.getInstance().start();
+		} catch(DatabaseConnectionException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }

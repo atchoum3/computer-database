@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Database {
+import com.excilys.cbd.exception.DatabaseConnectionException;
+
+public class Database implements AutoCloseable {
 	private static final String urlDatabase = "jdbc:mysql://127.0.0.1/computer-database-db?serverTimezone=UTC";
 	private static final String user = "admincdb";
 	private static final String password = "qwerty1234";
@@ -24,19 +26,22 @@ public class Database {
 
 	/**
 	 * Connect to the database
+	 * @return connection object
 	 */
-	public void connection() {
+	public Connection connection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.err.print("Driver not found");
-			System.exit(1);
 		}
 		try {
 			con = DriverManager.getConnection(urlDatabase, user, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DatabaseConnectionException("Connection impossible to database");
 		}
+		return con;
 	}
 
 	/**

@@ -7,14 +7,20 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collection;
 
+import com.excilys.cbd.model.Company;
 import com.excilys.cbd.model.Computer;
 
 public class ComputerMapper {
+	private static ComputerMapper instance;
 	
-	/**
-	 * Constructor is private because all method in this class are static.
-	 */
-	private ComputerMapper() {}// 
+
+	private ComputerMapper() {;}
+	
+	public static ComputerMapper getInstance() {
+		if (instance == null)
+			instance = new ComputerMapper();
+		return instance;
+	}
 
 	/**
 	 * Get data from a ResultSet to build a Computer object.
@@ -22,7 +28,7 @@ public class ComputerMapper {
 	 * @return Computer object
 	 * @throws SQLException
 	 */
-	public static Computer toComputer(ResultSet rs) throws SQLException {		
+	public Computer toComputer(ResultSet rs) throws SQLException {		
 		long id = rs.getLong(1);
 		String name = rs.getString(2);
 		Timestamp timestampIntroduced = rs.getTimestamp(3);
@@ -35,8 +41,9 @@ public class ComputerMapper {
 		if (timestampDiscontinued != null)
 			discontinued = timestampDiscontinued.toLocalDateTime().toLocalDate();
 		
-		long idCompany = rs.getLong(5);
-		return new Computer(id, name, introduced, discontinued, idCompany);
+		Company company = new Company(rs.getLong(5), rs.getString(6));
+		
+		return new Computer.Builder(id, name).introduced(introduced).discontinued(discontinued).company(company).build();
 	}
 	
 	/**
@@ -45,9 +52,9 @@ public class ComputerMapper {
 	 * @param collection to fill in
 	 * @throws SQLException
 	 */
-	public static void toComputers(ResultSet rs, Collection<Computer> collection) throws SQLException {
+	public void toComputers(ResultSet rs, Collection<Computer> collection) throws SQLException {
 		do {
-			collection.add(ComputerMapper.toComputer(rs));
+			collection.add(this.toComputer(rs));
 		} while(rs.next());
 	}
 	
@@ -59,13 +66,24 @@ public class ComputerMapper {
 	 * If this value is null, null value is insert on the prepared statement
 	 * @throws SQLException
 	 */
-	public static void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate) 
+	public void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate) 
 			throws SQLException {
 		if (localDate == null) {
-			ps.setNull(pos, java.sql.Types.TIMESTAMP);
+			ps.setNull(pos, java.sql.Types.NULL);
 		} else {
 			ps.setTimestamp(pos, Timestamp.valueOf(localDate.atStartOfDay()));
 		}
+	}
+
+	public void setCompanyOrNull(PreparedStatement ps, int pos, Company company) 
+			throws SQLException {
+		if (company == null) {
+			ps.setNull(pos, java.sql.Types.NULL);
+		} else {
+			ps.setLong(pos, company.getId());
+		}
+			
+		
 	}
 
 }

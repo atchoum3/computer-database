@@ -1,20 +1,24 @@
 package com.excilys.cbd.persistence;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 
+import com.excilys.cbd.exception.ComputerCompanyIdException;
 import com.excilys.cbd.mapper.ComputerMapper;
 import com.excilys.cbd.model.Computer;
 import com.excilys.cbd.model.Page;
 
-public class ComputerDAO extends DAO {
+public class ComputerDAO {
 	private static ComputerDAO instance = null;
 	
-	private static final String QUERY_SELECT_ALL = "SELECT * FROM computer LIMIT ?,?";
-	private static final String QUERY_SELECT_BY_ID = "SELECT * FROM computer WHERE id = ?";
+	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l JOIN company AS c ON l.company_id = c.id LIMIT ?,?";
+	private static final String QUERY_SELECT_BY_ID = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l JOIN company AS c ON l.company_id = c.id WHERE l.id=?;";
 	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
@@ -36,23 +40,25 @@ public class ComputerDAO extends DAO {
 	 */
 	public List<Computer> getAll(Page page) {
 		List<Computer> computers = new ArrayList<>();
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
+		) {
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
-			ResultSet rs = ps.executeQuery();
-			
-			if (rs.next()) {
-				ComputerMapper.toComputers(rs, computers);
-				// indicate to page if it's last page
-				if (computers.size() < page.getElementByPage()) {
+			try (ResultSet rs = ps.executeQuery()) {
+				
+				if (rs.next()) {
+					ComputerMapper.getInstance().toComputers(rs, computers);
+					// indicate to page if it's last page
+					if (computers.size() < page.getElementByPage()) {
+						page.setIsLastPage();
+					}
+				} else {
 					page.setIsLastPage();
 				}
-			} else {
-				page.setIsLastPage();
 			}
-			
-		}catch(Exception e){
+		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		return computers;
@@ -65,16 +71,18 @@ public class ComputerDAO extends DAO {
 	 */
 	public Optional<Computer> getById(long id) {
 		Optional<Computer> computer = Optional.empty();
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
+		) {
 			ps.setLong(1, id);
-			ResultSet rs = ps.executeQuery();
+			try(ResultSet rs = ps.executeQuery()) {
 			
-			if (rs.next()) {
-				computer = Optional.of(ComputerMapper.toComputer(rs));
+				if (rs.next()) {
+					computer = Optional.of(ComputerMapper.getInstance().toComputer(rs));
+				}
 			}
-			
-		}catch(Exception e){
+		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		return computer;
@@ -84,23 +92,29 @@ public class ComputerDAO extends DAO {
 	 * To create a computer 
 	 * @param c this computer will be create in the database. 
 	 * The id of the object will be determined and saved in this object
+	 * @throws ComputerCompanyIdException if the company id does not exist
 	 */
-	public void create(Computer c) {
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
+	public void create(Computer c) throws ComputerCompanyIdException {
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
+		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ps.setLong(4, c.getIdCompany());
+			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
+			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
+			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
 			ps.executeUpdate();
 			
 			//get id
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.first()) {
-				long id = rs.getLong(1);
-				c.setId(id);
+			try(ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.first()) {
+					long id = rs.getLong(1);
+					c.setId(id);
+				}
 			}
-		}catch(Exception e){
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new ComputerCompanyIdException("This company id does not exist");
+		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
@@ -110,15 +124,17 @@ public class ComputerDAO extends DAO {
 	 * @param computer to update
 	 */
 	public void update(Computer c) {
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_UPDATE);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
+		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ps.setLong(4, c.getIdCompany());
+			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
+			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
+			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
 			ps.setLong(5, c.getId());
 			ps.executeUpdate();
-		}catch(Exception e){
+		} catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
@@ -128,11 +144,13 @@ public class ComputerDAO extends DAO {
 	 * @param id the id of the computer
 	 */
 	public void delete(long id) {
-		try {
-			PreparedStatement ps = con.prepareStatement(QUERY_DELETE);
+		try(
+				Connection con = Database.getInstance().connection();
+				PreparedStatement ps = con.prepareStatement(QUERY_DELETE)
+		) {
 			ps.setLong(1, id);
 			ps.executeUpdate();
-		}catch(Exception e){
+		} catch(SQLException e){
 			e.printStackTrace();
 		}
 	}

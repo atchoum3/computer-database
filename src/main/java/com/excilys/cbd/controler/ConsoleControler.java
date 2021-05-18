@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Scanner;
 
+import com.excilys.cbd.exception.ComputerCompanyIdException;
+import com.excilys.cbd.model.Company;
 import com.excilys.cbd.model.Computer;
 import com.excilys.cbd.model.Page;
 import com.excilys.cbd.service.CompanyService;
@@ -172,9 +174,14 @@ public class ConsoleControler {
 	}
 	
 	private void createComputer() {
-		Computer computer = new Computer("", null, null, 0);
+		Computer computer = new Computer.Builder("").build();
 		updateComputer(computer);
-		ComputerService.getInstance().create(computer);
+		try {
+			ComputerService.getInstance().create(computer);
+		} catch (ComputerCompanyIdException e) {
+			System.err.println(e.getMessage());
+			System.out.println("Computer not created");
+		}
 	}
 	
 	
@@ -211,14 +218,17 @@ public class ConsoleControler {
 	}
 	
 	
-	private long askComputerCompanyId() {
-		System.out.print("Enter the id of the company: ");
+	private Company askComputerCompanyId() {
+		System.out.print("Enter the id of the company (optional): ");
 		String input = scanner.nextLine();
+		if (input.isEmpty()) {
+			return null;
+		}
 		try {
-			return Long.parseLong(input);
+			return new Company(Long.parseLong(input));
 		} catch (NumberFormatException e) {
 			System.out.println("Insert an integer");
-			return askComputerId();
+			return askComputerCompanyId();
 		}
 	}
 	
@@ -238,7 +248,7 @@ public class ConsoleControler {
 		} while( !checkIntroducedlessThanDisontinued(computer.getIntroduced(), discontinued));
 		computer.setDiscontinued(discontinued);
 		
-		computer.setIdCompany(askComputerCompanyId());
+		computer.setCompany(askComputerCompanyId());
 	}
 	
 	private void updateComputer() {
@@ -246,11 +256,11 @@ public class ConsoleControler {
 		Optional<Computer> optComputer = ComputerService.getInstance().getById(id);
 		
 		if (optComputer.isPresent()) {
-			Computer computer = optComputer.get();
+			Computer computer = new Computer.Builder("").build();
 			updateComputer(computer);
 			ComputerService.getInstance().update(computer);
 		} else {
-			System.out.println("This id is not on the database.");
+			System.out.println("This company id is not on the database.");
 		}
 	}
 	
