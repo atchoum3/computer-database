@@ -46,6 +46,7 @@ public class CompanyDAO {
 		) {	
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
+			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
@@ -77,6 +78,7 @@ public class CompanyDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);
+			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {

@@ -52,6 +52,7 @@ public class ComputerDAO {
 		) {
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
+			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
@@ -82,6 +83,7 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);
+			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 			
 				if (rs.next()) {
@@ -109,6 +111,7 @@ public class ComputerDAO {
 			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
 			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
 			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
+			logger.debug(ps.toString());
 			ps.executeUpdate();
 			
 			//get id
@@ -139,6 +142,7 @@ public class ComputerDAO {
 			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
 			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
 			ps.setLong(5, c.getId());
+			logger.debug(ps.toString());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -155,6 +159,7 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE)
 		) {
 			ps.setLong(1, id);
+			logger.debug(ps.toString());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
