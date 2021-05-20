@@ -1,68 +1,64 @@
 package com.excilys.cbd.persistence;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Properties;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cbd.exception.DatabaseConnectionDriver;
-import com.excilys.cbd.exception.DatabaseConnectionException;
-
-public class Database implements AutoCloseable {
-	private static final String urlDatabase = "jdbc:mysql://127.0.0.1/computer-database-db?serverTimezone=UTC";
-	private static final String user = "admincdb";
-	private static final String password = "qwerty1234E";
-	
+public class Database extends BasicDataSource implements AutoCloseable {
+	private static Database instance;
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
 	
-	private Connection con;
-	private static Database instance = null;
+	private static final String FILE_NAME_CONFIGURATION = "db.properties";
+	private static final String PROPERTY_DRIVER_CLASS = "db.driverClassName";
+	private static final String PROPERTY_URL = "db.url";
+	private static final String PROPERTY_USER = "db.username";
+	private static final String PROPERTY_PASSWORD = "db.password";
+	
+	private  Properties readProperties() {
+		Properties properties = new Properties();
+		
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		// classLoader.getResourceAsStream(file) search the file and open the file
+		try (InputStream configFile = classLoader.getResourceAsStream(FILE_NAME_CONFIGURATION)) {
+			properties.load(configFile);
+        } catch (IOException e) {
+        	logger.error(e.getMessage(), e);
+        	//TODO
+        	//throw new FileNotFoundException("configuration file " + FILE_NAME_CONFIGURATION + "has not been found.");
+        }
+		return properties;
+	}
 	
 	private Database() {
-		// nothing to initialize
+		super();
+		Properties properties = readProperties();
+		this.setDriverClassName(properties.getProperty(PROPERTY_DRIVER_CLASS));
+		this.setUrl(properties.getProperty(PROPERTY_URL));
+		this.setUsername(properties.getProperty(PROPERTY_USER));
+		this.setPassword(properties.getProperty(PROPERTY_PASSWORD));
+		logger.debug("driverClass=" + getDriverClassName() + " url=" + getUrl() + " user=" + getUsername() + " password=" + getPassword());
 	}
 	
 	public static Database getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new Database();
+		}
 		return instance;
 	}
 
 	/**
-	 * Connect to the database
-	 * @return connection object
-	 */
-	public Connection connection() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new DatabaseConnectionDriver("Driver not found");
-		}
-		try {
-			con = DriverManager.getConnection(urlDatabase, user, password);
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new DatabaseConnectionException("Connection impossible to database");
-		}
-		return con;
-	}
-
-	/**
-	 * Close connection with the database
+	 * Close connection with the database.
 	 */
 	public void close() {
 		try {
-			con.close();
-		} catch(SQLException e) {
+			getConnection().close();
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
-	}
-	
-	/// setters & getters
-	public Connection getConnection() {
-		return con;
 	}
 }

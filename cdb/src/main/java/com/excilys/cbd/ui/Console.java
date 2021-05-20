@@ -5,16 +5,17 @@ import com.excilys.cbd.model.Page;
 public class Console {
 	private static Console instance;
 
-	private Console() {;}
+	private Console() { }
 	
 	public static Console getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new Console();
+		}
 		return instance;
 	}
 	
 	/** 
-	 * display all possible choice
+	 * display all possible choices.
 	 */
 	public void displayMenuChoice() {
 		System.out.println("Possibilities :");
@@ -31,7 +32,7 @@ public class Console {
 	}
 	
 	/**
-	 * display the footer page of an table
+	 * display the footer page of an table.
 	 * @param page object Page to display the index of the current page
 	 */
 	public void displayFooterPage(Page page) {

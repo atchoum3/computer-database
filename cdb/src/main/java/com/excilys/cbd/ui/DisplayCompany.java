@@ -6,12 +6,12 @@ import java.util.Objects;
 import com.excilys.cbd.model.Company;
 
 public class DisplayCompany extends DisplayTable {
-	private static final String[] HEADER_COLUMN = {"id","name"};
+	private static final String[] HEADER_COLUMN = {"id", "name"};
 	
-	private DisplayCompany() {} // static class, all method are static
+	private DisplayCompany() { } // static class, all method are static
 	
 	/**
-	 * To display a collection in a table
+	 * To display a collection in a table.
 	 * @param collection the collection to display
 	 */
 	public static void displayCollection(Collection<Company> collection) {
@@ -31,7 +31,7 @@ public class DisplayCompany extends DisplayTable {
 	}
 	
 	/**
-	 * Method to get the max size of each column
+	 * Method to get the max size of each column.
 	 * @param collection the collection where computation will be made
 	 * @return Array of int with the max char on each column
 	 */
@@ -49,7 +49,7 @@ public class DisplayCompany extends DisplayTable {
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);
 		// get max between value length and header length
-		for (int i=0; i<array.length; i++) {
+		for (int i = 0; i < array.length; i++) {
 			array[i] = Math.max(array[i], HEADER_COLUMN[i].length());
 		}
 		return array;

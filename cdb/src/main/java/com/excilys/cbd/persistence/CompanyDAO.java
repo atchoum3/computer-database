@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import com.excilys.cbd.mapper.CompanyMapper;
 import com.excilys.cbd.model.Company;
 import com.excilys.cbd.model.Page;
-import com.excilys.cbd.target.SimpleLog4J;
 
 public class CompanyDAO {
 	private static CompanyDAO instance = null;
@@ -28,20 +27,21 @@ public class CompanyDAO {
 	}
 	
 	public static CompanyDAO getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CompanyDAO();
+		}
 		return instance;
 	}
 
 	/**
-	 * Get all Company present on the range of the page
+	 * Get all Company present on the range of the page.
 	 * @param page the page of values to take
-	 * @return
+	 * @return A company List
 	 */
 	public List<Company> getAll(Page page) {
 		List<Company> companies = new ArrayList<>();
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
 		) {	
 			ps.setInt(1, page.getIndexFirstElement());
@@ -66,14 +66,14 @@ public class CompanyDAO {
 	}
 	
 	/**
-	 * get a company by this id
+	 * get a company by this id.
 	 * @param id the id of the company
 	 * @return the optional is empty if there is no company with this id
 	 */
 	public Optional<Company> getById(long id) {
 		Optional<Company> company = Optional.empty();
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);

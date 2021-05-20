@@ -10,13 +10,13 @@ import java.util.Objects;
 import com.excilys.cbd.model.Computer;
 
 public class DisplayComputer extends DisplayTable {
-	private static final String[] HEADER_COLUMN = {"id","name","introduced","discontinued","company_id"};
+	private static final String[] HEADER_COLUMN = {"id", "name", "introduced", "discontinued", "company_id"};
 	private static final String PRINT_NO_VALUE = "NULL";
 	
-	private DisplayComputer() {} // static class, all method are static
+	private DisplayComputer() { } // static class, all method are static
 	
 	/**
-	 * To display a collection in a table
+	 * To display a collection in a table.
 	 * @param collection the collection to display
 	 */
 	public static void displayCollection(Collection<Computer> collection) {
@@ -59,7 +59,7 @@ public class DisplayComputer extends DisplayTable {
 	}
 	
 	/**
-	 * To display one line on a table
+	 * To display one line on a table.
 	 * @param c the computer to display
 	 */
 	public static void displayComputer(Computer c) {
@@ -69,7 +69,7 @@ public class DisplayComputer extends DisplayTable {
 	}
 	
 	/**
-	 * Method to get the max size of each column
+	 * Method to get the max size of each column.
 	 * @param collection the collection where computation will be made
 	 * @return Array of int with the max char on each column
 	 */
@@ -105,7 +105,7 @@ public class DisplayComputer extends DisplayTable {
 				.mapToInt(String::length)
 				.max().getAsInt();
 		// get max between value length and header length
-		for (int i=0; i<array.length; i++) {
+		for (int i = 0; i < array.length; i++) {
 			array[i] = Math.max(array[i], HEADER_COLUMN[i].length());
 		}
 		return array;

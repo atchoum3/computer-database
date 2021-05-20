@@ -31,13 +31,14 @@ public class ConsoleControler {
 	}
 	
 	public static ConsoleControler getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ConsoleControler();
+		}
 		return instance;
 	}
 	
 	/**
-	 * start the menu of the console
+	 * start the menu of the console.
 	 */
 	public void start() {
 		do {
@@ -51,7 +52,7 @@ public class ConsoleControler {
 					System.out.println("This is not a proposed choice");
 				}
 			}
-		} while(true);
+		} while (true);
 	}
 	
 	private OptionalInt askChoiceMainMenu() {
@@ -61,7 +62,7 @@ public class ConsoleControler {
 		String input = scanner.nextLine();
 		try {
 			opt = OptionalInt.of(Integer.parseInt(input));
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			System.out.println("Enter a number");
 		}
 		return opt;
@@ -92,10 +93,10 @@ public class ConsoleControler {
 	
 	/**
 	 * Read the answer of the user and call the concerned choice.
-	 * @param line the user input line
+	 * @param intChoice the input of the user
 	 */
 	private void executeChoiceMainMenu(int intChoice) {
-		ChoiceMainMenu choice = ChoiceMainMenu.values()[intChoice -1];
+		ChoiceMainMenu choice = ChoiceMainMenu.values()[intChoice - 1];
 		
 		switch (choice) {
 		case DISPLAY_ALL_COMPANIES:
@@ -130,7 +131,7 @@ public class ConsoleControler {
 	}
 		
 	/**
-	 * To display a table of all Companies selected by page
+	 * To display a table of all Companies selected by page.
 	 */
 	private void displayAllCompanies() {
 		Page page = new Page();
@@ -141,7 +142,7 @@ public class ConsoleControler {
 	}
 	
 	/**
-	 * To display a table of all computers selected by page
+	 * To display a table of all computers selected by page.
 	 */
 	private void displayAllComputers() {
 		Page page = new Page();
@@ -233,7 +234,7 @@ public class ConsoleControler {
 	}
 	
 	/**
-	 * method to update or create a computer
+	 * method to update or create a computer.
 	 * @param computer all values will be saved on this object
 	 */
 	private void updateComputer(Computer computer) {
@@ -245,7 +246,7 @@ public class ConsoleControler {
 		System.out.print("Discontinued time (optional, format: yyyy-MM-dd HH:mm:ss): ");
 		do {
 			discontinued = askComputerDate();
-		} while( !checkIntroducedlessThanDisontinued(computer.getIntroduced(), discontinued));
+		} while (!checkIntroducedBeforeDisontinued(computer.getIntroduced(), discontinued));
 		computer.setDiscontinued(discontinued);
 		
 		computer.setCompany(askComputerCompanyId());
@@ -273,7 +274,7 @@ public class ConsoleControler {
 	 * This method check if a LocalDateTime is before the 1st January 1970. 
 	 * This method is useful to know if the value can be or not converted in Timestamp.
 	 * @param date the date to check
-	 * @throws ComputerDateGreaterLessThan1970 if the date is before the 1st January 1970
+	 * @return true if the date is before the 1st January 1970
 	 */
 	private boolean checkDateBefore1970(LocalDate date) {
 		return (date != null && date.isBefore(LocalDate.ofEpochDay(0)));
@@ -284,8 +285,9 @@ public class ConsoleControler {
 	 * throw IllegalArgumentException
 	 * @param introduced the date to when the computer was introduced
 	 * @param discontinued the date to when the computer was discontinued
+	 * @return true if introduced is before discontinued
 	 */
-	private boolean checkIntroducedlessThanDisontinued(LocalDate introduced, 
+	private boolean checkIntroducedBeforeDisontinued(LocalDate introduced, 
 			LocalDate discontinued) {
 		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
 			return false;

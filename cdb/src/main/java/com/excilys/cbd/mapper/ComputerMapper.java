@@ -14,11 +14,12 @@ public class ComputerMapper {
 	private static ComputerMapper instance;
 	
 
-	private ComputerMapper() {;}
+	private ComputerMapper() { }
 	
 	public static ComputerMapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ComputerMapper();
+		}
 		return instance;
 	}
 
@@ -36,10 +37,12 @@ public class ComputerMapper {
 		
 		LocalDate introduced = null;
 		LocalDate discontinued = null;
-		if (timestampIntroduced != null) 
+		if (timestampIntroduced != null) { 
 			introduced = timestampIntroduced.toLocalDateTime().toLocalDate();
-		if (timestampDiscontinued != null)
+		}
+		if (timestampDiscontinued != null) {
 			discontinued = timestampDiscontinued.toLocalDateTime().toLocalDate();
+		}
 		
 		Company company = new Company(rs.getLong(5), rs.getString(6));
 		
@@ -55,14 +58,14 @@ public class ComputerMapper {
 	public void toComputers(ResultSet rs, Collection<Computer> collection) throws SQLException {
 		do {
 			collection.add(this.toComputer(rs));
-		} while(rs.next());
+		} while (rs.next());
 	}
 	
 	/**
 	 * To insert a Timestamp on a PreparedStatement. This method insert the timestamp or the null value.
 	 * @param ps a PreparedStatement object
 	 * @param pos the position where will be inserted the Timestamp value
-	 * @param localDateTime this value will be converted in Timestamp value. 
+	 * @param localDate this value will be converted in Timestamp value. 
 	 * If this value is null, null value is insert on the prepared statement
 	 * @throws SQLException
 	 */

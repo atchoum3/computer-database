@@ -33,20 +33,21 @@ public class ComputerDAO {
 	}
 	
 	public static ComputerDAO getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ComputerDAO();
+		}
 		return instance;
 	}
 
 	/**
-	 * Get all Computer present on the range of the page
+	 * Get all Computer present on the range of the page.
 	 * @param page  the page of values to take
-	 * @return
+	 * @return A computer list
 	 */
 	public List<Computer> getAll(Page page) {
 		List<Computer> computers = new ArrayList<>();
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
 		) {
 			ps.setInt(1, page.getIndexFirstElement());
@@ -63,7 +64,7 @@ public class ComputerDAO {
 					page.setIsLastPage();
 				}
 			}
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 		return computers;
@@ -76,32 +77,32 @@ public class ComputerDAO {
 	 */
 	public Optional<Computer> getById(long id) {
 		Optional<Computer> computer = Optional.empty();
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);
-			try(ResultSet rs = ps.executeQuery()) {
+			try (ResultSet rs = ps.executeQuery()) {
 			
 				if (rs.next()) {
 					computer = Optional.of(ComputerMapper.getInstance().toComputer(rs));
 				}
 			}
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 		return computer;
 	}
 
 	/**
-	 * To create a computer 
+	 * To create a computer.
 	 * @param c this computer will be create in the database. 
 	 * The id of the object will be determined and saved in this object
 	 * @throws ComputerCompanyIdException if the company id does not exist
 	 */
 	public void create(Computer c) throws ComputerCompanyIdException {
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
 			ps.setString(1, c.getName());
@@ -111,7 +112,7 @@ public class ComputerDAO {
 			ps.executeUpdate();
 			
 			//get id
-			try(ResultSet rs = ps.getGeneratedKeys()) {
+			try (ResultSet rs = ps.getGeneratedKeys()) {
 				if (rs.first()) {
 					long id = rs.getLong(1);
 					c.setId(id);
@@ -119,18 +120,18 @@ public class ComputerDAO {
 			}
 		} catch (SQLIntegrityConstraintViolationException e) {
 			throw new ComputerCompanyIdException("This company id does not exist");
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 
 	/**
-	 * TO update a computer
-	 * @param computer to update
+	 * To update a computer.
+	 * @param c computer to update
 	 */
 	public void update(Computer c) {
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
 		) {
 			ps.setString(1, c.getName());
@@ -139,23 +140,23 @@ public class ComputerDAO {
 			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
 			ps.setLong(5, c.getId());
 			ps.executeUpdate();
-		} catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 
 	/**
-	 * To delete a Computer thanks to this id 
+	 * To delete a Computer thanks to this id .
 	 * @param id the id of the computer
 	 */
 	public void delete(long id) {
-		try(
-				Connection con = Database.getInstance().connection();
+		try (
+				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE)
 		) {
 			ps.setLong(1, id);
 			ps.executeUpdate();
-		} catch(SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}

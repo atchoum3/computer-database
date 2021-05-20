@@ -15,8 +15,9 @@ public class CompanyService {
 	}
 	
 	public static CompanyService getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CompanyService();
+		}
 		return instance;
 	}
 	

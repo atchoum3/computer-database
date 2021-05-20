@@ -1,6 +1,7 @@
 package com.excilys.cbd.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Computer {
 	private static final long DEFAULT_ID = -1;
@@ -32,8 +33,7 @@ public class Computer {
 		private Company company;
 		
 		public Builder(String name) {
-			this.id = DEFAULT_ID;
-			this.name = name;
+			this(DEFAULT_ID, name);
 		}
 		
 		public Builder(long id, String name) {
@@ -59,6 +59,29 @@ public class Computer {
 		public Computer build() {
 			return new Computer(id, name, introduced, discontinued, company);
 		}
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Computer) {
+			Computer c = (Computer) obj;
+			if (Objects.equals(name, c.getName()) && Objects.equals(introduced, c.getIntroduced()) 
+					&& Objects.equals(discontinued, c.getDiscontinued()) 
+					&& Objects.equals(company, c.getCompany())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, introduced, discontinued, company);
+	}
+	
+	@Override
+	public String toString() {
+		return "{id=" + id + " name=" + name + " introduced=" + introduced + " discontinued=" + discontinued + " company=" + company + "}";
 	}
 	
 	/// setters & getters

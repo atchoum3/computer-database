@@ -1,3 +1,0 @@
-[18/05/2021 17:19:32 INFO SimpleLog4J.main] We've just greeted the user!
-[18/05/2021 17:19:32 WARN SimpleLog4J.main] We've just greeted the user!
-[18/05/2021 17:19:32 ERROR SimpleLog4J.main] We've just greeted the user!

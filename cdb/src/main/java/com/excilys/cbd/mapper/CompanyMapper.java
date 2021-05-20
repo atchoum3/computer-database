@@ -9,11 +9,12 @@ import com.excilys.cbd.model.Company;
 public class CompanyMapper {
 	private static CompanyMapper instance = null;
 	
-	private CompanyMapper() {;}
+	private CompanyMapper() { }
 	
 	public static CompanyMapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CompanyMapper();
+		}
 		return instance;
 	}
 	
@@ -38,6 +39,6 @@ public class CompanyMapper {
 	public void toCompanies(ResultSet rs, Collection<Company> collection) throws SQLException {
 		do {
 			collection.add(this.toCompany(rs));
-		} while(rs.next());
+		} while (rs.next());
 	}		
 }

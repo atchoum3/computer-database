@@ -17,8 +17,9 @@ public class ComputerService {
 	}
 	
 	public static ComputerService getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ComputerService();
+		}
 		return instance;
 	}
 	

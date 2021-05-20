@@ -6,7 +6,7 @@ public enum ChoicePageMenu {
 	
 	private final String value;
 	
-	private ChoicePageMenu(String s) {
+	ChoicePageMenu(String s) {
 		value = s;
 	}
 	
