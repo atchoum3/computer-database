@@ -1,4 +1,4 @@
-package com.excilys.cbd.persistence;
+package com.excilys.cdb.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import com.excilys.cbd.exception.ComputerCompanyIdException;
-import com.excilys.cbd.mapper.ComputerMapper;
-import com.excilys.cbd.model.Computer;
-import com.excilys.cbd.model.Page;
+import com.excilys.cdb.dao.mapper.ComputerMapper;
+import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 public class ComputerDAO {
 	private static ComputerDAO instance = null;

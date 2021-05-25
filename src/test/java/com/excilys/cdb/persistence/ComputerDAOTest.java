@@ -3,22 +3,18 @@ package com.excilys.cdb.persistence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.excilys.cbd.exception.ComputerCompanyIdException;
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Computer;
-import com.excilys.cbd.model.Page;
-import com.excilys.cbd.persistence.ComputerDAO;
-import com.excilys.cbd.persistence.Database;
+import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 public class ComputerDAOTest {
 

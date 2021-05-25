@@ -1,4 +1,4 @@
-package com.excilys.cbd.persistence;
+package com.excilys.cdb.dao;
 
 import java.io.IOException;
 import java.io.InputStream;

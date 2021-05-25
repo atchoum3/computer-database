@@ -1,10 +1,10 @@
-package com.excilys.cbd.target;
+package com.excilys.cdb.target;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cbd.controler.ConsoleControler;
-import com.excilys.cbd.exception.DatabaseConnectionException;
+import com.excilys.cdb.controler.cli.ConsoleControler;
+import com.excilys.cdb.exception.DatabaseConnectionException;
 
 public class LaunchConsole {
 	private static Logger logger = LoggerFactory.getLogger(LaunchConsole.class);

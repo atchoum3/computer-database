@@ -1,11 +1,11 @@
-package com.excilys.cbd.service;
+package com.excilys.cdb.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Page;
-import com.excilys.cbd.persistence.CompanyDAO;
+import com.excilys.cdb.dao.CompanyDAO;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Page;
 public class CompanyService {
 	private static CompanyService instance = null;
 	private CompanyDAO companyDAO;

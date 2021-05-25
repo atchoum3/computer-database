@@ -1,4 +1,4 @@
-package com.excilys.cbd.persistence;
+package com.excilys.cdb.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +11,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cbd.mapper.CompanyMapper;
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Page;
+import com.excilys.cdb.dao.mapper.CompanyMapper;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Page;
 
 public class CompanyDAO {
 	private static CompanyDAO instance = null;

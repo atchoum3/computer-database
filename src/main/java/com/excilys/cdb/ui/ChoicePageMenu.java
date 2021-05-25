@@ -1,4 +1,4 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
 
 public enum ChoicePageMenu {

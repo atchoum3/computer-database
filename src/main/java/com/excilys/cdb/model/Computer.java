@@ -1,4 +1,4 @@
-package com.excilys.cbd.model;
+package com.excilys.cdb.model;
 
 import java.time.LocalDate;
 import java.util.Objects;

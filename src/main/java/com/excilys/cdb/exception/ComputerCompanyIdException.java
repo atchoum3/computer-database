@@ -1,4 +1,4 @@
-package com.excilys.cbd.exception;
+package com.excilys.cdb.exception;
 
 public class ComputerCompanyIdException extends Exception {
 	private static final long serialVersionUID = 1L;

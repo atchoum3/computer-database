@@ -1,12 +1,12 @@
-package com.excilys.cbd.service;
+package com.excilys.cdb.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cbd.exception.ComputerCompanyIdException;
-import com.excilys.cbd.model.Computer;
-import com.excilys.cbd.model.Page;
-import com.excilys.cbd.persistence.ComputerDAO;
+import com.excilys.cdb.dao.ComputerDAO;
+import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 public class ComputerService {
 	private static ComputerService instance = null;

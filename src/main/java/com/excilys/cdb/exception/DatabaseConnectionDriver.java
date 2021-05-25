@@ -1,4 +1,4 @@
-package com.excilys.cbd.exception;
+package com.excilys.cdb.exception;
 
 public class DatabaseConnectionDriver extends RuntimeException {
 	private static final long serialVersionUID = 1L;

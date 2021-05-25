@@ -1,4 +1,4 @@
-package com.excilys.cbd.controler;
+package com.excilys.cdb.controler.cli;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,17 +7,17 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Scanner;
 
-import com.excilys.cbd.exception.ComputerCompanyIdException;
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Computer;
-import com.excilys.cbd.model.Page;
-import com.excilys.cbd.service.CompanyService;
-import com.excilys.cbd.service.ComputerService;
-import com.excilys.cbd.ui.ChoiceMainMenu;
-import com.excilys.cbd.ui.ChoicePageMenu;
-import com.excilys.cbd.ui.Console;
-import com.excilys.cbd.ui.DisplayCompany;
-import com.excilys.cbd.ui.DisplayComputer;
+import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
+import com.excilys.cdb.service.CompanyService;
+import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.ui.ChoiceMainMenu;
+import com.excilys.cdb.ui.ChoicePageMenu;
+import com.excilys.cdb.ui.Console;
+import com.excilys.cdb.ui.DisplayCompany;
+import com.excilys.cdb.ui.DisplayComputer;
 
 public class ConsoleControler {
 	private static ConsoleControler instance = null;

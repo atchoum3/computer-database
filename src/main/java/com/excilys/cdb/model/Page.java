@@ -1,4 +1,4 @@
-package com.excilys.cbd.model;
+package com.excilys.cdb.model;
 
 public class Page {
 	private static final int FIRST_PAGE = 1;

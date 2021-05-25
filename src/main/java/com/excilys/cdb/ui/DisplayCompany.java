@@ -1,9 +1,9 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
 import java.util.Collection;
 import java.util.Objects;
 
-import com.excilys.cbd.model.Company;
+import com.excilys.cdb.model.Company;
 
 public class DisplayCompany extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name"};

@@ -1,4 +1,4 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
 
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.excilys.cbd.model.Computer;
+import com.excilys.cdb.model.Computer;
 
 public class DisplayComputer extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name", "introduced", "discontinued", "company_id"};

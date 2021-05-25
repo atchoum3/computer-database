@@ -1,4 +1,4 @@
-package com.excilys.cbd.mapper;
+package com.excilys.cdb.dao.mapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,14 +6,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Computer;
-import com.excilys.cbd.persistence.ComputerDAO;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Computer;
 
 public class ComputerMapper {
 	private static ComputerMapper instance;

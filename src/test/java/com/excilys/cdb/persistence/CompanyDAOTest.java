@@ -2,19 +2,15 @@ package com.excilys.cdb.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.excilys.cbd.model.Company;
-import com.excilys.cbd.model.Page;
-import com.excilys.cbd.persistence.CompanyDAO;
-import com.excilys.cbd.persistence.Database;
+import com.excilys.cdb.dao.CompanyDAO;
+import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Page;
 
 public class CompanyDAOTest {
 	private static CompanyDAO companyDAO;

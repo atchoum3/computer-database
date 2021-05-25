@@ -1,6 +1,6 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
-import com.excilys.cbd.model.Page;
+import com.excilys.cdb.model.Page;
 
 public class Console {
 	private static Console instance;

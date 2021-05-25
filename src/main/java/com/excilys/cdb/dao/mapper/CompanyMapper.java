@@ -1,10 +1,10 @@
-package com.excilys.cbd.mapper;
+package com.excilys.cdb.dao.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import com.excilys.cbd.model.Company;
+import com.excilys.cdb.model.Company;
 
 public class CompanyMapper {
 	private static CompanyMapper instance = null;

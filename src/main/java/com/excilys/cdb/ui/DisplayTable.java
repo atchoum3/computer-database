@@ -1,4 +1,4 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
 /**
  * Commune method to display table on a command line.

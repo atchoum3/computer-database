@@ -1,4 +1,4 @@
-package com.excilys.cbd.ui;
+package com.excilys.cdb.ui;
 
 public enum ChoiceMainMenu {
 	DISPLAY_ALL_COMPANIES(1), DISPLAY_ALL_COMPUTERS(2), DISPLAY_COMPUTER(3), 
