@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dao.mapper.CompanyMapper;
+import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 
@@ -39,8 +40,9 @@ public class CompanyDAO {
 	 * Get all Company present on the range of the page.
 	 * @param page the page of values to take
 	 * @return A company List
+	 * @throws CustomSQLException 
 	 */
-	public List<Company> getAll(Page page) {
+	public List<Company> getAll(Page page) throws CustomSQLException {
 		List<Company> companies = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -57,6 +59,7 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return companies;
 	}
@@ -64,8 +67,9 @@ public class CompanyDAO {
 	/**
 	 * Get all Company.
 	 * @return A company List
+	 * @throws CustomSQLException 
 	 */
-	public List<Company> getAll() {
+	public List<Company> getAll() throws CustomSQLException {
 		List<Company> companies = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -80,6 +84,7 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return companies;
 	}
@@ -88,8 +93,9 @@ public class CompanyDAO {
 	 * get a company by this id.
 	 * @param id the id of the company
 	 * @return the optional is empty if there is no company with this id
+	 * @throws CustomSQLException 
 	 */
-	public Optional<Company> getById(long id) {
+	public Optional<Company> getById(long id) throws CustomSQLException {
 		Optional<Company> company = Optional.empty();
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -105,11 +111,12 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return company;
 	}
 	
-	public int count() {
+	public int count() throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_COUNT)
@@ -123,6 +130,7 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return 0;
 	}

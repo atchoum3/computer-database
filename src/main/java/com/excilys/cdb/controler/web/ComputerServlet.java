@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import com.excilys.cdb.controler.web.validator.AddComputerValidator;
 import com.excilys.cdb.dto.AddComputerDTO;
 import com.excilys.cdb.dto.mapper.ComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
@@ -31,6 +32,7 @@ public class ComputerServlet extends HttpServlet {
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
 	private static final String ATT_ADDED = "added";
+	private static final String ATT_OTHER_ERROR = "otherError";
 	
 	public static final String INPUT_COMPUTER_NAME = "computerName";
 	public static final String INPUT_INTRODUCED = "introduced";
@@ -51,7 +53,13 @@ public class ComputerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-		addCompanyList(req);
+		try {
+			addCompanyList(req);
+		} catch (CustomSQLException e) {
+			Map<String, String> errors = new HashMap<>();
+			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
+			req.setAttribute(ATT_ERRORS, errors);
+		}
 		try {
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
@@ -59,7 +67,7 @@ public class ComputerServlet extends HttpServlet {
 		}
 	}
 	
-	private void addCompanyList(HttpServletRequest req) {
+	private void addCompanyList(HttpServletRequest req) throws CustomSQLException {
 		req.setAttribute(ATT_ALL_COMPANIES, companyService.getAll());
 	}
 	
@@ -89,11 +97,12 @@ public class ComputerServlet extends HttpServlet {
 				computerService.create(computer);
 				req.setAttribute(ATT_ADDED, "This company has been added.");
 			} catch (ComputerCompanyIdException e) {
-				req.setAttribute(INPUT_COMPANY_ID, "This company id does not exist.");
+				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
+			} catch (CustomSQLException e) {
+				errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
 			}
-		} else {
-			req.setAttribute(ATT_ERRORS, errors);
 		}
+		req.setAttribute(ATT_ERRORS, errors);
 		return addComputerDTO;
 	}
 }

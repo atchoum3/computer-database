@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.excilys.cdb.dao.mapper.ComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -44,8 +45,9 @@ public class ComputerDAO {
 	 * Get all Computer present on the range of the page.
 	 * @param page  the page of values to take
 	 * @return A computer list
+	 * @throws CustomSQLException 
 	 */
-	public List<Computer> getAll(Page page) {
+	public List<Computer> getAll(Page page) throws CustomSQLException {
 		List<Computer> computers = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -62,6 +64,7 @@ public class ComputerDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return computers;
 	}
@@ -70,8 +73,9 @@ public class ComputerDAO {
 	 * To get a computer by this id.
 	 * @param id the id of the computer
 	 * @return the optional is empty if there is no Computer with this id 
+	 * @throws CustomSQLException 
 	 */
-	public Optional<Computer> getById(long id) {
+	public Optional<Computer> getById(long id) throws CustomSQLException {
 		Optional<Computer> computer = Optional.empty();
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -87,6 +91,7 @@ public class ComputerDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return computer;
 	}
@@ -96,8 +101,9 @@ public class ComputerDAO {
 	 * @param c this computer will be create in the database. 
 	 * The id of the object will be determined and saved in this object
 	 * @throws ComputerCompanyIdException if the company id does not exist
+	 * @throws CustomSQLException 
 	 */
-	public void create(Computer c) throws ComputerCompanyIdException {
+	public void create(Computer c) throws ComputerCompanyIdException, CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
@@ -121,14 +127,16 @@ public class ComputerDAO {
 			throw new ComputerCompanyIdException("This company id does not exist");
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 	}
 
 	/**
 	 * To update a computer.
 	 * @param c computer to update
+	 * @throws CustomSQLException 
 	 */
-	public void update(Computer c) {
+	public void update(Computer c) throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
@@ -142,27 +150,34 @@ public class ComputerDAO {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 	}
 
 	/**
 	 * To delete a Computer thanks to this id .
 	 * @param id the id of the computer
+	 * @return true if the Computer has been deleted.
+	 * @throws CustomSQLException 
 	 */
-	public void delete(long id) {
+	public boolean delete(long id) throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE)
 		) {
 			ps.setLong(1, id);
 			logger.debug(ps.toString());
-			ps.executeUpdate();
+			if (ps.executeUpdate() == 1) {
+				return true;
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
+		return false;
 	}
 	
-	public int count() {
+	public int count() throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_COUNT)
@@ -176,6 +191,7 @@ public class ComputerDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+			throw new CustomSQLException(e);
 		}
 		return 0;
 	}

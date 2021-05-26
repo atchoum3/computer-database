@@ -1,13 +1,16 @@
 package com.excilys.cdb.controler.web;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dto.ComputerCompanyNameDTO;
 import com.excilys.cdb.dto.mapper.ComputerMapper;
+import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
@@ -36,24 +39,29 @@ public class ListComputerServlet extends HttpServlet {
 	private static final String ATT_PAGE_INDEX_BEGIN = "pageIndexBegin";
 	private static final String ATT_PAGE_INDEX_END = "pageIndexEnd";
 	private static final String ATT_COMPUTER_NUMBER = "computerNumber";
+	private static final String ATT_ERRORS = "errors";
+	private static final String ATT_OTHER_ERROR = "otherError";
 	
 	private ComputerService computerService = ComputerService.getInstance();
 	private ComputerMapper computerMapper = ComputerMapper.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-		Page page = getPage(req);
-		System.out.println(page);
-		
-		List<Computer> computers = computerService.getAll(page);
-		List<ComputerCompanyNameDTO> computersDTO = computerMapper.toComputerCompanyName(computers);
-		req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
-		System.out.println(page);
-		setPageAttributes(req, page);
 		try {
+			Page page = getPage(req);
+			
+			List<Computer> computers = computerService.getAll(page);
+			List<ComputerCompanyNameDTO> computersDTO = computerMapper.toComputerCompanyName(computers);
+			req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
+			setPageAttributes(req, page);
+			
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
 			logger.error(e.getMessage(), e);
+		} catch (CustomSQLException e) {
+			Map<String, String> errors = new HashMap<>();
+			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
+			req.setAttribute(ATT_ERRORS, errors);
 		}
 	}
 	
@@ -65,14 +73,14 @@ public class ListComputerServlet extends HttpServlet {
 	}
 	
 	private void setIndexPageAttributes(HttpServletRequest req, Page page) {
-		int half_page_window = INDEX_PAGE_WINDOW/2;
-		int pageIndexBegin = Math.max(page.getCurrentPage() - half_page_window, page.INDEX_FIRST_PAGE);
-		int pageIndexEnd = Math.min(pageIndexBegin + INDEX_PAGE_WINDOW -1, page.getIndexLastPage()); // because the loop on jsp do the last element
+		int halfPageWindow = INDEX_PAGE_WINDOW / 2;
+		int pageIndexBegin = Math.max(page.getCurrentPage() - halfPageWindow, Page.INDEX_FIRST_PAGE);
+		int pageIndexEnd = Math.min(pageIndexBegin + INDEX_PAGE_WINDOW - 1, page.getIndexLastPage()); // because the loop on jsp do the last element
 		req.setAttribute(ATT_PAGE_INDEX_BEGIN, pageIndexBegin);
 		req.setAttribute(ATT_PAGE_INDEX_END, pageIndexEnd);
 	}
 	
-	private Page getPage(HttpServletRequest req) {
+	private Page getPage(HttpServletRequest req) throws CustomSQLException {
 		int currentPage;
 		try {
 			currentPage = Integer.parseInt(req.getParameter(URL_PARAM_PAGE));

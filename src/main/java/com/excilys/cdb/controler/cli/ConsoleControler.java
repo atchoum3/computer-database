@@ -7,7 +7,11 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -20,6 +24,8 @@ import com.excilys.cdb.ui.DisplayCompany;
 import com.excilys.cdb.ui.DisplayComputer;
 
 public class ConsoleControler {
+	private static Logger logger = LoggerFactory.getLogger(ConsoleControler.class);
+	
 	private static ConsoleControler instance = null;
 	private Console console;
 	private Scanner scanner;
@@ -98,42 +104,48 @@ public class ConsoleControler {
 	private void executeChoiceMainMenu(int intChoice) {
 		ChoiceMainMenu choice = ChoiceMainMenu.values()[intChoice - 1];
 		
-		switch (choice) {
-		case DISPLAY_ALL_COMPANIES:
-			displayAllCompanies();
-			break;
-			
-		case DISPLAY_ALL_COMPUTERS:
-			displayAllComputers();
-			break;
-			
-		case DISPLAY_COMPUTER:
-			displayComputer();
-			break;
-			
-		case CREATE_COMPUTER:
-			createComputer();
-			break;
-			
-		case UPDATE_COMPUTER:
-			updateComputer();
-			break;
-			
-		case DELETE_COMPUTER:
-			deleteComputer();
-			break;
-			
-		case QUIT:
-			System.exit(0);
-			break;
-	
+		try {
+			switch (choice) {
+			case DISPLAY_ALL_COMPANIES:
+					displayAllCompanies();
+				break;
+				
+			case DISPLAY_ALL_COMPUTERS:
+				displayAllComputers();
+				break;
+				
+			case DISPLAY_COMPUTER:
+				displayComputer();
+				break;
+				
+			case CREATE_COMPUTER:
+				createComputer();
+				break;
+				
+			case UPDATE_COMPUTER:
+				updateComputer();
+				break;
+				
+			case DELETE_COMPUTER:
+				deleteComputer();
+				break;
+				
+			case QUIT:
+				System.exit(0);
+				break;
+		
+			}
+		} catch (CustomSQLException e) {
+			logger.error(e.getMessage(), e);
+			System.out.println("Communication between the programm and database failed. Try again");
 		}
 	}
 		
 	/**
 	 * To display a table of all Companies selected by page.
+	 * @throws CustomSQLException 
 	 */
-	private void displayAllCompanies() {
+	private void displayAllCompanies() throws CustomSQLException {
 		Page page = new Page(1, 10, CompanyService.getInstance().count());
 		do {
 			DisplayCompany.displayCollection(CompanyService.getInstance().getAll(page));
@@ -143,8 +155,9 @@ public class ConsoleControler {
 	
 	/**
 	 * To display a table of all computers selected by page.
+	 * @throws CustomSQLException 
 	 */
-	private void displayAllComputers() {
+	private void displayAllComputers() throws CustomSQLException {
 		Page page = new Page(1, 10, ComputerService.getInstance().count());
 		do {
 			DisplayComputer.displayCollection(ComputerService.getInstance().getAll(page));
@@ -152,7 +165,7 @@ public class ConsoleControler {
 		} while (executeChoicePageMenu(page));
 	}
 	
-	private void displayComputer() {
+	private void displayComputer() throws CustomSQLException {
 		long id = askComputerId();
 
 		Optional<Computer> opt = ComputerService.getInstance().getById(id);
@@ -174,7 +187,7 @@ public class ConsoleControler {
 		}
 	}
 	
-	private void createComputer() {
+	private void createComputer() throws CustomSQLException {
 		Computer computer = new Computer.Builder("").build();
 		updateComputer(computer);
 		try {
@@ -252,7 +265,7 @@ public class ConsoleControler {
 		computer.setCompany(askComputerCompanyId());
 	}
 	
-	private void updateComputer() {
+	private void updateComputer() throws CustomSQLException {
 		long id = askComputerId();
 		Optional<Computer> optComputer = ComputerService.getInstance().getById(id);
 		
@@ -265,7 +278,7 @@ public class ConsoleControler {
 		}
 	}
 	
-	private void deleteComputer() {
+	private void deleteComputer() throws CustomSQLException {
 		long id = askComputerId();
 		ComputerService.getInstance().delete(id);
 	}

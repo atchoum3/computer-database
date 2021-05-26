@@ -36,19 +36,20 @@
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued"">
+                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
-                                    <c:forEach items="${allCompanies}" var="company">
+                                    <c:forEach var="company" items="${allCompanies}">
 										<option value="${company.id}"><c:out value="${company.name}" /></option>
 									</c:forEach>
                                 </select>
                                 <div class="${empty errors['companyId'] ? '':'alert alert-danger'}"><c:out value="${errors['companyId']}"></c:out></div>
                             </div>                  
                         </fieldset>
+                        <div class="${empty errors['otherError'] ? '':'alert alert-danger'}"><c:out value="${errors['otherError']}"></c:out></div>
 						<div class="${empty added ? '':'alert alert-success'}"><c:out value="${added}"></c:out></div>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary">

@@ -18,7 +18,6 @@ public class AddComputerValidator {
 	public Map<String, String> validate(AddComputerDTO computerDTO) {
 		errors.clear();
 		validateName(computerDTO.getName());
-		validateCompanyId(computerDTO.getCompanyId());
 		return errors;
 	}
 	
@@ -28,9 +27,4 @@ public class AddComputerValidator {
 		}
 	}
 	
-	private void validateCompanyId(int id) {
-		if (id == 0) {
-			errors.put(ComputerServlet.INPUT_COMPANY_ID, "You have to select a company id.");
-		}
-	}
 }

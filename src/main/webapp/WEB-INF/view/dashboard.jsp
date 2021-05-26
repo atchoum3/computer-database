@@ -21,6 +21,7 @@
 
     <section id="main">
         <div class="container">
+        	<div class="${empty errors['otherError'] ? '':'alert alert-danger'}"><c:out value="${errors['otherError']}"></c:out></div>
             <h1 id="homeTitle">
                 <c:out value="${computerNumber}"></c:out> Computers found
             </h1>

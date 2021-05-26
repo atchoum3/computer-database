@@ -11,7 +11,7 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
 /**
- * Mapper between DTO and DAO
+ * Mapper between DTO and DAO.
  */
 public class ComputerMapper {
 	private static ComputerMapper instance = new ComputerMapper();
