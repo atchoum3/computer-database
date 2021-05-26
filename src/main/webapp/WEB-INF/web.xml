@@ -14,4 +14,8 @@
 		<servlet-name>ComputerServlet</servlet-name>
 		<servlet-class>com.excilys.cdb.controler.web.ComputerServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>ListComputerServlet</servlet-name>
+		<servlet-class>com.excilys.cdb.controler.web.ListComputerServlet</servlet-class>
+	</servlet>
 </web-app>

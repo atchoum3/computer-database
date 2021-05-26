@@ -32,4 +32,8 @@ public class CompanyService {
 	public Optional<Company> getById(long id) {
 		return companyDAO.getById(id);
 	}
+	
+	public int count() {
+		return companyDAO.count();
+	}
 }

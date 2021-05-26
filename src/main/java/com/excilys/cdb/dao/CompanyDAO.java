@@ -19,6 +19,7 @@ public class CompanyDAO {
 	private static CompanyDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
+	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM company";
 	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company";
 	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
@@ -52,14 +53,7 @@ public class CompanyDAO {
 				
 				if (rs.next()) {
 					CompanyMapper.getInstance().toCompanies(rs, companies);
-					// indicate to page if it's last page
-					if (companies.size() < page.getElementByPage()) {
-						page.setIsLastPage();
-					}
-				} else {
-					// indicate to page if it's last page
-					page.setIsLastPage();
-				}
+				} 
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -113,5 +107,23 @@ public class CompanyDAO {
 			logger.error(e.getMessage(), e);
 		}
 		return company;
+	}
+	
+	public int count() {
+		try (
+				Connection con = Database.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(QUERY_COUNT)
+		) {
+			logger.debug(ps.toString());
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+				//TODO throw error
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return 0;
 	}
 }

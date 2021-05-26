@@ -18,23 +18,21 @@ import com.excilys.cdb.model.Page;
 
 public class ComputerDAOTest {
 
-	private static ComputerDAO computerDAO;
+	private static ComputerDAO computerDAO = ComputerDAO.getInstance();
 	private final long COMPUTER_REFERENCED_ID = 321;
 	private final Computer COMPUTER_TO_UPDATE;
 	private final Company COMPANY_COMPUTER_TO_UPDATE;
 	private final int ELEM_BY_PAGE = 4;
 	private final long COMPANY_ID_NOT_EXIST = -1;
+	private final Page PAGE;
 	
 	public ComputerDAOTest() {		
 		LocalDate date1 = LocalDate.of(2010, 1, 7);
 		LocalDate date2 = LocalDate.of(2011, 1, 3);
 		COMPANY_COMPUTER_TO_UPDATE = new Company(4, "Netronics"); // company exist on database
 		COMPUTER_TO_UPDATE = new Computer.Builder(44, "MyCompyuter").introduced(date1).discontinued(date2).company(COMPANY_COMPUTER_TO_UPDATE).build();
-	}
-	
-	@BeforeAll
-	public static void setUpInstance() {
-		computerDAO = ComputerDAO.getInstance();
+		
+		PAGE = new Page(1, ELEM_BY_PAGE, computerDAO.count());
 	}
 
 	@Test
@@ -57,8 +55,7 @@ public class ComputerDAOTest {
 	
 	@Test
 	public void getAllRightParam() {
-		Page page = new Page(ELEM_BY_PAGE);
-		List<Computer> computers =  computerDAO.getAll(page);
+		List<Computer> computers =  computerDAO.getAll(PAGE);
 		assertEquals(ELEM_BY_PAGE, computers.size());
 	}
 	

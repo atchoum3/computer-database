@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.controler.web.validator.AddComputerValidator;
 import com.excilys.cdb.dto.AddComputerDTO;
-import com.excilys.cdb.dto.mapper.ComputerMapperDTO;
+import com.excilys.cdb.dto.mapper.ComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
@@ -28,9 +28,9 @@ public class ComputerServlet extends HttpServlet {
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerServlet.class);
 	
-	public static final String ATT_ALL_COMPANIES = "allCompanies";
-	public static final String ATT_ERRORS = "errors";
-	public static final String ATT_ADDED = "added";
+	private static final String ATT_ALL_COMPANIES = "allCompanies";
+	private static final String ATT_ERRORS = "errors";
+	private static final String ATT_ADDED = "added";
 	
 	public static final String INPUT_COMPUTER_NAME = "computerName";
 	public static final String INPUT_INTRODUCED = "introduced";
@@ -41,7 +41,7 @@ public class ComputerServlet extends HttpServlet {
 	
 	private CompanyService companyService = CompanyService.getInstance();
 	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerMapperDTO computerMapperDTO = ComputerMapperDTO.getInstance();
+	private ComputerMapper computerMapperDTO = ComputerMapper.getInstance();
 	private AddComputerValidator addComputerValidator;
 	
 	public ComputerServlet() {
@@ -64,7 +64,7 @@ public class ComputerServlet extends HttpServlet {
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		addComputer(req);
 		doGet(req, resp);
 	}

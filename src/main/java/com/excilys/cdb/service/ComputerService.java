@@ -42,4 +42,8 @@ public class ComputerService {
 	public void update(Computer computer) {
 		computerDAO.update(computer);
 	}
+	
+	public int count() {
+		return computerDAO.count();
+	}
 }

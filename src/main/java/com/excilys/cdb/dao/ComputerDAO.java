@@ -27,6 +27,7 @@ public class ComputerDAO {
 	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
+	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM computer";
 	
 	private ComputerDAO() {
 		super();
@@ -57,12 +58,6 @@ public class ComputerDAO {
 				
 				if (rs.next()) {
 					ComputerMapper.getInstance().toComputers(rs, computers);
-					// indicate to page if it's last page
-					if (computers.size() < page.getElementByPage()) {
-						page.setIsLastPage();
-					}
-				} else {
-					page.setIsLastPage();
 				}
 			}
 		} catch (SQLException e) {
@@ -165,5 +160,23 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+	
+	public int count() {
+		try (
+				Connection con = Database.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(QUERY_COUNT)
+		) {
+			logger.debug(ps.toString());
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+				//TODO throw error
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return 0;
 	}
 }

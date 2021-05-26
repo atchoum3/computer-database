@@ -1,70 +1,74 @@
 package com.excilys.cdb.model;
 
 public class Page {
-	private static final int FIRST_PAGE = 1;
-	private static final int DEFAULT_ELEMENT_BY_PAGE = 10;
+	public static final int INDEX_FIRST_PAGE = 1;
 	private int currentPage;
 	private int elementByPage;
-	private boolean isLastPage;
+	private int totalNumberElem;
+	private int indexLastPage;
 	
-	public Page(int elementByPage) {
+	public Page(int currentPage, int elementByPage, int totalNumberElem) {
 		this.elementByPage = elementByPage;
-		this.currentPage = FIRST_PAGE;
+		this.totalNumberElem = totalNumberElem;
+		computeLastPage();
+		
+		this.currentPage = INDEX_FIRST_PAGE;
+		setCurrentPage(currentPage);
 	}
 	
-	public Page() {
-		this(DEFAULT_ELEMENT_BY_PAGE);
-	}
-
 	/**
 	 * go to the next page if this page is not the last page.
 	 */
 	public void nextPage() {
-		if (!isLastPage) {
+		if (currentPage < indexLastPage) {
 			currentPage++;
 		}
 	}
-	
+
 	/**
 	 * go to the previous page if this page is not the first page.
 	 */
 	public void previousPage() {
-		if (currentPage > FIRST_PAGE) {
-			isLastPage = false;
+		if (currentPage > INDEX_FIRST_PAGE) {
 			currentPage--;
 		}
 	}
 	
-	/**
-	 * get the index of the first element of the current page.
-	 * @return the index of the first element of the current page
-	 */
 	public int getIndexFirstElement() {
-		return elementByPage * (currentPage - 1);
+		return currentPage * elementByPage;
 	}
 	
-	/**
-	 * get the index of the first element of the last page.
-	 * @return the index of the first element of the last page
-	 */
-	public int getIndexLastElement() {
-		return elementByPage * currentPage;
+	private void computeLastPage() {
+		indexLastPage = (int) Math.ceil(totalNumberElem / elementByPage);
+	}
+	
+	@Override
+	public String toString() {
+		return "Page [currentPage=" + currentPage + ", elementByPage=" + elementByPage + ", totalNumberElem="
+				+ totalNumberElem + ", indexLastPage=" + indexLastPage + "]";
 	}
 	
 	/// setters & getters
 	
+	public void setCurrentPage(int page) {
+		if (page >= INDEX_FIRST_PAGE && page <= indexLastPage) {
+			currentPage = page;
+		}
+	}
+	
+	public int getTotalNumberElem() {
+		return totalNumberElem;
+	}
+
+	public int getIndexLastPage() {
+		return indexLastPage;
+	}
+
 	public int getCurrentPage() {
 		return currentPage;
 	}
 
 	public int getElementByPage() {
 		return elementByPage;
-	}
-	
-	public boolean isLastPage() {
-		return isLastPage; 
-	}
-	public void setIsLastPage() {
-		isLastPage = true;
 	}
 }

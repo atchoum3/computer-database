@@ -13,24 +13,20 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 
 public class CompanyDAOTest {
-	private static CompanyDAO companyDAO;
+	private static CompanyDAO companyDAO = CompanyDAO.getInstance();
 	private final int ELEM_BY_PAGE = 8;
 	private final int COMPANY_REFERENCED_ID = 22;
 	private final Company COMPANY_COMPUTER_REFERENCED;
+	private final Page PAGE;
 	
 	public CompanyDAOTest() {
 		COMPANY_COMPUTER_REFERENCED = new Company(COMPANY_REFERENCED_ID, "Timex Sinclair");
-	}
-	
-	@BeforeAll
-	public static void setUpInstance() {
-		companyDAO = CompanyDAO.getInstance();
+		PAGE = new Page(1, ELEM_BY_PAGE, companyDAO.count());
 	}
 	
 	@Test
 	public void getAllRightParam() {
-		Page page = new Page(ELEM_BY_PAGE);
-		List<Company> companies =  companyDAO.getAll(page);
+		List<Company> companies =  companyDAO.getAll(PAGE);
 		assertEquals(ELEM_BY_PAGE, companies.size());
 	}
 	

@@ -134,7 +134,7 @@ public class ConsoleControler {
 	 * To display a table of all Companies selected by page.
 	 */
 	private void displayAllCompanies() {
-		Page page = new Page();
+		Page page = new Page(1, 10, CompanyService.getInstance().count());
 		do {
 			DisplayCompany.displayCollection(CompanyService.getInstance().getAll(page));
 			console.displayFooterPage(page);
@@ -145,7 +145,7 @@ public class ConsoleControler {
 	 * To display a table of all computers selected by page.
 	 */
 	private void displayAllComputers() {
-		Page page = new Page();
+		Page page = new Page(1, 10, ComputerService.getInstance().count());
 		do {
 			DisplayComputer.displayCollection(ComputerService.getInstance().getAll(page));
 			console.displayFooterPage(page);
