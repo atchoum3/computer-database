@@ -2,16 +2,17 @@ package com.excilys.cdb.dto;
 
 public class AddComputerDTO {
 
-	private String companyId, introduced, discontinued, computerName;
-	
-	public AddComputerDTO(String computerName, String introduced, String discontinued, String companyId) {
+	private String name, introduced, discontinued; 
+	private int companyId;
+
+	public AddComputerDTO(String name, String introduced, String discontinued, int companyId) {
 		this.companyId = companyId;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
-		this.computerName = computerName;
+		this.name = name;
 	}
 
-	public String getCompanyId() {
+	public int getCompanyId() {
 		return companyId;
 	}
 
@@ -23,7 +24,7 @@ public class AddComputerDTO {
 		return discontinued;
 	}
 
-	public String getComputerName() {
-		return computerName;
+	public String getName() {
+		return name;
 	}
 }

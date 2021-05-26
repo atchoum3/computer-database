@@ -19,7 +19,8 @@ public class CompanyDAO {
 	private static CompanyDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
-	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company LIMIT ?,?";
+	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company";
+	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 	
 	private CompanyDAO() {
@@ -42,7 +43,7 @@ public class CompanyDAO {
 		List<Company> companies = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
 		) {	
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
@@ -58,6 +59,29 @@ public class CompanyDAO {
 				} else {
 					// indicate to page if it's last page
 					page.setIsLastPage();
+				}
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return companies;
+	}
+	
+	/**
+	 * Get all Company.
+	 * @return A company List
+	 */
+	public List<Company> getAll() {
+		List<Company> companies = new ArrayList<>();
+		try (
+				Connection con = Database.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
+		) {	
+			logger.debug(ps.toString());
+			try (ResultSet rs = ps.executeQuery()) {
+				
+				if (rs.next()) {
+					CompanyMapper.getInstance().toCompanies(rs, companies);
 				}
 			}
 		} catch (SQLException e) {

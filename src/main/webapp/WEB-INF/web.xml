@@ -11,7 +11,7 @@
 	</welcome-file-list>
   
 	<servlet>
-		<servlet-name>AddComputerServlet</servlet-name>
-		<servlet-class>com.excilys.cdb.controler.web.AddComputerServlet</servlet-class>
+		<servlet-name>ComputerServlet</servlet-name>
+		<servlet-class>com.excilys.cdb.controler.web.ComputerServlet</servlet-class>
 	</servlet>
 </web-app>

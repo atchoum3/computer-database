@@ -25,6 +25,10 @@ public class CompanyService {
 		return companyDAO.getAll(page);
 	}
 	
+	public List<Company> getAll() {
+		return companyDAO.getAll();
+	}
+	
 	public Optional<Company> getById(long id) {
 		return companyDAO.getById(id);
 	}
