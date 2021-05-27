@@ -2,11 +2,13 @@ package com.excilys.cdb.dto.mapper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.cdb.dto.AddComputerDTO;
 import com.excilys.cdb.dto.ComputerCompanyNameDTO;
+import com.excilys.cdb.exception.DateFormaNotValidException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
@@ -17,6 +19,7 @@ public class ComputerMapper {
 	private static ComputerMapper instance = new ComputerMapper();
 	
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
+	private static final int COMPANY_ID_NULL = 0;
 	
 	private ComputerMapper() {
 	}
@@ -25,7 +28,7 @@ public class ComputerMapper {
 		return instance;
 	}
 	
-	public Computer toComputer(AddComputerDTO computerDTO) {
+	public Computer toComputer(AddComputerDTO computerDTO) throws DateFormaNotValidException {
 		Computer.Builder builder = new Computer.Builder(computerDTO.getName());
 		
 		if (!computerDTO.getIntroduced().isEmpty()) {
@@ -36,7 +39,9 @@ public class ComputerMapper {
 			builder.discontinued(LocalDate.parse(
 					computerDTO.getDiscontinued(), DateTimeFormatter.ofPattern(DATE_FORMAT)));
 		}
-		builder.company(new Company(computerDTO.getCompanyId()));
+		if (computerDTO.getCompanyId() != COMPANY_ID_NULL) {
+			builder.company(new Company(computerDTO.getCompanyId()));
+		}
 		return builder.build();
 	}
 	

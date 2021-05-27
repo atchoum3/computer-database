@@ -27,23 +27,25 @@
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" placeholder="Computer name" name="computerName">
+                                <input type="text" class="form-control" id="computerName" placeholder="Computer name" name="computerName" value="${computer.name}">
                                 <div class="${empty errors['computerName'] ? '':'alert alert-danger'}"><c:out value="${errors['computerName']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" placeholder="Introduced date" name="introduced">
+                                <input type="date" class="form-control" id="introduced" placeholder="Introduced date" name="introduced" value="${computer.introduced}">
+                                <div class="${empty errors['introduced'] ? '':'alert alert-danger'}"><c:out value="${errors['introduced']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued">
+                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued" value="${computer.discontinued}">
+                                <div class="${empty errors['discontinued'] ? '':'alert alert-danger'}"><c:out value="${errors['discontinued']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
                                     <c:forEach var="company" items="${allCompanies}">
-										<option value="${company.id}"><c:out value="${company.name}" /></option>
+										<option value="${company.id}" ${computer.companyId == company.id ? 'selected="selected"' : ''}><c:out value="${company.name}"/></option>
 									</c:forEach>
                                 </select>
                                 <div class="${empty errors['companyId'] ? '':'alert alert-danger'}"><c:out value="${errors['companyId']}"></c:out></div>
