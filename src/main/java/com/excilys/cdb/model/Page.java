@@ -51,9 +51,19 @@ public class Page {
 	/// setters & getters
 	
 	public void setCurrentPage(int page) {
-		if (page >= INDEX_FIRST_PAGE && page <= indexLastPage) {
+		if (page < INDEX_FIRST_PAGE) {
+			currentPage = INDEX_FIRST_PAGE;
+		} else if (page > indexLastPage) {
+			currentPage = indexLastPage;
+		} else {
 			currentPage = page;
 		}
+	}
+	
+	public void setElementByPage(int elementByPage) {
+		this.elementByPage = elementByPage;
+		computeLastPage();
+		setCurrentPage(currentPage);
 	}
 	
 	public int getTotalNumberElem() {

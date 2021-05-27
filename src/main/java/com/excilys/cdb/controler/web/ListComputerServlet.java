@@ -32,7 +32,8 @@ public class ListComputerServlet extends HttpServlet {
 	private static final int DEFAULT_NB_ELEMENT_BY_PAGE = 10;
 	private static final String VIEW = "/WEB-INF/view/dashboard.jsp";
 	private static final String URL_PARAM_PAGE = "page";
-	private static final String SESION_NUMBER_BY_PAGE = "numberByPage";
+	private static final String URL_PARAM_ELEM_BY_PAGE = "nbElemByPage";
+	private static final String SESSION_PAGE = "page";
 	private static final String ATT_COMPUTER_LIST = "computerList";
 	private static final String ATT_CURRENT_PAGE = "currentPage";
 	private static final String ATT_MAX_PAGE = "maxPage";
@@ -70,6 +71,9 @@ public class ListComputerServlet extends HttpServlet {
 		req.setAttribute(ATT_CURRENT_PAGE, page.getCurrentPage());
 		req.setAttribute(ATT_COMPUTER_NUMBER, page.getTotalNumberElem());
 		setIndexPageAttributes(req, page);
+		
+		HttpSession session = req.getSession();
+		session.setAttribute(SESSION_PAGE, page);
 	}
 	
 	private void setIndexPageAttributes(HttpServletRequest req, Page page) {
@@ -81,21 +85,54 @@ public class ListComputerServlet extends HttpServlet {
 	}
 	
 	private Page getPage(HttpServletRequest req) throws CustomSQLException {
+		HttpSession session = req.getSession();
+		Page page = (Page) session.getAttribute(SESSION_PAGE);
+
+		if (page != null) {
+			int currentPage = getCurrentpage(req);
+			if (currentPage != -1) {
+				page.setCurrentPage(currentPage);
+			}
+			
+			
+			int nbElemByPage = getNbElemByPage(req);
+			if (nbElemByPage != -1) {
+				page.setElementByPage(nbElemByPage);
+			}
+		} else {
+			page = new Page(Page.INDEX_FIRST_PAGE, DEFAULT_NB_ELEMENT_BY_PAGE, computerService.count());
+		}
+		
+		return page;
+	}
+	
+	/**
+	 * Get the current page by the URL.
+	 * @param req object to get the current page
+	 * @return (1) the current page passed by GET method. (2) -1 if the parameter in URL does not exist. 
+	 */
+	private int getCurrentpage(HttpServletRequest req) {
 		int currentPage;
 		try {
 			currentPage = Integer.parseInt(req.getParameter(URL_PARAM_PAGE));
 		} catch (NumberFormatException e) {
-			currentPage = Page.INDEX_FIRST_PAGE;
+			currentPage = -1;
 		}
-		
-		HttpSession session = req.getSession();
-		String stringNbByPage = (String) session.getAttribute(SESION_NUMBER_BY_PAGE);
-		
-		Integer nbByPage = DEFAULT_NB_ELEMENT_BY_PAGE;
-		if (stringNbByPage != null) {
-			nbByPage = Integer.valueOf(stringNbByPage);
+		return currentPage;
+	}
+	
+	/**
+	 * Get the he number of element by page by the URL.
+	 * @param req object to get the number of element by page
+	 * @return (1) the number of element by page passed by GET method. (2) -1 if the parameter in URL does not exist. 
+	 */
+	private int getNbElemByPage(HttpServletRequest req) {
+		int nbElemByPage;
+		try {
+			nbElemByPage = Integer.parseInt(req.getParameter(URL_PARAM_ELEM_BY_PAGE));
+		} catch (NumberFormatException e) {
+			nbElemByPage = -1;
 		}
-		
-		return new Page(currentPage, nbByPage, computerService.count());
+		return nbElemByPage;
 	}
 }

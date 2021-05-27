@@ -130,9 +130,11 @@
 	        </ul>
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	        	<button type="button" class="btn btn-default">10</button>
-	            <button type="button" class="btn btn-default">50</button>
-	            <button type="button" class="btn btn-default">100</button>
+	         	<form method="GET">
+		        	<button type="submit" class="btn btn-default" name="nbElemByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default" name="nbElemByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default" name="nbElemByPage" value="100">100</button>
+	            </form>
 	        </div>
         </div>
 

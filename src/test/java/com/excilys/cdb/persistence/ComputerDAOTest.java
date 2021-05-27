@@ -121,10 +121,9 @@ public class ComputerDAOTest {
 		try {
 			computerDAO.create(computer);
 			fail("exception ComputerCompanyIdException not thrown");
-			
-			// post treatment
-			computerDAO.delete(computer.getId());
-		} catch (ComputerCompanyIdException | CustomSQLException e) {
+		} catch (ComputerCompanyIdException e) {
+			// success test
+		} catch (CustomSQLException e) {
 			e.printStackTrace();
 			fail();
 		}
