@@ -1,4 +1,4 @@
-package com.excilys.cdb.controler.web;
+package com.excilys.cdb.controller.web;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.ServletException;
@@ -86,7 +86,8 @@ public class ComputerServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			req.setAttribute(INPUT_COMPANY_ID, "The company id must be a number.");
 		}
-		return new AddComputerDTO(name, introduced, discontinued, companyId);
+		return new AddComputerDTO.Builder(name).introduced(introduced)
+				.discontinued(discontinued).companyId(companyId).build();
 	}
 	
 	/**
@@ -114,6 +115,7 @@ public class ComputerServlet extends HttpServlet {
 		}
 		req.setAttribute(ATT_ERRORS, errors);
 		req.setAttribute(ATT_COMPUTER, addComputerDTO);
+		req.setAttribute(ATT_ADDED, "");
 		return false;
 	}
 }

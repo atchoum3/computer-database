@@ -1,4 +1,4 @@
-package com.excilys.cdb.controler.cli;
+package com.excilys.cdb.controller.cli;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

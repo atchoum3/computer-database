@@ -2,7 +2,6 @@ package com.excilys.cdb.dto.mapper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +64,7 @@ public class ComputerMapper {
 		if (computer.getCompany() != null) {
 			companyName = computer.getCompany().getName();
 		}
-		return new ComputerCompanyNameDTO(computer.getName(), introduced, discontinued, companyName);
+		return new ComputerCompanyNameDTO.Builder(computer.getName()).introduced(introduced)
+				.discontinued(discontinued).companyName(companyName).build();
 	}
 }

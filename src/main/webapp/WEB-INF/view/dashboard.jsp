@@ -110,12 +110,12 @@
                   	</a>
 	              </li>
 	              <c:forEach var="i" begin="${pageIndexBegin}" end="${pageIndexEnd}" step="1">
-		              <li>
+		              <li class=${i == currentPage ? 'active': ''}>
 		              	<a href="
 		              		<c:url value="/dashboard">
-					  			<c:param name="page" value="${i}"/>
+					  			<c:param name="page" value="${i}"/> 
 					  		</c:url>">
-					  		${i}</a>
+					  	${i}</a>
 					  </li>
 				  </c:forEach>
 	              <li>
@@ -128,12 +128,13 @@
 	                </a>
 	            </li>
 	        </ul>
-
+			<c:out value=""></c:out>
+			
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
-		        	<button type="submit" class="btn btn-default" name="nbElemByPage" value="10">10</button>
-		            <button type="submit" class="btn btn-default" name="nbElemByPage" value="50">50</button>
-		            <button type="submit" class="btn btn-default" name="nbElemByPage" value="100">100</button>
+		        	<button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 10 ? 'active' : ''}" name="nbElemByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 50 ? 'active' : ''}" name="nbElemByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 100 ? 'active' : ''}" name="nbElemByPage" value="100">100</button>
 	            </form>
 	        </div>
         </div>

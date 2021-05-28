@@ -1,4 +1,4 @@
-package com.excilys.cdb.controler.web;
+package com.excilys.cdb.controller.web;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,8 +31,8 @@ public class ListComputerServlet extends HttpServlet {
 	private static final int INDEX_PAGE_WINDOW = 5;
 	private static final int DEFAULT_NB_ELEMENT_BY_PAGE = 10;
 	private static final String VIEW = "/WEB-INF/view/dashboard.jsp";
-	private static final String URL_PARAM_PAGE = "page";
-	private static final String URL_PARAM_ELEM_BY_PAGE = "nbElemByPage";
+	public static final String URL_PARAM_PAGE = "page";
+	public static final String URL_PARAM_ELEM_BY_PAGE = "nbElemByPage";
 	private static final String SESSION_PAGE = "page";
 	private static final String ATT_COMPUTER_LIST = "computerList";
 	private static final String ATT_CURRENT_PAGE = "currentPage";
