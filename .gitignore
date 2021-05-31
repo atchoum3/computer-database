@@ -118,3 +118,8 @@ db.properties
 
 ### reports ###
 reports/
+
+### hidden files ###
+.checkstyle
+.classpath
+.project
