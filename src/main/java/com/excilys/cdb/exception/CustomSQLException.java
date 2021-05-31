@@ -6,8 +6,4 @@ public class CustomSQLException extends Exception {
 	public CustomSQLException(String message) {
 		super(message);
 	}
-	
-	public CustomSQLException(Throwable throwable) {
-		super(throwable);
-	}
 }

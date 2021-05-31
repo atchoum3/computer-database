@@ -8,9 +8,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="../../cdb/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="../../cdb/css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="../../cdb/css/main.css" rel="stylesheet" media="screen">
+<link href="./static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="./static/css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="./static/css/main.css" rel="stylesheet" media="screen">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
@@ -21,7 +21,7 @@
 
     <section id="main">
         <div class="container">
-        	<div class="${empty errors['otherError'] ? '':'alert alert-danger'}"><c:out value="${errors['otherError']}"></c:out></div>
+        	<div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
             <h1 id="homeTitle">
                 <c:out value="${computerNumber}"></c:out> Computers found
             </h1>
@@ -102,15 +102,15 @@
             <ul class="pagination">
                <li>
                     <a href="
-                      	<c:url value="/dashboard">
-                      		<c:param name="page" value="${currentPage > 1 ? currentPage - 1 : currentPage}"/>
-                      	</c:url>"
+                   		<c:if test="${currentPage > 1}">
+                      		<c:url value="/dashboard"><c:param name="page" value="${currentPage - 1}"/></c:url>
+                      	</c:if>"
 			  		  	aria-label="Previous">
                     	<span aria-hidden="true">&laquo;</span>
                   	</a>
 	              </li>
 	              <c:forEach var="i" begin="${pageIndexBegin}" end="${pageIndexEnd}" step="1">
-		              <li class=${i == currentPage ? 'active': ''}>
+		              <li class="<c:if test="${i == currentPage}">active</c:if>">
 		              	<a href="
 		              		<c:url value="/dashboard">
 					  			<c:param name="page" value="${i}"/> 
@@ -119,11 +119,11 @@
 					  </li>
 				  </c:forEach>
 	              <li>
-	                <a href="
-	                	<c:url value="/dashboard">
-                      		<c:param name="page" value="${currentPage < maxPage ? currentPage + 1 : currentPage}"/>
-                      	</c:url>"
-			  		  	aria-label="Next">
+	                	<a href="
+	                		<c:if test="${currentPage < pageIndexEnd}">
+	                			<c:url value="/dashboard"><c:param name="page" value="${currentPage + 1}"/></c:url>
+	                		</c:if>
+	                	" aria-label="Next">
 	                  <span aria-hidden="true">&raquo;</span>
 	                </a>
 	            </li>
@@ -132,17 +132,17 @@
 			
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
-		        	<button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 10 ? 'active' : ''}" name="nbElemByPage" value="10">10</button>
-		            <button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 50 ? 'active' : ''}" name="nbElemByPage" value="50">50</button>
-		            <button type="submit" class="btn btn-default ${sessionScope.page.elementByPage == 100 ? 'active' : ''}" name="nbElemByPage" value="100">100</button>
+		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElemByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElemByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElemByPage" value="100">100</button>
 	            </form>
 	        </div>
         </div>
 
     </footer>
-<script src="../../csb/js/jquery.min.js"></script>
-<script src="../../csb/js/bootstrap.min.js"></script>
-<script src="../../csb/js/dashboard.js"></script>
+<script src="./static/js/jquery.min.js"></script>
+<script src="./static/js/bootstrap.min.js"></script>
+<script src="./static/js/dashboard.js"></script>
 
 </body>
 </html>

@@ -3,38 +3,50 @@ package com.excilys.cdb.dto;
 public class ComputerCompanyNameDTO {
 	private String name, introduced, discontinued, companyName;
 	
-	private ComputerCompanyNameDTO(String name, String introduced, String discontinued, String companyName) {
+	private ComputerCompanyNameDTO(Builder builder) {
 		super();
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.companyName = companyName;
+		this.name = builder.name;
+		this.introduced = builder.introduced;
+		this.discontinued = builder.discontinued;
+		this.companyName = builder.companyName;
 	}
 	
 	public static class Builder {
-		private String name, introduced, discontinued, companyName;
+		private String name = "", introduced = "", discontinued = "", companyName = "";
 		
 		public Builder(String name) {
+			if (name == null) {
+				name = "";
+			}
 			this.name = name;
 		}
 		
-		public Builder introduced(String introduced) {
+		public Builder withIntroduced(String introduced) {
+			if (introduced == null) {
+				introduced = "";
+			}
 			this.introduced = introduced;
 			return this;
 		}
 		
-		public Builder discontinued(String discontinued) {
+		public Builder withDiscontinued(String discontinued) {
+			if (discontinued == null) {
+				discontinued = "";
+			}
 			this.discontinued = discontinued;
 			return this;
 		}
 		
-		public Builder companyName(String companyName) {
+		public Builder withCompanyName(String companyName) {
+			if (companyName == null) {
+				companyName = "";
+			}
 			this.companyName = companyName;
 			return this;
 		}
 		
 		public ComputerCompanyNameDTO build() {
-			return new ComputerCompanyNameDTO(name, introduced, discontinued, companyName);
+			return new ComputerCompanyNameDTO(this);
 		}
 	}
 

@@ -9,6 +9,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.exception.CustomSQLException;
+
 public class Database extends BasicDataSource {
 	private static Database instance;
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
@@ -19,7 +21,7 @@ public class Database extends BasicDataSource {
 	private static final String PROPERTY_USER = "db.username";
 	private static final String PROPERTY_PASSWORD = "db.password";
 	
-	private  Properties readProperties() {
+	private  Properties readProperties() throws CustomSQLException {
 		Properties properties = new Properties();
 		
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -28,13 +30,12 @@ public class Database extends BasicDataSource {
 			properties.load(configFile);
         } catch (IOException e) {
         	logger.error(e.getMessage(), e);
-        	//TODO
-        	//throw new FileNotFoundException("configuration file " + FILE_NAME_CONFIGURATION + "has not been found.");
+        	throw new CustomSQLException("Error to connect to the database.");
         }
 		return properties;
 	}
 	
-	private Database() {
+	private Database() throws CustomSQLException {
 		super();
 		Properties properties = readProperties();
 		this.setDriverClassName(properties.getProperty(PROPERTY_DRIVER_CLASS));
@@ -44,7 +45,7 @@ public class Database extends BasicDataSource {
 		logger.debug("driverClass=" + getDriverClassName() + " url=" + getUrl() + " user=" + getUsername() + " password=" + getPassword());
 	}
 	
-	public static Database getInstance() {
+	public static Database getInstance() throws CustomSQLException {
 		if (instance == null) {
 			instance = new Database();
 		}

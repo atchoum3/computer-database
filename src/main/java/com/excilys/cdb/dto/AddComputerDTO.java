@@ -5,38 +5,47 @@ public class AddComputerDTO {
 	private String name, introduced, discontinued; 
 	private int companyId;
 
-	private AddComputerDTO(String name, String introduced, String discontinued, int companyId) {
-		this.companyId = companyId;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.name = name;
+	private AddComputerDTO(Builder builder) {
+		this.companyId = builder.companyId;
+		this.introduced = builder.introduced;
+		this.discontinued = builder.discontinued;
+		this.name = builder.name;
 	}
 	
 	public static class  Builder {
-		private String name, introduced, discontinued; 
+		private String name = "", introduced = "", discontinued = ""; 
 		private int companyId;
 		
 		public Builder(String name) {
+			if (name == null)  {
+				name = "";
+			}
 			this.name = name;
 		}
 		
-		public Builder introduced(String introduced) {
+		public Builder withIntroduced(String introduced) {
+			if (introduced == null)  {
+				introduced = "";
+			}
 			this.introduced = introduced;
 			return this;
 		}
 		
-		public Builder discontinued(String discontinued) {
+		public Builder withDiscontinued(String discontinued) {
+			if (discontinued == null)  {
+				discontinued = "";
+			}
 			this.discontinued = discontinued;
 			return this;
 		}
 		
-		public Builder companyId(int companyId) {
+		public Builder withCompanyId(int companyId) {
 			this.companyId = companyId;
 			return this;
 		}
 		
 		public AddComputerDTO build() {
-			return new AddComputerDTO(name, introduced, discontinued, companyId);
+			return new AddComputerDTO(this);
 		}
 	}
 

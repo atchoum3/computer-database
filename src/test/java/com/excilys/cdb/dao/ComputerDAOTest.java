@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
@@ -30,7 +29,8 @@ public class ComputerDAOTest {
 		LocalDate date1 = LocalDate.of(2010, 1, 7);
 		LocalDate date2 = LocalDate.of(2011, 1, 3);
 		COMPANY_COMPUTER_TO_UPDATE = new Company(4, "Netronics"); // company exist on database
-		COMPUTER_TO_UPDATE = new Computer.Builder(44, "MyCompyuter").introduced(date1).discontinued(date2).company(COMPANY_COMPUTER_TO_UPDATE).build();
+		COMPUTER_TO_UPDATE = new Computer.Builder("MyCompyuter").withId(44).withIntroduced(date1)
+				.withDiscontinued(date2).withCompany(COMPANY_COMPUTER_TO_UPDATE).build();
 		
 		try {
 			page = new Page(1, ELEM_BY_PAGE, computerDAO.count());
@@ -41,7 +41,7 @@ public class ComputerDAOTest {
 	}
 
 	@Test
-	public void getByIdRightParam() {
+	public void getByIdShouldSucced() {
 		Optional<Computer> computer;
 		try {
 			computer = computerDAO.getById(COMPUTER_REFERENCED_ID);
@@ -55,7 +55,7 @@ public class ComputerDAOTest {
 	}
 	
 	@Test
-	public void updateRightParam() {
+	public void updateShouldSucced() {
 		try {
 			computerDAO.update(COMPUTER_TO_UPDATE);
 			Optional<Computer> computer = computerDAO.getById(COMPUTER_TO_UPDATE.getId());
@@ -68,7 +68,7 @@ public class ComputerDAOTest {
 	}
 	
 	@Test
-	public void getAllRightParam() {
+	public void getAllShouldSucced() {
 		List<Computer> computers;
 		try {
 			computers = computerDAO.getAll(page);
@@ -80,7 +80,7 @@ public class ComputerDAOTest {
 	}
 	
 	@Test 
-	public void deleteRightParam() {
+	public void deleteShouldSucced() {
 		try {
 			computerDAO.delete(COMPUTER_REFERENCED_ID);
 			Optional<Computer> opt = computerDAO.getById(COMPUTER_REFERENCED_ID);
@@ -93,10 +93,10 @@ public class ComputerDAOTest {
 	}
 	
 	@Test
-	public void createRightParam() throws ComputerCompanyIdException {
+	public void createShouldSucced() throws ComputerCompanyIdException {
 		LocalDate date1 = LocalDate.of(2007, 3, 7);
 		LocalDate date2 = LocalDate.of(2010, 9, 3);
-		Computer computer = new Computer.Builder("Hey").introduced(date1).discontinued(date2).build();
+		Computer computer = new Computer.Builder("Hey").withIntroduced(date1).withDiscontinued(date2).build();
 		
 		try {
 			computerDAO.create(computer);
@@ -117,7 +117,8 @@ public class ComputerDAOTest {
 		LocalDate date1 = LocalDate.of(2007, 3, 7);
 		LocalDate date2 = LocalDate.of(2010, 9, 3);
 		Company company = new Company(COMPANY_ID_NOT_EXIST);
-		Computer computer = new Computer.Builder("Hey").introduced(date1).discontinued(date2).company(company).build();
+		Computer computer = new Computer.Builder("Hey").withIntroduced(date1)
+				.withDiscontinued(date2).withCompany(company).build();
 		try {
 			computerDAO.create(computer);
 			fail("exception ComputerCompanyIdException not thrown");

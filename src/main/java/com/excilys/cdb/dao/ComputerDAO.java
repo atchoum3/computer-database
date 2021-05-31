@@ -5,17 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import com.excilys.cdb.binding.CompanyDTO;
+import com.excilys.cdb.binding.ComputerDTO;
+import com.excilys.cdb.binding.mapper.CompanyDTOMapper;
+import com.excilys.cdb.binding.mapper.ComputerDTOMapper;
+import com.excilys.cdb.dao.mapper.CompanyMapper;
 import com.excilys.cdb.dao.mapper.ComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -29,6 +39,9 @@ public class ComputerDAO {
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
 	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM computer";
+	
+	private static ComputerDTOMapper dtoMapper = ComputerDTOMapper.getInstance();
+	private static ComputerMapper mapper = ComputerMapper.getInstance();
 	
 	private ComputerDAO() {
 		super();
@@ -59,12 +72,14 @@ public class ComputerDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
-					ComputerMapper.getInstance().toComputers(rs, computers);
+					List<ComputerDTO> computersDTO = new ArrayList<>();
+					dtoMapper.toComputers(rs, computersDTO);
+					return mapper.toListComputer(computersDTO);
 				}
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return computers;
 	}
@@ -86,12 +101,12 @@ public class ComputerDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 			
 				if (rs.next()) {
-					computer = Optional.of(ComputerMapper.getInstance().toComputer(rs));
+					computer = Optional.of(mapper.toComputer(dtoMapper.toComputer(rs)));
 				}
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return computer;
 	}
@@ -109,9 +124,9 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
+			setTimestampOrNull(ps, 2, c.getIntroduced());
+			setTimestampOrNull(ps, 3, c.getDiscontinued());
+			setCompanyOrNull(ps, 4, c.getCompany());
 			logger.debug(ps.toString());
 			ps.executeUpdate();
 			
@@ -127,7 +142,7 @@ public class ComputerDAO {
 			throw new ComputerCompanyIdException("This company id does not exist");
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 	}
 
@@ -142,15 +157,15 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
 		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
+			setTimestampOrNull(ps, 2, c.getIntroduced());
+			setTimestampOrNull(ps, 3, c.getDiscontinued());
+			setCompanyOrNull(ps, 4, c.getCompany());
 			ps.setLong(5, c.getId());
 			logger.debug(ps.toString());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 	}
 
@@ -172,7 +187,7 @@ public class ComputerDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return false;
 	}
@@ -191,8 +206,34 @@ public class ComputerDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return 0;
+	}
+	
+	/**
+	 * To insert a Timestamp on a PreparedStatement. This method insert the timestamp or the null value.
+	 * @param ps a PreparedStatement object
+	 * @param pos the position where will be inserted the Timestamp value
+	 * @param localDate this value will be converted in Timestamp value. 
+	 * If this value is null, null value is insert on the prepared statement
+	 * @throws SQLException
+	 */
+	private void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate) 
+			throws SQLException {
+		if (localDate == null) {
+			ps.setNull(pos, java.sql.Types.NULL);
+		} else {
+			ps.setTimestamp(pos, Timestamp.valueOf(localDate.atStartOfDay()));
+		}
+	}
+
+	private void setCompanyOrNull(PreparedStatement ps, int pos, Company company) 
+			throws SQLException {
+		if (company == null) {
+			ps.setNull(pos, java.sql.Types.NULL);
+		} else {
+			ps.setLong(pos, company.getId());
+		}
 	}
 }

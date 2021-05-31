@@ -11,6 +11,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.cdb.binding.CompanyDTO;
+import com.excilys.cdb.binding.mapper.CompanyDTOMapper;
 import com.excilys.cdb.dao.mapper.CompanyMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
@@ -24,6 +26,9 @@ public class CompanyDAO {
 	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company";
 	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
+	
+	private static CompanyDTOMapper dtoMapper = CompanyDTOMapper.getInstance();
+	private static CompanyMapper mapper = CompanyMapper.getInstance();
 	
 	private CompanyDAO() {
 		super();
@@ -54,12 +59,14 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
-					CompanyMapper.getInstance().toCompanies(rs, companies);
+					List<CompanyDTO> companiesDTO = new ArrayList<>();
+					dtoMapper.toCompanies(rs, companiesDTO);
+					return mapper.toListCompany(companiesDTO);
 				} 
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return companies;
 	}
@@ -70,7 +77,6 @@ public class CompanyDAO {
 	 * @throws CustomSQLException 
 	 */
 	public List<Company> getAll() throws CustomSQLException {
-		List<Company> companies = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
@@ -79,14 +85,16 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
-					CompanyMapper.getInstance().toCompanies(rs, companies);
+					List<CompanyDTO> companiesDTO = new ArrayList<>();
+					dtoMapper.toCompanies(rs, companiesDTO);
+					return mapper.toListCompany(companiesDTO);
 				}
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
-		return companies;
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -106,12 +114,12 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 				
 				if (rs.next()) {
-					company = Optional.of(CompanyMapper.getInstance().toCompany(rs));
+					company = Optional.of(mapper.toCompany(dtoMapper.toCompany(rs)));
 				}
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return company;
 	}
@@ -130,7 +138,7 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
-			throw new CustomSQLException(e);
+			throw new CustomSQLException(e.getMessage());
 		}
 		return 0;
 	}

@@ -31,15 +31,15 @@ public class ComputerMapper {
 		Computer.Builder builder = new Computer.Builder(computerDTO.getName());
 		
 		if (!computerDTO.getIntroduced().isEmpty()) {
-			builder.introduced(LocalDate.parse(
+			builder.withIntroduced(LocalDate.parse(
 					computerDTO.getIntroduced(), DateTimeFormatter.ofPattern(DATE_FORMAT)));
 		}
 		if (!computerDTO.getDiscontinued().isEmpty()) {
-			builder.discontinued(LocalDate.parse(
+			builder.withDiscontinued(LocalDate.parse(
 					computerDTO.getDiscontinued(), DateTimeFormatter.ofPattern(DATE_FORMAT)));
 		}
 		if (computerDTO.getCompanyId() != COMPANY_ID_NULL) {
-			builder.company(new Company(computerDTO.getCompanyId()));
+			builder.withCompany(new Company(computerDTO.getCompanyId()));
 		}
 		return builder.build();
 	}
@@ -64,7 +64,7 @@ public class ComputerMapper {
 		if (computer.getCompany() != null) {
 			companyName = computer.getCompany().getName();
 		}
-		return new ComputerCompanyNameDTO.Builder(computer.getName()).introduced(introduced)
-				.discontinued(discontinued).companyName(companyName).build();
+		return new ComputerCompanyNameDTO.Builder(computer.getName()).withIntroduced(introduced)
+				.withDiscontinued(discontinued).withCompanyName(companyName).build();
 	}
 }

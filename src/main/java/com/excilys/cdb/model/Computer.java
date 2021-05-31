@@ -11,53 +11,51 @@ public class Computer {
 	private LocalDate discontinued;
 	private Company company;
 	
-	private Computer(long id, String name, LocalDate introduced, 
-			LocalDate discontinued, Company company) {
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.company = company;
-	}
-	
-	private Computer(String name, LocalDate introduced, 
-			LocalDate discontinued, Company company) {
-		this(DEFAULT_ID, name, introduced, discontinued, company);
+	private Computer(Builder builder) {
+		this.id = builder.id;
+		this.name = builder.name;
+		this.introduced = builder.introduced;
+		this.discontinued = builder.discontinued;
+		this.company = builder.company;
 	}
 	
 	public static class Builder {
 		private long id;
-		private String name;
+		private String name = "";
 		private LocalDate introduced;
 		private LocalDate discontinued;
 		private Company company;
 		
 		public Builder(String name) {
-			this(DEFAULT_ID, name);
-		}
-		
-		public Builder(long id, String name) {
-			this.id = id;
+			id = DEFAULT_ID;
+			if (name == null) {
+				name = "";
+			}
 			this.name = name;
 		}
 		
-		public Builder introduced(LocalDate introduced) {
+		public Builder withId(long id) {
+			this.id = id;
+			return this;
+		}
+		
+		public Builder withIntroduced(LocalDate introduced) {
 			this.introduced = introduced;
 			return this;
 		}
 		
-		public Builder discontinued(LocalDate discontinued) {
+		public Builder withDiscontinued(LocalDate discontinued) {
 			this.discontinued = discontinued;
 			return this;
 		}
 		
-		public Builder company(Company company) {
+		public Builder withCompany(Company company) {
 			this.company = company;
 			return this;
 		}
 		
 		public Computer build() {
-			return new Computer(id, name, introduced, discontinued, company);
+			return new Computer(this);
 		}
 	}
 	

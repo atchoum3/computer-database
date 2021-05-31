@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.excilys.cdb.dao.CompanyDAO;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
@@ -30,7 +29,7 @@ public class CompanyDAOTest {
 	}
 	
 	@Test
-	public void getAllRightParam() {
+	public void getAllShouldSucced() {
 		List<Company> companies;
 		try {
 			companies = companyDAO.getAll(page);
@@ -43,7 +42,7 @@ public class CompanyDAOTest {
 	}
 	
 	@Test
-	public void getByIdRightParam() {
+	public void getByIdShouldSucced() {
 		Optional<Company> companies;
 		try {
 			companies = companyDAO.getById(COMPANY_COMPUTER_REFERENCED.getId());

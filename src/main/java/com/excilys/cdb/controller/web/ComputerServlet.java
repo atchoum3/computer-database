@@ -86,8 +86,8 @@ public class ComputerServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			req.setAttribute(INPUT_COMPANY_ID, "The company id must be a number.");
 		}
-		return new AddComputerDTO.Builder(name).introduced(introduced)
-				.discontinued(discontinued).companyId(companyId).build();
+		return new AddComputerDTO.Builder(name).withIntroduced(introduced)
+				.withDiscontinued(discontinued).withCompanyId(companyId).build();
 	}
 	
 	/**
