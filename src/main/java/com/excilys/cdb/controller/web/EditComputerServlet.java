@@ -120,7 +120,7 @@ public class EditComputerServlet extends HttpServlet {
 			try {
 				computerService.update(computer.get());
 				added = true;
-				req.setAttribute(ATT_SUCCESS, "This company has been added.");
+				req.setAttribute(ATT_SUCCESS, "This company has been edited.");
 			} catch (ComputerCompanyIdException e) {
 				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
 			} catch (CustomSQLException e) {

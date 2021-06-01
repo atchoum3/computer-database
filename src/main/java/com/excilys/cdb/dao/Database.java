@@ -2,16 +2,18 @@ package com.excilys.cdb.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.exception.CustomSQLException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
-public class Database extends BasicDataSource {
+public class Database {
 	private static Database instance;
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
 	
@@ -20,6 +22,9 @@ public class Database extends BasicDataSource {
 	private static final String PROPERTY_URL = "db.url";
 	private static final String PROPERTY_USER = "db.username";
 	private static final String PROPERTY_PASSWORD = "db.password";
+	
+	private static HikariConfig config = new HikariConfig();
+	private static HikariDataSource ds;
 	
 	private  Properties readProperties() throws CustomSQLException {
 		Properties properties = new Properties();
@@ -36,13 +41,16 @@ public class Database extends BasicDataSource {
 	}
 	
 	private Database() throws CustomSQLException {
-		super();
 		Properties properties = readProperties();
-		this.setDriverClassName(properties.getProperty(PROPERTY_DRIVER_CLASS));
-		this.setUrl(properties.getProperty(PROPERTY_URL));
-		this.setUsername(properties.getProperty(PROPERTY_USER));
-		this.setPassword(properties.getProperty(PROPERTY_PASSWORD));
-		logger.debug("driverClass=" + getDriverClassName() + " url=" + getUrl() + " user=" + getUsername() + " password=" + getPassword());
+		config.setDriverClassName(properties.getProperty(PROPERTY_DRIVER_CLASS));
+		config.setJdbcUrl(properties.getProperty(PROPERTY_URL));
+		config.setUsername(properties.getProperty(PROPERTY_USER));
+		config.setPassword(properties.getProperty(PROPERTY_PASSWORD));
+		config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("maxLifetime", "60_000"); // 60 seconds
+        ds = new HikariDataSource(config);
 	}
 	
 	public static Database getInstance() throws CustomSQLException {
@@ -53,12 +61,7 @@ public class Database extends BasicDataSource {
 	}
 
 	
-	@Override
-	public void close() {
-		try {
-			super.close();
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+	public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    } 
 }
