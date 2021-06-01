@@ -13,7 +13,7 @@ import com.excilys.cdb.exception.CustomSQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public class Database {
+public class Database implements AutoCloseable {
 	private static Database instance;
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
 	
@@ -22,6 +22,10 @@ public class Database {
 	private static final String PROPERTY_URL = "db.url";
 	private static final String PROPERTY_USER = "db.username";
 	private static final String PROPERTY_PASSWORD = "db.password";
+	private static final String PROPERTY_CACHE_PREP_STMTS = "db.prop.cachePrepStmts";
+	private static final String PROPERTY_PREP_STMTS_CACHE_SIZE = "db.prop.prepStmtCacheSize";
+	private static final String PROPERTY_PREP_STMTS_CACHE_SQL_LIMIT = "db.prop.prepStmtCacheSqlLimit";
+	private static final String PROPERTY_PREP_MAX_LIFE_TIME = "db.prop.maxLifetime";
 	
 	private static HikariConfig config = new HikariConfig();
 	private static HikariDataSource ds;
@@ -46,10 +50,11 @@ public class Database {
 		config.setJdbcUrl(properties.getProperty(PROPERTY_URL));
 		config.setUsername(properties.getProperty(PROPERTY_USER));
 		config.setPassword(properties.getProperty(PROPERTY_PASSWORD));
-		config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("maxLifetime", "60_000"); // 60 seconds
+		
+		config.addDataSourceProperty("cachePrepStmts", properties.getProperty(PROPERTY_CACHE_PREP_STMTS));
+        config.addDataSourceProperty("prepStmtCacheSize", properties.getProperty(PROPERTY_PREP_STMTS_CACHE_SIZE));
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", properties.getProperty(PROPERTY_PREP_STMTS_CACHE_SQL_LIMIT));
+        config.addDataSourceProperty("maxLifetime", properties.getProperty(PROPERTY_PREP_MAX_LIFE_TIME));
         ds = new HikariDataSource(config);
 	}
 	
@@ -64,4 +69,8 @@ public class Database {
 	public Connection getConnection() throws SQLException {
         return ds.getConnection();
     } 
+	
+	public void close() {
+		ds.close();
+	}
 }

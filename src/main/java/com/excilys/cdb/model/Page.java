@@ -66,6 +66,12 @@ public class Page {
 		setCurrentPage(currentPage);
 	}
 	
+	public void setTotalNumberElem(int totalNumberElem) {
+		this.totalNumberElem = totalNumberElem;
+		computeLastPage();
+		setCurrentPage(currentPage);
+	}
+	
 	public int getTotalNumberElem() {
 		return totalNumberElem;
 	}

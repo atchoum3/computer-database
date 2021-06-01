@@ -46,19 +46,33 @@ public class ListComputerServlet extends HttpServlet {
 	private static final String ATT_ERRORS = "errors";
 	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String INPUT_ID_DELETE = "selection";
+	private static final String URL_PARAM_SEARCH_NAME = "search";
+	private static final String ATT_SEARCH = "search";
+	
 	
 	private ComputerService computerService = ComputerService.getInstance();
 	private ComputerMapper computerMapper = ComputerMapper.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+		String searchName = (String) req.getParameter(URL_PARAM_SEARCH_NAME);
+		List<Computer> computers = null;
+		
 		try {
 			Page page = getPage(req);
 			
-			List<Computer> computers = computerService.getAll(page);
+			if (searchName == null) {
+				page.setTotalNumberElem(computerService.count());
+				computers = computerService.getAll(page);
+			} else {
+				page.setTotalNumberElem(computerService.countSearchByName(searchName));
+				computers = computerService.searchByName(searchName, page);
+			}
+			
+			
 			List<ComputerCompanyNameDTO> computersDTO = computerMapper.toComputerCompanyName(computers);
 			req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
-			setPageAttributes(req, page);
+			setPageAttributes(req, searchName, page);
 			
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
@@ -70,7 +84,9 @@ public class ListComputerServlet extends HttpServlet {
 		}
 	}
 	
-	private void setPageAttributes(HttpServletRequest req, Page page) {
+	private void setPageAttributes(HttpServletRequest req, String searchName, Page page) {
+		req.setAttribute(ATT_SEARCH, searchName);
+		req.setAttribute(ATT_MAX_PAGE, page.getIndexLastPage());
 		req.setAttribute(ATT_MAX_PAGE, page.getIndexLastPage());
 		req.setAttribute(ATT_CURRENT_PAGE, page.getCurrentPage());
 		req.setAttribute(ATT_COMPUTER_NUMBER, page.getTotalNumberElem());
@@ -104,7 +120,7 @@ public class ListComputerServlet extends HttpServlet {
 				page.setElementByPage(nbElemByPage);
 			}
 		} else {
-			page = new Page(Page.INDEX_FIRST_PAGE, DEFAULT_NB_ELEMENT_BY_PAGE, computerService.count());
+			page = new Page(Page.INDEX_FIRST_PAGE, DEFAULT_NB_ELEMENT_BY_PAGE, DEFAULT_NB_ELEMENT_BY_PAGE);
 		}
 		
 		return page;
@@ -155,4 +171,6 @@ public class ListComputerServlet extends HttpServlet {
 				});
 		doGet(req, resp);
 	}
+	
+	
 }

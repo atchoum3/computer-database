@@ -23,12 +23,14 @@ public class ComputerDAO {
 	private static ComputerDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
-	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id LIMIT ?,?";
+	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id LIMIT ?,?";
+	private static final String QUERY_SERCH_NAME_LIMIT = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%') LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.id=?;";
 	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
 	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM computer";
+	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%')";
 	
 	private ComputerDAO() {
 		super();
@@ -51,7 +53,7 @@ public class ComputerDAO {
 		List<Computer> computers = new ArrayList<>();
 		try (
 				Connection con = Database.getInstance().getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
+				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
 		) {
 			ps.setInt(1, page.getIndexFirstElement());
 			ps.setInt(2, page.getElementByPage());
@@ -65,6 +67,30 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new CustomSQLException("failure to get all Computer.");
+		}
+		return computers;
+	}
+	
+	public List<Computer> searchByName(String name, Page page) throws CustomSQLException {
+		List<Computer> computers = new ArrayList<>();
+		try (
+				Connection con = Database.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(QUERY_SERCH_NAME_LIMIT)
+		) {
+			ps.setString(1, name);
+			ps.setString(2, name);
+			ps.setInt(3, page.getIndexFirstElement());
+			ps.setInt(4, page.getElementByPage());
+			logger.debug(ps.toString());
+			try (ResultSet rs = ps.executeQuery()) {
+				
+				if (rs.next()) {
+					ComputerMapper.getInstance().toComputers(rs, computers);
+				}
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new CustomSQLException("failure to get Computer by name search.");
 		}
 		return computers;
 	}
@@ -190,13 +216,33 @@ public class ComputerDAO {
 				if (rs.next()) {
 					return rs.getInt(1);
 				}
-				//TODO throw error
+				return 0;
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new CustomSQLException("failure to count all computers.");
 		}
-		return 0;
+	}
+	
+	public int countSearchByName(String name) throws CustomSQLException {
+		try (
+				Connection con = Database.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(QUERY_COUNT_SERCH_NAME)
+		) {
+			ps.setString(1, name);
+			ps.setString(2, name);
+			
+			logger.debug(ps.toString());
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+				return 0;
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new CustomSQLException("failure to count Computer by name search.");
+		}
 	}
 }
 

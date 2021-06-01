@@ -20,7 +20,7 @@
   
   	<!-- Versions -->
     <h2.version>1.4.200</h2.version>
-    <HikariCP.version>4.0.3</HikariCP.version>
+    <HikariCP.version>3.4.5</HikariCP.version>
     <jakarta.servlet.jsp.jstl.version>2.0.0-M1</jakarta.servlet.jsp.jstl.version>
     <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     <junit.version>5.8.0-M1</junit.version>

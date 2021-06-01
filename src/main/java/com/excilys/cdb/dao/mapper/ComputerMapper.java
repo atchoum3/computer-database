@@ -7,15 +7,11 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
 public class ComputerMapper {
 	private static ComputerMapper instance;
-	private static Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
 	
 	private static final int KEY_NULL = 0;
 
@@ -55,8 +51,6 @@ public class ComputerMapper {
 		
 		if (companyId != KEY_NULL) { 
 			company = new Company(companyId, companyName);
-		} else {
-			logger.debug("company_id null");
 		}
 		
 		return new Computer.Builder(name).withId(id).withIntroduced(introduced)

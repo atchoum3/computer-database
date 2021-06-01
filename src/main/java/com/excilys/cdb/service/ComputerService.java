@@ -28,6 +28,10 @@ public class ComputerService {
 		return computerDAO.getAll(page);
 	}
 	
+	public List<Computer> searchByName(String name, Page page) throws CustomSQLException {
+		return computerDAO.searchByName(name, page);
+	}
+	
 	public Optional<Computer> getById(long id) throws CustomSQLException {
 		return computerDAO.getById(id);
 	}
@@ -46,5 +50,9 @@ public class ComputerService {
 	
 	public int count() throws CustomSQLException {
 		return computerDAO.count();
+	}
+	
+	public int countSearchByName(String name) throws CustomSQLException {
+		return computerDAO.countSearchByName(name);
 	}
 }

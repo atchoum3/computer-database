@@ -28,10 +28,8 @@
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
-
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
-                        class="btn btn-primary" />
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${search}"/>
+                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
@@ -103,7 +101,10 @@
                <li>
                     <a href="
                    		<c:if test="${currentPage > 1}">
-                      		<c:url value="/dashboard"><c:param name="page" value="${currentPage - 1}"/></c:url>
+                      		<c:url value="/dashboard">
+                      			<c:param name="page" value="${currentPage - 1}"/>
+                      			<c:param name="search" value="${search}"/>
+                      		</c:url>
                       	</c:if>"
 			  		  	aria-label="Previous">
                     	<span aria-hidden="true">&laquo;</span>
@@ -114,6 +115,7 @@
 		              	<a href="
 		              		<c:url value="/dashboard">
 					  			<c:param name="page" value="${i}"/> 
+					  			<c:param name="search" value="${search}"/>
 					  		</c:url>">
 					  	${i}</a>
 					  </li>
@@ -121,7 +123,10 @@
 	              <li>
 	                	<a href="
 	                		<c:if test="${currentPage < pageIndexEnd}">
-	                			<c:url value="/dashboard"><c:param name="page" value="${currentPage + 1}"/></c:url>
+	                			<c:url value="/dashboard">
+	                				<c:param name="page" value="${currentPage + 1}"/>
+	                				<c:param name="search" value="${search}"/>
+	                			</c:url>
 	                		</c:if>
 	                	" aria-label="Next">
 	                  <span aria-hidden="true">&raquo;</span>
@@ -132,6 +137,8 @@
 			
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
+	         		<input type="hidden" value="${currentPage}" name="page"/>
+	         		<input type="hidden" value="${search}" name="search"/>
 		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElemByPage" value="10">10</button>
 		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElemByPage" value="50">50</button>
 		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElemByPage" value="100">100</button>

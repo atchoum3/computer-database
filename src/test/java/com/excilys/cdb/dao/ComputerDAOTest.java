@@ -19,6 +19,7 @@ public class ComputerDAOTest {
 
 	private static ComputerDAO computerDAO = ComputerDAO.getInstance();
 	private final long COMPUTER_REFERENCED_ID = 321;
+	private final long COMPUTER_REFERENCED_ID_DELETE = 232;
 	private final Computer COMPUTER_TO_UPDATE;
 	private final Company COMPANY_COMPUTER_TO_UPDATE;
 	private final int ELEM_BY_PAGE = 4;
@@ -82,8 +83,8 @@ public class ComputerDAOTest {
 	@Test 
 	public void deleteShouldSucced() {
 		try {
-			computerDAO.delete(COMPUTER_REFERENCED_ID);
-			Optional<Computer> opt = computerDAO.getById(COMPUTER_REFERENCED_ID);
+			computerDAO.delete(COMPUTER_REFERENCED_ID_DELETE);
+			Optional<Computer> opt = computerDAO.getById(COMPUTER_REFERENCED_ID_DELETE);
 			assertEquals(false, opt.isPresent());
 		} catch (CustomSQLException e) {
 			e.printStackTrace();
@@ -100,12 +101,11 @@ public class ComputerDAOTest {
 		
 		try {
 			computerDAO.create(computer);
+			System.out.println(computer.getId());
 			Optional<Computer> opt = computerDAO.getById(computer.getId());
 			assertEquals(true, opt.isPresent());
 			assertEquals(computer, opt.get());
 			
-			// post treatment
-			computerDAO.delete(computer.getId());
 		} catch (ComputerCompanyIdException | CustomSQLException e) {
 			e.printStackTrace();
 			fail();
