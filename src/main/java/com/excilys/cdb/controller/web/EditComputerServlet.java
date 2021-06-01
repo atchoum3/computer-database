@@ -1,6 +1,5 @@
 package com.excilys.cdb.controller.web;
 
-import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,11 +8,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.EditComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.ComputerMapper;
 import com.excilys.cdb.bindingFront.validator.EditComputerValidator;
-import com.excilys.cdb.dao.mapper.CompanyMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
@@ -110,7 +107,6 @@ public class EditComputerServlet extends HttpServlet {
 	}
 	
 	private void editComputer(HttpServletRequest req,  HttpServletResponse resp, EditComputerDTO  editComputerDTO) {
-		boolean added = false;
 		Map<String, String> errors = new HashMap<String, String>(); 
 		EditComputerValidator editComputerValidator = new EditComputerValidator(errors); 
 		
@@ -119,7 +115,6 @@ public class EditComputerServlet extends HttpServlet {
 		if (computer.isPresent()) {
 			try {
 				computerService.update(computer.get());
-				added = true;
 				req.setAttribute(ATT_SUCCESS, "This company has been edited.");
 			} catch (ComputerCompanyIdException e) {
 				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");

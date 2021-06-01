@@ -61,7 +61,7 @@ public class Database {
 	}
 
 	
-	public static Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {
         return ds.getConnection();
     } 
 }

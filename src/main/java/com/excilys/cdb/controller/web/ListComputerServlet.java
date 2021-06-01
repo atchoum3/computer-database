@@ -1,9 +1,11 @@
 package com.excilys.cdb.controller.web;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,7 @@ public class ListComputerServlet extends HttpServlet {
 	private static final String ATT_COMPUTER_NUMBER = "computerNumber";
 	private static final String ATT_ERRORS = "errors";
 	private static final String ATT_OTHER_ERROR = "otherError";
+	private static final String INPUT_ID_DELETE = "selection";
 	
 	private ComputerService computerService = ComputerService.getInstance();
 	private ComputerMapper computerMapper = ComputerMapper.getInstance();
@@ -135,5 +138,21 @@ public class ListComputerServlet extends HttpServlet {
 			nbElemByPage = -1;
 		}
 		return nbElemByPage;
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+		String stringId = (String) req.getParameter(INPUT_ID_DELETE);
+		
+		Arrays.stream(stringId.split(","))
+				.map(s -> Long.valueOf(s))
+				.forEach(id -> {
+					try {
+						computerService.delete(id);
+					} catch (CustomSQLException e1) {
+						req.setAttribute(ATT_OTHER_ERROR, "All select computers have not been deleted. Try again.");
+					}
+				});
+		doGet(req, resp);
 	}
 }
