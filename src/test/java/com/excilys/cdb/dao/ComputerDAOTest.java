@@ -61,7 +61,7 @@ public class ComputerDAOTest {
 			Optional<Computer> computer = computerDAO.getById(COMPUTER_TO_UPDATE.getId());
 			assertEquals(true, computer.isPresent());
 			assertEquals(COMPUTER_TO_UPDATE, computer.get());
-		} catch (CustomSQLException e) {
+		} catch (CustomSQLException | ComputerCompanyIdException e) {
 			e.printStackTrace();
 			fail();
 		}

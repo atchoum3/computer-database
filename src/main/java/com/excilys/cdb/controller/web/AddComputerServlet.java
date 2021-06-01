@@ -14,8 +14,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dto.AddComputerDTO;
-import com.excilys.cdb.dto.validator.AddComputerValidator;
+import com.excilys.cdb.bindingFront.AddComputerDTO;
+import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
@@ -23,11 +23,11 @@ import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
 
-@WebServlet("/addComputer")
-public class ComputerServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/addComputer"}, name = "addComputer")
+public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(ComputerServlet.class);
+	private static Logger logger = LoggerFactory.getLogger(AddComputerServlet.class);
 
 	private static final String INPUT_COMPUTER_NAME = "computerName";
 	private static final String INPUT_INTRODUCED = "introduced";
@@ -35,19 +35,18 @@ public class ComputerServlet extends HttpServlet {
 	private static final String INPUT_COMPANY_ID = "companyId";
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
-	private static final String ATT_ADDED = "added";
+	private static final String ATT_SUCCESS = "success";
 	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String ATT_COMPUTER = "computer";
 	
-	private static final String VIEW = "/WEB-INF/view/addComputer.jsp";
+	public static final String VIEW = "/WEB-INF/view/addComputer.jsp";
 	
 	private CompanyService companyService = CompanyService.getInstance();
 	private ComputerService computerService = ComputerService.getInstance();
 	
-	public ComputerServlet() {
+	public AddComputerServlet() {
 		super();
 	}
-
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -100,12 +99,12 @@ public class ComputerServlet extends HttpServlet {
 		Map<String, String> errors = new HashMap<String, String>(); 
 		AddComputerValidator addComputerValidator = new AddComputerValidator(errors); 
 		
-		Optional<Computer> computer = addComputerValidator.validate(addComputerDTO);
+		Optional<Computer> computer = addComputerValidator.map(addComputerDTO);
 		
 		if (computer.isPresent()) {
 			try {
 				computerService.create(computer.get());
-				req.setAttribute(ATT_ADDED, "This company has been added.");
+				req.setAttribute(ATT_SUCCESS, "This company has been added.");
 				return true;
 			} catch (ComputerCompanyIdException e) {
 				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
@@ -115,7 +114,7 @@ public class ComputerServlet extends HttpServlet {
 		}
 		req.setAttribute(ATT_ERRORS, errors);
 		req.setAttribute(ATT_COMPUTER, addComputerDTO);
-		req.setAttribute(ATT_ADDED, "");
+		req.setAttribute(ATT_SUCCESS, "");
 		return false;
 	}
 }

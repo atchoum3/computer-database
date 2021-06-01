@@ -40,7 +40,7 @@ public class ComputerService {
 		return computerDAO.delete(id);
 	}
 	
-	public void update(Computer computer) throws CustomSQLException {
+	public void update(Computer computer) throws CustomSQLException, ComputerCompanyIdException {
 		computerDAO.update(computer);
 	}
 	

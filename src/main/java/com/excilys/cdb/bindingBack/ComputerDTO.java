@@ -1,4 +1,4 @@
-package com.excilys.cdb.binding;
+package com.excilys.cdb.bindingBack;
 
 public class ComputerDTO {
 	private long id;

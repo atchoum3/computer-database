@@ -1,12 +1,14 @@
-package com.excilys.cdb.dto.mapper;
+package com.excilys.cdb.bindingFront.mapper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.cdb.dto.AddComputerDTO;
-import com.excilys.cdb.dto.ComputerCompanyNameDTO;
+import com.excilys.cdb.bindingFront.AddComputerDTO;
+import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
+import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO.Builder;
+import com.excilys.cdb.bindingFront.EditComputerDTO;
 import com.excilys.cdb.exception.DateFormaNotValidException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -65,6 +67,43 @@ public class ComputerMapper {
 			companyName = computer.getCompany().getName();
 		}
 		return new ComputerCompanyNameDTO.Builder(computer.getName()).withIntroduced(introduced)
-				.withDiscontinued(discontinued).withCompanyName(companyName).build();
+				.withDiscontinued(discontinued).withCompanyName(companyName).withId(computer.getId()).build();
+	}
+	
+	public Computer toComputer(EditComputerDTO computerDTO) throws DateFormaNotValidException {
+		Computer computer =  toComputer((AddComputerDTO) computerDTO);
+		computer.setId(computerDTO.getId());
+		return computer;
+	}
+	
+	public AddComputerDTO toAddComputerDTO(Computer computer) {
+		AddComputerDTO.Builder<?> builder = new AddComputerDTO.Builder<>(computer.getName());
+		if (computer.getCompany() != null) {
+			builder.withCompanyId(computer.getCompany().getId());
+		}
+		if (computer.getDiscontinued() != null) {
+			builder.withDiscontinued(computer.getDiscontinued().toString());
+		}
+		if (computer.getIntroduced() != null) {
+			builder.withIntroduced(computer.getIntroduced().toString());
+		}
+		return builder.build();
+		
+	}
+	
+	
+	public EditComputerDTO toEditComputerDTO(Computer computer) {
+		EditComputerDTO.Builder builder = new EditComputerDTO.Builder(computer.getName());
+		if (computer.getCompany() != null) {
+			builder.withCompanyId(computer.getCompany().getId());
+		}
+		if (computer.getDiscontinued() != null) {
+			builder.withDiscontinued(computer.getDiscontinued().toString());
+		}
+		if (computer.getIntroduced() != null) {
+			builder.withIntroduced(computer.getIntroduced().toString());
+		}
+		builder.withId(computer.getId());
+		return builder.build();
 	}
 }

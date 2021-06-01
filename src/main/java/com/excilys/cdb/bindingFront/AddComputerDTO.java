@@ -1,20 +1,20 @@
-package com.excilys.cdb.dto;
+package com.excilys.cdb.bindingFront;
 
 public class AddComputerDTO {
 
-	private String name, introduced, discontinued; 
-	private int companyId;
+	protected String name, introduced, discontinued; 
+	protected long companyId;
 
-	private AddComputerDTO(Builder builder) {
+	protected AddComputerDTO(Builder<?> builder) {
 		this.companyId = builder.companyId;
 		this.introduced = builder.introduced;
 		this.discontinued = builder.discontinued;
 		this.name = builder.name;
 	}
 	
-	public static class  Builder {
+	public static class Builder<T extends Builder<T>> {
 		private String name = "", introduced = "", discontinued = ""; 
-		private int companyId;
+		private long companyId;
 		
 		public Builder(String name) {
 			if (name == null)  {
@@ -23,25 +23,25 @@ public class AddComputerDTO {
 			this.name = name;
 		}
 		
-		public Builder withIntroduced(String introduced) {
+		public T withIntroduced(String introduced) {
 			if (introduced == null)  {
 				introduced = "";
 			}
 			this.introduced = introduced;
-			return this;
+			return (T) this;
 		}
 		
-		public Builder withDiscontinued(String discontinued) {
+		public T withDiscontinued(String discontinued) {
 			if (discontinued == null)  {
 				discontinued = "";
 			}
 			this.discontinued = discontinued;
-			return this;
+			return (T) this;
 		}
 		
-		public Builder withCompanyId(int companyId) {
-			this.companyId = companyId;
-			return this;
+		public T withCompanyId(long l) {
+			this.companyId = l;
+			return (T) this;
 		}
 		
 		public AddComputerDTO build() {
@@ -49,7 +49,7 @@ public class AddComputerDTO {
 		}
 	}
 
-	public int getCompanyId() {
+	public long getCompanyId() {
 		return companyId;
 	}
 
@@ -64,4 +64,12 @@ public class AddComputerDTO {
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public String toString() {
+		return "AddComputerDTO [name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
+				+ ", companyId=" + companyId + "]";
+	}
+	
+	
 }

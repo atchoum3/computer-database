@@ -8,8 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dto.ComputerCompanyNameDTO;
-import com.excilys.cdb.dto.mapper.ComputerMapper;
+import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
+import com.excilys.cdb.bindingFront.mapper.ComputerMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/dashboard")
+@WebServlet(urlPatterns = {"/dashboard"}, name = "dashboard")
 public class ListComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,9 +30,10 @@ public class ListComputerServlet extends HttpServlet {
 	
 	private static final int INDEX_PAGE_WINDOW = 5;
 	private static final int DEFAULT_NB_ELEMENT_BY_PAGE = 10;
-	private static final String VIEW = "/WEB-INF/view/dashboard.jsp";
-	public static final String URL_PARAM_PAGE = "page";
-	public static final String URL_PARAM_ELEM_BY_PAGE = "nbElemByPage";
+	public static final String VIEW = "/WEB-INF/view/dashboard.jsp";
+	
+	private static final String URL_PARAM_PAGE = "page";
+	private static final String URL_PARAM_ELEM_BY_PAGE = "nbElemByPage";
 	private static final String SESSION_PAGE = "page";
 	private static final String ATT_COMPUTER_LIST = "computerList";
 	private static final String ATT_CURRENT_PAGE = "currentPage";
@@ -122,7 +123,7 @@ public class ListComputerServlet extends HttpServlet {
 	}
 	
 	/**
-	 * Get the he number of element by page by the URL.
+	 * Get the number of element by page by the URL.
 	 * @param req object to get the number of element by page
 	 * @return (1) the number of element by page passed by GET method. (2) -1 if the parameter in URL does not exist. 
 	 */

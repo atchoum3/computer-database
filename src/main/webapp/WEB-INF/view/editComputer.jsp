@@ -17,54 +17,55 @@
             <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
         </div>
     </header>
-
     <section id="main">
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
-                    <form action="addComputer" method="POST">
+                    <div class="label label-default pull-right">
+                        id: ${computer.id}
+                    </div>
+                    <h1>Edit Computer</h1>
+
+                    <form action="editComputer" method="POST">
+                        <input type="hidden" value="${computer.id}" id="id" name="id"/>
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" placeholder="Computer name" name="computerName" required value="${computer.name}">
-                                <div class="<c:if test="${not empty errors['computerName']}">alert alert-danger</c:if>"><c:out value="${errors['computerName']}"></c:out></div>
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="${computer.name}">
+								<c:if test="${not empty errors['computerName']}"><div class="alert alert-danger"><c:out value="${errors['computerName']}"></c:out></div></c:if>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" placeholder="Introduced date" name="introduced" value="${computer.introduced}">
-                                <div class="<c:if test="${not empty errors['introduced']}">alert alert-danger</c:if>"><c:out value="${errors['introduced']}"></c:out></div>
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="${computer.introduced}">
+                            	<c:if test="${not empty errors['introduced']}"><div class="alert alert-danger"><c:out value="${errors['introduced']}"></c:out></div></c:if>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued" value="${computer.discontinued}">
-                                <div class="<c:if test="${not empty errors['discontinued']}">alert alert-danger</c:if>"><c:out value="${errors['discontinued']}"></c:out></div>
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="${computer.discontinued}">
+                                <c:if test="${not empty errors['discontinued']}"><div class="alert alert-danger"><c:out value="${errors['discontinued']}"></c:out></div></c:if>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
                                     <c:forEach var="company" items="${allCompanies}">
-										<option value="${company.id}" <c:if test="${not empty computer.companyId  && computer.companyId == company.id}">selected="selected"</c:if>><c:out value="${company.name}"/></option>
+                                    	<option value="${company.id}" <c:if test="${not empty computer.companyId && computer.companyId == company.id}">selected="selected"</c:if>><c:out value="${company.name}"/></option>
 									</c:forEach>
                                 </select>
-                                <div class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>"><c:out value="${errors['companyId']}"></c:out></div>
-                            </div>                  
+                                <c:if test="${not empty errors['companyId']}"><div class="alert alert-danger"><c:out value="${errors['otherError']}"></c:out></div></c:if>
+                            </div>            
                         </fieldset>
-                        <div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
-						<div class="<c:if test="${not empty success}">alert alert-success</c:if>"><c:out value="${success}"></c:out></div>
+                        <c:if test="${not empty errors['otherError']}"> <div class="alert alert-danger"><c:out value="${errors['otherError']}"></c:out></div></c:if>
+                        <div class="<c:if test="${not empty success}">alert alert-success</c:if>"><c:out value="${success}"></c:out></div>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
+                            <input type="submit" value="Edit" class="btn btn-primary">
                             or
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
-                        
                     </form>
                 </div>
             </div>
         </div>
     </section>
-    
-<script src="./static/js/modifyComputer.js"></script>
 </body>
 </html>

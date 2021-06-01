@@ -135,6 +135,8 @@ public class ConsoleControler {
 				break;
 		
 			}
+		} catch (ComputerCompanyIdException e) {
+			System.out.println("This id of company does not exist.");
 		} catch (CustomSQLException e) {
 			logger.error(e.getMessage(), e);
 			System.out.println("Communication between the programm and database failed. Try again");
@@ -265,7 +267,7 @@ public class ConsoleControler {
 		computer.setCompany(askComputerCompanyId());
 	}
 	
-	private void updateComputer() throws CustomSQLException {
+	private void updateComputer() throws CustomSQLException, ComputerCompanyIdException {
 		long id = askComputerId();
 		Optional<Computer> optComputer = ComputerService.getInstance().getById(id);
 		

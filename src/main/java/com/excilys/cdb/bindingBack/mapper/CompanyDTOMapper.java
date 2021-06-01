@@ -1,10 +1,10 @@
-package com.excilys.cdb.binding.mapper;
+package com.excilys.cdb.bindingBack.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import com.excilys.cdb.binding.CompanyDTO;
+import com.excilys.cdb.bindingBack.CompanyDTO;
 
 public class CompanyDTOMapper {
 	private static CompanyDTOMapper instance = new CompanyDTOMapper();

@@ -1,18 +1,20 @@
-package com.excilys.cdb.dto;
+package com.excilys.cdb.bindingFront;
 
 public class ComputerCompanyNameDTO {
 	private String name, introduced, discontinued, companyName;
+	private long id;
 	
 	private ComputerCompanyNameDTO(Builder builder) {
-		super();
-		this.name = builder.name;
-		this.introduced = builder.introduced;
-		this.discontinued = builder.discontinued;
-		this.companyName = builder.companyName;
+		name = builder.name;
+		introduced = builder.introduced;
+		discontinued = builder.discontinued;
+		companyName = builder.companyName;
+		id = builder.id;
 	}
 	
 	public static class Builder {
 		private String name = "", introduced = "", discontinued = "", companyName = "";
+		private long id;
 		
 		public Builder(String name) {
 			if (name == null) {
@@ -45,6 +47,11 @@ public class ComputerCompanyNameDTO {
 			return this;
 		}
 		
+		public Builder withId(long id) {
+			this.id = id;
+			return this;
+		}
+		
 		public ComputerCompanyNameDTO build() {
 			return new ComputerCompanyNameDTO(this);
 		}
@@ -64,5 +71,9 @@ public class ComputerCompanyNameDTO {
 
 	public String getCompanyName() {
 		return companyName;
+	}
+	
+	public long getId() {
+		return id;
 	}
 }
