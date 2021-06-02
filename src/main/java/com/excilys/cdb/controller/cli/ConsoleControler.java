@@ -130,6 +130,10 @@ public class ConsoleControler {
 				deleteComputer();
 				break;
 
+			case DELETE_COMPANY:
+				deleteCompany();
+				break;
+
 			case QUIT:
 				System.exit(0);
 				break;
@@ -188,6 +192,17 @@ public class ConsoleControler {
 		} catch (NumberFormatException e) {
 			System.out.println("Insert an integer");
 			return askComputerId();
+		}
+	}
+
+	private long askCompanyId() {
+		System.out.println("Insert the id of the company");
+		String input = scanner.nextLine();
+		try {
+			return Long.parseLong(input);
+		} catch (NumberFormatException e) {
+			System.out.println("Insert an integer");
+			return askCompanyId();
 		}
 	}
 
@@ -285,6 +300,11 @@ public class ConsoleControler {
 	private void deleteComputer() throws CustomSQLException {
 		long id = askComputerId();
 		ComputerService.getInstance().delete(id);
+	}
+
+	private void deleteCompany() throws CustomSQLException {
+		long id = askCompanyId();
+		CompanyService.getInstance().delete(id);
 	}
 
 	/**

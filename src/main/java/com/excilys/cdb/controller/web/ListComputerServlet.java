@@ -75,7 +75,6 @@ public class ListComputerServlet extends HttpServlet {
 				computers = computerService.searchByName(searchName, page);
 			}
 
-
 			List<ComputerCompanyNameDTO> computersDTO = computerMapper.toComputerCompanyName(computers);
 			req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
 			setPageAttributes(req, searchName, page);

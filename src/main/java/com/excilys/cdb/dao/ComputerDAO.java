@@ -34,6 +34,8 @@ public class ComputerDAO {
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
 	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM computer";
 	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%')";
+	private static final String QUERY_DELETE_BY_COMPUTER_ID = "DELETE FROM computer WHERE company_id = ?";
+
 
 	private static final String ORDER_BY = " ORDER BY ? ";
 	private static final String LIMIT = " LIMIT ?,? ";
@@ -210,6 +212,22 @@ public class ComputerDAO {
 			throw new CustomSQLException("failure to delete a Computer.");
 		}
 		return false;
+	}
+
+	public int deleteByCompanyId(Connection con, long computerId) throws CustomSQLException {
+		int nbDeleted = 0;
+		try (
+				PreparedStatement ps = con.prepareStatement(QUERY_DELETE_BY_COMPUTER_ID)
+		) {
+			ps.setLong(1, computerId);
+			logger.debug(ps.toString());
+			nbDeleted = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new CustomSQLException("failure to delete a Computer by this computer id.");
+		}
+		return nbDeleted;
 	}
 
 	public int count() throws CustomSQLException {

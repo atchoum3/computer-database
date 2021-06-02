@@ -28,17 +28,17 @@
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
                                 <input type="text" class="form-control" id="computerName" placeholder="Computer name" name="computerName" required value="${computer.name}">
-                                <div class="<c:if test="${not empty errors['computerName']}">alert alert-danger</c:if>"><c:out value="${errors['computerName']}"></c:out></div>
+                                <div id="errorComputerName" class="<c:if test="${not empty errors['computerName']}">alert alert-danger</c:if>"><c:out value="${errors['computerName']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
                                 <input type="date" class="form-control" id="introduced" placeholder="Introduced date" name="introduced" value="${computer.introduced}">
-                                <div class="<c:if test="${not empty errors['introduced']}">alert alert-danger</c:if>"><c:out value="${errors['introduced']}"></c:out></div>
+                                <div id="errorIntroduced" class="<c:if test="${not empty errors['introduced']}">alert alert-danger</c:if>"><c:out value="${errors['introduced']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
                                 <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued" value="${computer.discontinued}">
-                                <div class="<c:if test="${not empty errors['discontinued']}">alert alert-danger</c:if>"><c:out value="${errors['discontinued']}"></c:out></div>
+                                <div id="errorDiscontinued" class="<c:if test="${not empty errors['discontinued']}">alert alert-danger</c:if>"><c:out value="${errors['discontinued']}"></c:out></div>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -48,23 +48,23 @@
 										<option value="${company.id}" <c:if test="${not empty computer.companyId  && computer.companyId == company.id}">selected="selected"</c:if>><c:out value="${company.name}"/></option>
 									</c:forEach>
                                 </select>
-                                <div class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>"><c:out value="${errors['companyId']}"></c:out></div>
-                            </div>                  
+                                <div id="errorCompany" class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>"><c:out value="${errors['companyId']}"></c:out></div>
+                            </div>
                         </fieldset>
                         <div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
 						<div class="<c:if test="${not empty success}">alert alert-success</c:if>"><c:out value="${success}"></c:out></div>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
+                            <input type="submit" value="Add" class="btn btn-primary" disabled>
                             or
                             <a href="dashboard" class="btn btn-default">Cancel</a>
                         </div>
-                        
+
                     </form>
                 </div>
             </div>
         </div>
     </section>
-    
+<script src="./static/js/jquery.min.js"></script>
 <script src="./static/js/modifyComputer.js"></script>
 </body>
 </html>
