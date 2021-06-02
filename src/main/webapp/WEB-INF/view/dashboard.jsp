@@ -33,7 +33,7 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a>
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <!-- Table header for Computer Name -->
 
                         <th class="editMode" style="width: 60px; height: 22px;">
-                            <input type="checkbox" id="selectall" /> 
+                            <input type="checkbox" id="selectall" />
                             <span style="vertical-align: top;">
                                  -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();">
                                         <i class="fa fa-trash-o fa-lg"></i>
@@ -59,18 +59,82 @@
                             </span>
                         </th>
                         <th>
-                            Computer name
+                       		<a href="
+                        	 	<c:url value="/dashboard">
+	                				<c:param name="page" value="${currentPage}"/>
+	                				<c:param name="search" value="${search}"/>
+	                				<c:param name="column" value="1"/>
+	                				<c:param name="order" value="${orderReversed}"/>
+	                			</c:url>
+                        	">Computer name
+                        	<c:choose>
+         						<c:when test = "${order == 'ASC' && column == 1}">
+									&#x25BC
+						        </c:when>
+						        <c:when test = "${order == 'DESC' && column == 1}">
+									&#x25B2
+						        </c:when>
+						    </c:choose>
+                        	</a>
                         </th>
                         <th>
-                            Introduced date
+                        	<a href="
+                        		<c:url value="/dashboard">
+	                				<c:param name="page" value="${currentPage}"/>
+	                				<c:param name="search" value="${search}"/>
+	                				<c:param name="column" value="2"/>
+	                				<c:param name="order" value="${orderReversed}"/>
+	                			</c:url>
+                        	 ">Introduced date
+                        	 <c:choose>
+         						<c:when test = "${order == 'ASC' && column == 2}">
+									&#x25BC
+						        </c:when>
+						        <c:when test = "${order == 'DESC' && column == 2}">
+									&#x25B2
+						        </c:when>
+						    </c:choose>
+                        	</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date
+                        	<a href="
+                        	 	<c:url value="/dashboard">
+	                				<c:param name="page" value="${currentPage}"/>
+	                				<c:param name="search" value="${search}"/>
+	                				<c:param name="column" value="3"/>
+	                				<c:param name="order" value="${orderReversed}"/>
+	                			</c:url>
+                        	 ">Discontinued date
+                        	 <c:choose>
+         						<c:when test = "${order == 'ASC' && column == 3}">
+									&#x25BC
+						        </c:when>
+						        <c:when test = "${order == 'DESC' && column == 3}">
+									&#x25B2
+						        </c:when>
+						    </c:choose>
+						    </a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company
+                        	<a href="
+                        	 	<c:url value="/dashboard">
+	                				<c:param name="page" value="${currentPage}"/>
+	                				<c:param name="search" value="${search}"/>
+	                				<c:param name="column" value="4"/>
+	                				<c:param name="order" value="${orderReversed}"/>
+	                			</c:url>
+                        	 ">Company
+                        	 <c:choose>
+         						<c:when test = "${order == 'ASC' && column == 4}">
+									&#x25BC
+						        </c:when>
+						        <c:when test = "${order == 'DESC' && column == 4}">
+									&#x25B2
+						        </c:when>
+						    </c:choose>
+						    </a>
                         </th>
 
                     </tr>
@@ -104,6 +168,8 @@
                       		<c:url value="/dashboard">
                       			<c:param name="page" value="${currentPage - 1}"/>
                       			<c:param name="search" value="${search}"/>
+                     			<c:param name="column" value="${column}"/>
+                				<c:param name="order" value="${order}"/>
                       		</c:url>
                       	</c:if>"
 			  		  	aria-label="Previous">
@@ -114,8 +180,10 @@
 		              <li class="<c:if test="${i == currentPage}">active</c:if>">
 		              	<a href="
 		              		<c:url value="/dashboard">
-					  			<c:param name="page" value="${i}"/> 
+					  			<c:param name="page" value="${i}"/>
 					  			<c:param name="search" value="${search}"/>
+					  			<c:param name="column" value="${column}"/>
+                				<c:param name="order" value="${order}"/>
 					  		</c:url>">
 					  	${i}</a>
 					  </li>
@@ -126,6 +194,8 @@
 	                			<c:url value="/dashboard">
 	                				<c:param name="page" value="${currentPage + 1}"/>
 	                				<c:param name="search" value="${search}"/>
+									<c:param name="column" value="${column}"/>
+                					<c:param name="order" value="${order}"/>
 	                			</c:url>
 	                		</c:if>
 	                	" aria-label="Next">
@@ -134,11 +204,13 @@
 	            </li>
 	        </ul>
 			<c:out value=""></c:out>
-			
+
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
 	         		<input type="hidden" value="${currentPage}" name="page"/>
 	         		<input type="hidden" value="${search}" name="search"/>
+	         		<input type="hidden" value="${column}" name="column"/>
+                	<input type="hidden" value="${order}" name="order"/>
 		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElemByPage" value="10">10</button>
 		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElemByPage" value="50">50</button>
 		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElemByPage" value="100">100</button>

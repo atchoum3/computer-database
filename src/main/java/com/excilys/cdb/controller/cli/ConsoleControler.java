@@ -25,24 +25,24 @@ import com.excilys.cdb.ui.DisplayComputer;
 
 public class ConsoleControler {
 	private static Logger logger = LoggerFactory.getLogger(ConsoleControler.class);
-	
+
 	private static ConsoleControler instance = null;
 	private Console console;
 	private Scanner scanner;
-	
+
 	private ConsoleControler() {
 		console = Console.getInstance();
-		
+
 		scanner = new Scanner(System.in);
 	}
-	
+
 	public static ConsoleControler getInstance() {
 		if (instance == null) {
 			instance = new ConsoleControler();
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * start the menu of the console.
 	 */
@@ -60,10 +60,10 @@ public class ConsoleControler {
 			}
 		} while (true);
 	}
-	
+
 	private OptionalInt askChoiceMainMenu() {
-		OptionalInt opt = OptionalInt.empty();	
-		
+		OptionalInt opt = OptionalInt.empty();
+
 		System.out.print("your choice: ");
 		String input = scanner.nextLine();
 		try {
@@ -73,12 +73,12 @@ public class ConsoleControler {
 		}
 		return opt;
 	}
-	
-	
+
+
 	private boolean executeChoicePageMenu(Page page) {
 		System.out.print("your choice: ");
 		String input = scanner.nextLine();
-		
+
 		try {
 			switch (ChoicePageMenu.fromPropertyName(input)) {
 			case NEXT_PAGE:
@@ -95,45 +95,45 @@ public class ConsoleControler {
 		}
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Read the answer of the user and call the concerned choice.
 	 * @param intChoice the input of the user
 	 */
 	private void executeChoiceMainMenu(int intChoice) {
 		ChoiceMainMenu choice = ChoiceMainMenu.values()[intChoice - 1];
-		
+
 		try {
 			switch (choice) {
 			case DISPLAY_ALL_COMPANIES:
 					displayAllCompanies();
 				break;
-				
+
 			case DISPLAY_ALL_COMPUTERS:
 				displayAllComputers();
 				break;
-				
+
 			case DISPLAY_COMPUTER:
 				displayComputer();
 				break;
-				
+
 			case CREATE_COMPUTER:
 				createComputer();
 				break;
-				
+
 			case UPDATE_COMPUTER:
 				updateComputer();
 				break;
-				
+
 			case DELETE_COMPUTER:
 				deleteComputer();
 				break;
-				
+
 			case QUIT:
 				System.exit(0);
 				break;
-		
+
 			}
 		} catch (ComputerCompanyIdException e) {
 			System.out.println("This id of company does not exist.");
@@ -142,31 +142,33 @@ public class ConsoleControler {
 			System.out.println("Communication between the programm and database failed. Try again");
 		}
 	}
-		
+
 	/**
 	 * To display a table of all Companies selected by page.
-	 * @throws CustomSQLException 
+	 * @throws CustomSQLException
 	 */
 	private void displayAllCompanies() throws CustomSQLException {
-		Page page = new Page(1, 10, CompanyService.getInstance().count());
+		Page page = new Page.Builder().withElementByPage(10)
+				.withTotalNumberElem(CompanyService.getInstance().count()).build();
 		do {
 			DisplayCompany.displayCollection(CompanyService.getInstance().getAll(page));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
-	
+
 	/**
 	 * To display a table of all computers selected by page.
-	 * @throws CustomSQLException 
+	 * @throws CustomSQLException
 	 */
 	private void displayAllComputers() throws CustomSQLException {
-		Page page = new Page(1, 10, ComputerService.getInstance().count());
+		Page page = new Page.Builder().withElementByPage(10)
+				.withTotalNumberElem(CompanyService.getInstance().count()).build();
 		do {
 			DisplayComputer.displayCollection(ComputerService.getInstance().getAll(page));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
-	
+
 	private void displayComputer() throws CustomSQLException {
 		long id = askComputerId();
 
@@ -177,7 +179,7 @@ public class ConsoleControler {
 			System.out.println("This id is not on the database.");
 		}
 	}
-	
+
 	private long askComputerId() {
 		System.out.println("Insert the id of the computer");
 		String input = scanner.nextLine();
@@ -188,7 +190,7 @@ public class ConsoleControler {
 			return askComputerId();
 		}
 	}
-	
+
 	private void createComputer() throws CustomSQLException {
 		Computer computer = new Computer.Builder("").build();
 		updateComputer(computer);
@@ -199,9 +201,9 @@ public class ConsoleControler {
 			System.out.println("Computer not created");
 		}
 	}
-	
-	
-	
+
+
+
 	private String askComputerName() {
 		System.out.print("Enter a name: ");
 		String input = scanner.nextLine();
@@ -210,11 +212,11 @@ public class ConsoleControler {
 		}
 		return input;
 	}
-	
-	
+
+
 	private LocalDate askComputerDate() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
+
 		String input = scanner.nextLine();
 		if (input.isEmpty()) {
 			return null;
@@ -228,12 +230,12 @@ public class ConsoleControler {
 				return date;
 			}
 		} catch (DateTimeParseException e) {
-			System.out.print("Wrong format"); 
+			System.out.print("Wrong format");
 			return askComputerDate();
 		}
 	}
-	
-	
+
+
 	private Company askComputerCompanyId() {
 		System.out.print("Enter the id of the company (optional): ");
 		String input = scanner.nextLine();
@@ -247,7 +249,7 @@ public class ConsoleControler {
 			return askComputerCompanyId();
 		}
 	}
-	
+
 	/**
 	 * method to update or create a computer.
 	 * @param computer all values will be saved on this object
@@ -263,14 +265,14 @@ public class ConsoleControler {
 			discontinued = askComputerDate();
 		} while (!checkIntroducedBeforeDisontinued(computer.getIntroduced(), discontinued));
 		computer.setDiscontinued(discontinued);
-		
+
 		computer.setCompany(askComputerCompanyId());
 	}
-	
+
 	private void updateComputer() throws CustomSQLException, ComputerCompanyIdException {
 		long id = askComputerId();
 		Optional<Computer> optComputer = ComputerService.getInstance().getById(id);
-		
+
 		if (optComputer.isPresent()) {
 			Computer computer = new Computer.Builder("").build();
 			updateComputer(computer);
@@ -279,14 +281,14 @@ public class ConsoleControler {
 			System.out.println("This company id is not on the database.");
 		}
 	}
-	
+
 	private void deleteComputer() throws CustomSQLException {
 		long id = askComputerId();
 		ComputerService.getInstance().delete(id);
 	}
-	
+
 	/**
-	 * This method check if a LocalDateTime is before the 1st January 1970. 
+	 * This method check if a LocalDateTime is before the 1st January 1970.
 	 * This method is useful to know if the value can be or not converted in Timestamp.
 	 * @param date the date to check
 	 * @return true if the date is before the 1st January 1970
@@ -294,15 +296,15 @@ public class ConsoleControler {
 	private boolean checkDateBefore1970(LocalDate date) {
 		return (date != null && date.isBefore(LocalDate.ofEpochDay(0)));
 	}
-	
+
 	/**
-	 * Check if the introduced is before the discontinued date. If this is the case 
+	 * Check if the introduced is before the discontinued date. If this is the case
 	 * throw IllegalArgumentException
 	 * @param introduced the date to when the computer was introduced
 	 * @param discontinued the date to when the computer was discontinued
 	 * @return true if introduced is before discontinued
 	 */
-	private boolean checkIntroducedBeforeDisontinued(LocalDate introduced, 
+	private boolean checkIntroducedBeforeDisontinued(LocalDate introduced,
 			LocalDate discontinued) {
 		if (introduced != null && discontinued != null && introduced.isAfter(discontinued)) {
 			return false;

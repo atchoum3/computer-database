@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -16,26 +18,30 @@ import java.util.List;
 import com.excilys.cdb.dao.mapper.ComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
 public class ComputerDAO {
 	private static ComputerDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	
-	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id LIMIT ?,?";
-	private static final String QUERY_SERCH_NAME_LIMIT = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%') LIMIT ?,?";
+
+	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id";
+	private static final String QUERY_SERCH_NAME = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%')";
 	private static final String QUERY_SELECT_BY_ID = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.id=?;";
 	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=?";
 	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM computer";
 	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%')";
-	
+
+	private static final String ORDER_BY = " ORDER BY ? ";
+	private static final String LIMIT = " LIMIT ?,? ";
+
 	private ComputerDAO() {
 		super();
 	}
-	
+
 	public static ComputerDAO getInstance() {
 		if (instance == null) {
 			instance = new ComputerDAO();
@@ -47,19 +53,19 @@ public class ComputerDAO {
 	 * Get all Computer present on the range of the page.
 	 * @param page  the page of values to take
 	 * @return A computer list
-	 * @throws CustomSQLException 
+	 * @throws CustomSQLException
 	 */
 	public List<Computer> getAll(Page page) throws CustomSQLException {
 		List<Computer> computers = new ArrayList<>();
+		String query = QUERY_SELECT_ALL + ORDER_BY + page.getOrder().toString() + LIMIT;
 		try (
 				Connection con = Database.getInstance().getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
+				PreparedStatement ps = con.prepareStatement(query)
 		) {
-			ps.setInt(1, page.getIndexFirstElement());
-			ps.setInt(2, page.getElementByPage());
+			setPage(ps, 1, page);
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
-				
+
 				if (rs.next()) {
 					ComputerMapper.getInstance().toComputers(rs, computers);
 				}
@@ -70,20 +76,20 @@ public class ComputerDAO {
 		}
 		return computers;
 	}
-	
+
 	public List<Computer> searchByName(String name, Page page) throws CustomSQLException {
 		List<Computer> computers = new ArrayList<>();
+		String query = QUERY_SERCH_NAME + ORDER_BY + page.getOrder().toString() + LIMIT;
 		try (
 				Connection con = Database.getInstance().getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SERCH_NAME_LIMIT)
+				PreparedStatement ps = con.prepareStatement(query)
 		) {
 			ps.setString(1, name);
 			ps.setString(2, name);
-			ps.setInt(3, page.getIndexFirstElement());
-			ps.setInt(4, page.getElementByPage());
+			setPage(ps, 3, page);
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
-				
+
 				if (rs.next()) {
 					ComputerMapper.getInstance().toComputers(rs, computers);
 				}
@@ -98,8 +104,8 @@ public class ComputerDAO {
 	/**
 	 * To get a computer by this id.
 	 * @param id the id of the computer
-	 * @return the optional is empty if there is no Computer with this id 
-	 * @throws CustomSQLException 
+	 * @return the optional is empty if there is no Computer with this id
+	 * @throws CustomSQLException
 	 */
 	public Optional<Computer> getById(long id) throws CustomSQLException {
 		Optional<Computer> computer = Optional.empty();
@@ -110,7 +116,7 @@ public class ComputerDAO {
 			ps.setLong(1, id);
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
-			
+
 				if (rs.next()) {
 					computer = Optional.of(ComputerMapper.getInstance().toComputer(rs));
 				}
@@ -124,10 +130,10 @@ public class ComputerDAO {
 
 	/**
 	 * To create a computer.
-	 * @param c this computer will be create in the database. 
+	 * @param c this computer will be create in the database.
 	 * The id of the object will be determined and saved in this object
 	 * @throws ComputerCompanyIdException if the company id does not exist
-	 * @throws CustomSQLException 
+	 * @throws CustomSQLException
 	 */
 	public void create(Computer c) throws ComputerCompanyIdException, CustomSQLException {
 		try (
@@ -135,12 +141,12 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
+			setTimestampOrNull(ps, 2, c.getIntroduced());
+			setTimestampOrNull(ps, 3, c.getDiscontinued());
+			setCompanyOrNull(ps, 4, c.getCompany());
 			logger.debug(ps.toString());
 			ps.executeUpdate();
-			
+
 			//get id
 			try (ResultSet rs = ps.getGeneratedKeys()) {
 				if (rs.first()) {
@@ -160,8 +166,8 @@ public class ComputerDAO {
 	/**
 	 * To update a computer.
 	 * @param c computer to update
-	 * @throws CustomSQLException 
-	 * @throws ComputerCompanyIdException 
+	 * @throws CustomSQLException
+	 * @throws ComputerCompanyIdException
 	 */
 	public void update(Computer c) throws CustomSQLException, ComputerCompanyIdException {
 		try (
@@ -169,9 +175,9 @@ public class ComputerDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
 		) {
 			ps.setString(1, c.getName());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 2, c.getIntroduced());
-			ComputerMapper.getInstance().setTimestampOrNull(ps, 3, c.getDiscontinued());
-			ComputerMapper.getInstance().setCompanyOrNull(ps, 4, c.getCompany());
+			setTimestampOrNull(ps, 2, c.getIntroduced());
+			setTimestampOrNull(ps, 3, c.getDiscontinued());
+			setCompanyOrNull(ps, 4, c.getCompany());
 			ps.setLong(5, c.getId());
 			logger.debug(ps.toString());
 			ps.executeUpdate();
@@ -187,7 +193,7 @@ public class ComputerDAO {
 	 * To delete a Computer thanks to this id .
 	 * @param id the id of the computer
 	 * @return true if the Computer has been deleted.
-	 * @throws CustomSQLException 
+	 * @throws CustomSQLException
 	 */
 	public boolean delete(long id) throws CustomSQLException {
 		try (
@@ -205,7 +211,7 @@ public class ComputerDAO {
 		}
 		return false;
 	}
-	
+
 	public int count() throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -223,7 +229,7 @@ public class ComputerDAO {
 			throw new CustomSQLException("failure to count all computers.");
 		}
 	}
-	
+
 	public int countSearchByName(String name) throws CustomSQLException {
 		try (
 				Connection con = Database.getInstance().getConnection();
@@ -231,7 +237,7 @@ public class ComputerDAO {
 		) {
 			ps.setString(1, name);
 			ps.setString(2, name);
-			
+
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
@@ -243,6 +249,38 @@ public class ComputerDAO {
 			logger.error(e.getMessage(), e);
 			throw new CustomSQLException("failure to count Computer by name search.");
 		}
+	}
+
+	/**
+	 * To insert a Timestamp on a PreparedStatement. This method insert the timestamp or the null value.
+	 * @param ps a PreparedStatement object
+	 * @param pos the position where will be inserted the Timestamp value
+	 * @param localDate this value will be converted in Timestamp value.
+	 * If this value is null, null value is insert on the prepared statement
+	 * @throws SQLException
+	 */
+	private void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate)
+			throws SQLException {
+		if (localDate == null) {
+			ps.setNull(pos, java.sql.Types.NULL);
+		} else {
+			ps.setTimestamp(pos, Timestamp.valueOf(localDate.atStartOfDay()));
+		}
+	}
+
+	private void setCompanyOrNull(PreparedStatement ps, int pos, Company company)
+			throws SQLException {
+		if (company == null) {
+			ps.setNull(pos, java.sql.Types.NULL);
+		} else {
+			ps.setLong(pos, company.getId());
+		}
+	}
+
+	private void setPage(PreparedStatement ps, int pos, Page page) throws SQLException {
+		ps.setInt(pos, page.getIndexColumn());
+		ps.setInt(++pos, page.getIndexFirstElement());
+		ps.setInt(++pos, page.getElementByPage());
 	}
 }
 

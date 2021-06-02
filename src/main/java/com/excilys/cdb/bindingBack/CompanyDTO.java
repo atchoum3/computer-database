@@ -4,10 +4,6 @@ public class CompanyDTO {
 	private String name;
 	private long id;
 	
-	public CompanyDTO(long id) {
-		this(id, "");
-	}
-	
 	public CompanyDTO(long id, String name) {
 		this.id = id;
 		this.name = name;

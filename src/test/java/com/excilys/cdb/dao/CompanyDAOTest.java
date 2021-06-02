@@ -22,7 +22,7 @@ public class CompanyDAOTest {
 	public CompanyDAOTest() {
 		COMPANY_COMPUTER_REFERENCED = new Company(COMPANY_REFERENCED_ID, "Timex Sinclair");
 		try {
-			page = new Page(1, ELEM_BY_PAGE, companyDAO.count());
+			page = new Page.Builder().withElementByPage(ELEM_BY_PAGE).withTotalNumberElem(companyDAO.count()).build();
 		} catch (CustomSQLException e) {
 			e.printStackTrace();
 		}

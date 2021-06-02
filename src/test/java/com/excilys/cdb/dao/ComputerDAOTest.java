@@ -34,7 +34,7 @@ public class ComputerDAOTest {
 				.withDiscontinued(date2).withCompany(COMPANY_COMPUTER_TO_UPDATE).build();
 		
 		try {
-			page = new Page(1, ELEM_BY_PAGE, computerDAO.count());
+			page = new Page.Builder().withElementByPage(ELEM_BY_PAGE).withTotalNumberElem(computerDAO.count()).build();
 		} catch (CustomSQLException e) {
 			page = null;
 			e.printStackTrace();
