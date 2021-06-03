@@ -1,11 +1,5 @@
 package com.excilys.cdb.controller.web;
 
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +15,12 @@ import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @WebServlet(urlPatterns = {"/addComputer"}, name = "addComputer")
@@ -38,12 +38,12 @@ public class AddComputerServlet extends HttpServlet {
 	private static final String ATT_SUCCESS = "success";
 	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String ATT_COMPUTER = "computer";
-	
+
 	public static final String VIEW = "/WEB-INF/view/addComputer.jsp";
-	
+
 	private CompanyService companyService = CompanyService.getInstance();
 	private ComputerService computerService = ComputerService.getInstance();
-	
+
 	public AddComputerServlet() {
 		super();
 	}
@@ -63,18 +63,18 @@ public class AddComputerServlet extends HttpServlet {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	private void addCompanyList(HttpServletRequest req) throws CustomSQLException {
 		req.setAttribute(ATT_ALL_COMPANIES, companyService.getAll());
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		AddComputerDTO computerDTO = mapToDTO(req);
 		addComputer(req, computerDTO);
 		doGet(req, resp);
 	}
-	
+
 	private AddComputerDTO mapToDTO(HttpServletRequest req) {
 		int companyId = 0;
 		String name = req.getParameter(INPUT_COMPUTER_NAME);
@@ -85,10 +85,10 @@ public class AddComputerServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			req.setAttribute(INPUT_COMPANY_ID, "The company id must be a number.");
 		}
-		return new AddComputerDTO.Builder(name).withIntroduced(introduced)
+		return new AddComputerDTO.Builder<>(name).withIntroduced(introduced)
 				.withDiscontinued(discontinued).withCompanyId(companyId).build();
 	}
-	
+
 	/**
 	 * Try to save the computer if each field are correct.
 	 * @param req object to set error on the page
@@ -96,11 +96,11 @@ public class AddComputerServlet extends HttpServlet {
 	 * @return true if the computer is added, otherwise false.
 	 */
 	private boolean addComputer(HttpServletRequest req, AddComputerDTO addComputerDTO) {
-		Map<String, String> errors = new HashMap<String, String>(); 
-		AddComputerValidator addComputerValidator = new AddComputerValidator(errors); 
-		
+		Map<String, String> errors = new HashMap<String, String>();
+		AddComputerValidator addComputerValidator = new AddComputerValidator(errors);
+
 		Optional<Computer> computer = addComputerValidator.map(addComputerDTO);
-		
+
 		if (computer.isPresent()) {
 			try {
 				computerService.create(computer.get());

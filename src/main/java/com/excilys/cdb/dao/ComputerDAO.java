@@ -15,15 +15,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import com.excilys.cdb.dao.mapper.ComputerMapper;
+import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
+import com.excilys.cdb.bindingBack.mapper.ComputerDTOMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.model.mapper.ComputerMapper;
 
 public class ComputerDAO {
-	private static ComputerDAO instance = null;
+	private static ComputerDAO instance = new ComputerDAO();
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 
 	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id";
@@ -36,18 +38,16 @@ public class ComputerDAO {
 	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id WHERE l.name LIKE CONCAT('%',?,'%') OR c.name LIKE CONCAT('%',?,'%')";
 	private static final String QUERY_DELETE_BY_COMPUTER_ID = "DELETE FROM computer WHERE company_id = ?";
 
-
 	private static final String ORDER_BY = " ORDER BY ? ";
 	private static final String LIMIT = " LIMIT ?,? ";
 
-	private ComputerDAO() {
-		super();
-	}
+	private static ComputerDTOMapper mapperDTO = ComputerDTOMapper.getInstance();
+	private static ComputerMapper mapper = ComputerMapper.getInstance();
+
+
+	private ComputerDAO() { }
 
 	public static ComputerDAO getInstance() {
-		if (instance == null) {
-			instance = new ComputerDAO();
-		}
 		return instance;
 	}
 
@@ -69,7 +69,7 @@ public class ComputerDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					ComputerMapper.getInstance().toComputers(rs, computers);
+					computers = mapper.toListComputer(mapperDTO.toListComputer(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -93,7 +93,7 @@ public class ComputerDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					ComputerMapper.getInstance().toComputers(rs, computers);
+					computers = mapper.toListComputer(mapperDTO.toListComputer(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -120,7 +120,7 @@ public class ComputerDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					computer = Optional.of(ComputerMapper.getInstance().toComputer(rs));
+					computer = Optional.of(mapper.toComputer(mapperDTO.toComputer(rs)));
 				}
 			}
 		} catch (SQLException e) {

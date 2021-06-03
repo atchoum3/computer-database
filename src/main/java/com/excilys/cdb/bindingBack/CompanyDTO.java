@@ -3,7 +3,7 @@ package com.excilys.cdb.bindingBack;
 public class CompanyDTO {
 	private String name;
 	private long id;
-	
+
 	public CompanyDTO(long id, String name) {
 		this.id = id;
 		this.name = name;
@@ -42,7 +42,7 @@ public class CompanyDTO {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "CompanyDTO [name=" + name + ", id=" + id + "]";
@@ -55,6 +55,6 @@ public class CompanyDTO {
 	public long getId() {
 		return id;
 	}
-	
-	
+
+
 }

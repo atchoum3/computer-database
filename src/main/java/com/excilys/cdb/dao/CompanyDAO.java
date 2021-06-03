@@ -11,20 +11,23 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.cdb.dao.mapper.CompanyMapper;
+import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.model.mapper.CompanyMapper;
 
 public class CompanyDAO {
 	private static CompanyDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 
-	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM company";
 	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company ORDER BY name";
 	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company ORDER BY id LIMIT ?,?";
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 	private static final String QUERY_DELETE = "DELETE FROM company WHERE id = ?";
+
+	private static final CompanyMapper mapper = CompanyMapper.getInstance();
+	private static final CompanyDTOMapper mapperDTO = CompanyDTOMapper.getInstance();
 
 
 	private CompanyDAO() {
@@ -56,7 +59,7 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					CompanyMapper.getInstance().toCompanies(rs, companies);
+					companies = mapper.toListCompany(mapperDTO.toListCompany(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -81,7 +84,7 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					CompanyMapper.getInstance().toCompanies(rs, companies);
+					companies = mapper.toListCompany(mapperDTO.toListCompany(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -108,7 +111,7 @@ public class CompanyDAO {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				if (rs.next()) {
-					company = Optional.of(CompanyMapper.getInstance().toCompany(rs));
+					company = Optional.of(mapper.toCompany(mapperDTO.toCompany(rs)));
 				}
 			}
 		} catch (SQLException e) {

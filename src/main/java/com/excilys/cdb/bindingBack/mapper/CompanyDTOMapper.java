@@ -2,7 +2,9 @@ package com.excilys.cdb.bindingBack.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.excilys.cdb.bindingBack.CompanyDTO;
 
@@ -14,9 +16,9 @@ public class CompanyDTOMapper {
 	}
 
 	/**
-	 * Get data from a ResultSet to build a Company object.
+	 * Get data from a ResultSet to build a CompanyDTO object.
 	 * @param rs a result set object from the SQL relation of company
-	 * @return Company object
+	 * @return CompanyDTO object
 	 * @throws SQLException
 	 */
 	public CompanyDTO toCompany(ResultSet rs) throws SQLException {
@@ -29,12 +31,15 @@ public class CompanyDTOMapper {
 	 * Get data from a ResultSet to fill in the collection.
 	 * @param rs a ResultSet object from the SQL relation of company
 	 * @param collection to fill in
+	 * @return CompanyDTO list
 	 * @throws SQLException
 	 */
-	public void toCompanies(ResultSet rs, Collection<CompanyDTO> collection) throws SQLException {
+	public List<CompanyDTO> toListCompany(ResultSet rs) throws SQLException {
+		List<CompanyDTO> list = new ArrayList<>();
 		do {
-			collection.add(this.toCompany(rs));
+			list.add(this.toCompany(rs));
 		} while (rs.next());
-	}		
+		return list;
+	}
 
 }

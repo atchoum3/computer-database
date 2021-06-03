@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: checkStyle-excilys
+    Checkstyle-Configuration: chesktyle_cdb_maxime
     Description: none
 -->
 <module name="Checker">
@@ -52,8 +52,10 @@
     <module name="SimplifyBooleanReturn"/>
     <module name="ArrayTypeStyle"/>
     <module name="UpperEll"/>
-    <module name="MissingOverride">
-      <property name="severity" value="warning"/>
+    <module name="SuppressionCommentFilter">
+      <property name="offCommentFormat" value="CHECKSTYLE_OFF: JAVADOC"/>
+      <property name="onCommentFormat" value="CHECKSTYLE_ON: JAVADOC"/>
+      <property name="checkFormat" value="JavadocMethod"/>
     </module>
   </module>
   <module name="Translation"/>
@@ -70,4 +72,10 @@
     <property name="message" value="Line has trailing spaces."/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
+
+
+  <module name="SuppressionFilter">
+    <property name="file" value="config/checkstyle/suppressions.xml"/>
+  </module>
+
 </module>
