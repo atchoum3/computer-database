@@ -4,9 +4,9 @@
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	
-	
-	
+
+
+
 	<error-page>
 	    <error-code>403</error-code>
 	    <location>/static/view/403.html</location>

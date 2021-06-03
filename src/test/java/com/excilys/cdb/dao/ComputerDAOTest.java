@@ -25,14 +25,14 @@ public class ComputerDAOTest {
 	private final int ELEM_BY_PAGE = 4;
 	private final long COMPANY_ID_NOT_EXIST = -1;
 	private  Page page;
-	
-	public ComputerDAOTest() {		
+
+	public ComputerDAOTest() {
 		LocalDate date1 = LocalDate.of(2010, 1, 7);
 		LocalDate date2 = LocalDate.of(2011, 1, 3);
 		COMPANY_COMPUTER_TO_UPDATE = new Company(4, "Netronics"); // company exist on database
 		COMPUTER_TO_UPDATE = new Computer.Builder("MyCompyuter").withId(44).withIntroduced(date1)
 				.withDiscontinued(date2).withCompany(COMPANY_COMPUTER_TO_UPDATE).build();
-		
+
 		try {
 			page = new Page.Builder().withElementByPage(ELEM_BY_PAGE).withTotalNumberElem(computerDAO.count()).build();
 		} catch (CustomSQLException e) {
@@ -52,9 +52,9 @@ public class ComputerDAOTest {
 			e.printStackTrace();
 			fail();
 		}
-		
+
 	}
-	
+
 	@Test
 	public void updateShouldSucced() {
 		try {
@@ -67,7 +67,7 @@ public class ComputerDAOTest {
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void getAllShouldSucced() {
 		List<Computer> computers;
@@ -79,8 +79,8 @@ public class ComputerDAOTest {
 			fail();
 		}
 	}
-	
-	@Test 
+
+	@Test
 	public void deleteShouldSucced() {
 		try {
 			computerDAO.delete(COMPUTER_REFERENCED_ID_DELETE);
@@ -90,28 +90,28 @@ public class ComputerDAOTest {
 			e.printStackTrace();
 			fail();
 		}
-		
+
 	}
-	
+
 	@Test
 	public void createShouldSucced() throws ComputerCompanyIdException {
 		LocalDate date1 = LocalDate.of(2007, 3, 7);
 		LocalDate date2 = LocalDate.of(2010, 9, 3);
 		Computer computer = new Computer.Builder("Hey").withIntroduced(date1).withDiscontinued(date2).build();
-		
+
 		try {
 			computerDAO.create(computer);
 			System.out.println(computer.getId());
 			Optional<Computer> opt = computerDAO.getById(computer.getId());
 			assertEquals(true, opt.isPresent());
 			assertEquals(computer, opt.get());
-			
+
 		} catch (ComputerCompanyIdException | CustomSQLException e) {
 			e.printStackTrace();
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void createWrongCompanyId() {
 		LocalDate date1 = LocalDate.of(2007, 3, 7);
@@ -129,5 +129,5 @@ public class ComputerDAOTest {
 			fail();
 		}
 	}
-	
+
 }
