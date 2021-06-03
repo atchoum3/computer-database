@@ -7,13 +7,13 @@ public class Page {
 	private int elementByPage;
 	private int totalNumberElem;
 	private int indexLastPage;
-	private int indexColumn;
-	private OrderBy order;
+	private OrderBy column;
+	private Order order;
 
 	private Page(Builder builder) {
 		elementByPage = builder.elementByPage;
 		totalNumberElem = builder.totalNumberElem;
-		indexColumn = builder.indexColumn;
+		column = builder.column;
 		order = builder.order;
 		computeLastPage();
 
@@ -22,19 +22,18 @@ public class Page {
 
 	public static class Builder {
 		private static final int DEFAULT_ELEM_BY_PAGE = 10;
-		private static final OrderBy DEFAULT_ORDER = OrderBy.ASC;
 
 		private int currentPage;
 		private int elementByPage;
 		private int totalNumberElem;
-		private int indexColumn;
-		private OrderBy order;
+		private OrderBy column;
+		private Order order;
 
 		public Builder() {
 			elementByPage = DEFAULT_ELEM_BY_PAGE;
-			order = DEFAULT_ORDER;
+			order = Order.ASC;
 			currentPage = INDEX_FIRST_PAGE;
-			indexColumn = INDEX_FIRST_PAGE;
+			column = OrderBy.COMPUTER_NAME;
 		}
 
 		public Builder withCurrentPage(int currentPage) {
@@ -52,12 +51,12 @@ public class Page {
 			return this;
 		}
 
-		public Builder withIndexColumn(int indexColumn) {
-			this.indexColumn = indexColumn;
+		public Builder withColumn(OrderBy column) {
+			this.column = column;
 			return this;
 		}
 
-		public Builder withOrder(OrderBy order) {
+		public Builder withOrder(Order order) {
 			this.order = order;
 			return this;
 		}
@@ -67,21 +66,15 @@ public class Page {
 		}
 	}
 
-	/**
-	 * go to the next page if this page is not the last page.
-	 */
-	public void nextPage() {
-		if (currentPage < indexLastPage) {
-			currentPage++;
-		}
-	}
-
-	/**
-	 * go to the previous page if this page is not the first page.
-	 */
 	public void previousPage() {
 		if (currentPage > INDEX_FIRST_PAGE) {
 			currentPage--;
+		}
+	}
+
+	public void nextPage() {
+		if (currentPage < indexLastPage) {
+			currentPage++;
 		}
 	}
 
@@ -139,19 +132,19 @@ public class Page {
 		return elementByPage;
 	}
 
-	public int getIndexColumn() {
-		return indexColumn;
+	public OrderBy getColumn() {
+		return column;
 	}
 
-	public void setIndexColumn(int indexColumn) {
-		this.indexColumn = indexColumn;
+	public void setColumn(OrderBy column) {
+		this.column = column;
 	}
 
-	public OrderBy getOrder() {
+	public Order getOrder() {
 		return order;
 	}
 
-	public void setOrder(OrderBy order) {
+	public void setOrder(Order order) {
 		this.order = order;
 	}
 }

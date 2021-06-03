@@ -13,6 +13,7 @@ import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Order;
 import com.excilys.cdb.model.OrderBy;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
@@ -125,14 +126,14 @@ public class ListComputerServlet extends HttpServlet {
 	 * @param req object to get the current page
 	 * @return (1) the  column id to sort passed by GET method. (2) 1 if the parameter in URL does not exist.
 	 */
-	private int getSortedColumn(HttpServletRequest req) {
-		int id;
+	private OrderBy getSortedColumn(HttpServletRequest req) {
+		OrderBy column;
 		try {
-			id = Integer.parseInt(req.getParameter(URL_PARAM_ORDER_COLUMN));
+			column = OrderBy.valueOf(req.getParameter(URL_PARAM_ORDER_COLUMN));
 		} catch (NumberFormatException e) {
-			id = 1;
+			column = OrderBy.COMPUTER_NAME;
 		}
-		return id;
+		return column;
 	}
 
 	/**
@@ -140,12 +141,12 @@ public class ListComputerServlet extends HttpServlet {
 	 * @param req object to get the current page
 	 * @return return true if it is in ascincronous order
 	 */
-	private OrderBy getOrder(HttpServletRequest req) {
+	private Order getOrder(HttpServletRequest req) {
 		String order = req.getParameter(URL_PARAM_ORDER);
 		if ("DESC".equals(order)) {
-			return OrderBy.DESC;
+			return Order.DESC;
 		}
-		return OrderBy.ASC;
+		return Order.ASC;
 	}
 
 	/**
@@ -178,10 +179,10 @@ public class ListComputerServlet extends HttpServlet {
 				page.setElementByPage(nbElemByPage);
 			}
 
-			page.setIndexColumn(getSortedColumn(req) + 1); // +1 because we don't print the first column (id)
+			page.setColumn(getSortedColumn(req));
 			page.setOrder(getOrder(req));
 		} else {
-			page = new Page.Builder().withElementByPage(DEFAULT_NB_ELEMENT_BY_PAGE).withIndexColumn(DEFAULT_ORDER_COLUMN).build();
+			page = new Page.Builder().withElementByPage(DEFAULT_NB_ELEMENT_BY_PAGE).build();
 		}
 
 		return page;
@@ -199,7 +200,7 @@ public class ListComputerServlet extends HttpServlet {
 		req.setAttribute(ATT_SEARCH, searchName);
 		req.setAttribute(ATT_ORDER, page.getOrder().name());
 		req.setAttribute(ATT_ORDER_REVERSED, page.getOrder().reverse().name());
-		req.setAttribute(ATT_ORDER_COLUMN, page.getIndexColumn() - 1); // because we don't print the first column (id)
+		req.setAttribute(ATT_ORDER_COLUMN, page.getColumn().name());
 		req.setAttribute(ATT_MAX_PAGE, page.getIndexLastPage());
 		req.setAttribute(ATT_MAX_PAGE, page.getIndexLastPage());
 		req.setAttribute(ATT_CURRENT_PAGE, page.getCurrentPage());

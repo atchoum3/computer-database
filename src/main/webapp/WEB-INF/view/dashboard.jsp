@@ -63,15 +63,15 @@
                         	 	<c:url value="/dashboard">
 	                				<c:param name="page" value="${currentPage}"/>
 	                				<c:param name="search" value="${search}"/>
-	                				<c:param name="column" value="1"/>
+	                				<c:param name="column" value="COMPUTER_NAME"/>
 	                				<c:param name="order" value="${orderReversed}"/>
 	                			</c:url>
                         	">Computer name
                         	<c:choose>
-         						<c:when test = "${order == 'ASC' && column == 1}">
+         						<c:when test = "${order == 'ASC' && column == 'COMPUTER_NAME'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 1}">
+						        <c:when test = "${order == 'DESC' && column == 'COMPUTER_NAME'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -82,15 +82,15 @@
                         		<c:url value="/dashboard">
 	                				<c:param name="page" value="${currentPage}"/>
 	                				<c:param name="search" value="${search}"/>
-	                				<c:param name="column" value="2"/>
+	                				<c:param name="column" value="INTRODUCED"/>
 	                				<c:param name="order" value="${orderReversed}"/>
 	                			</c:url>
                         	 ">Introduced date
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 2}">
+         						<c:when test = "${order == 'ASC' && column == 'INTRODUCED'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 2}">
+						        <c:when test = "${order == 'DESC' && column == 'INTRODUCED'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -102,15 +102,15 @@
                         	 	<c:url value="/dashboard">
 	                				<c:param name="page" value="${currentPage}"/>
 	                				<c:param name="search" value="${search}"/>
-	                				<c:param name="column" value="3"/>
+	                				<c:param name="column" value="DISCONTINUED"/>
 	                				<c:param name="order" value="${orderReversed}"/>
 	                			</c:url>
                         	 ">Discontinued date
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 3}">
+         						<c:when test = "${order == 'ASC' && column == 'DISCONTINUED'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 3}">
+						        <c:when test = "${order == 'DESC' && column == 'DISCONTINUED'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -122,15 +122,15 @@
                         	 	<c:url value="/dashboard">
 	                				<c:param name="page" value="${currentPage}"/>
 	                				<c:param name="search" value="${search}"/>
-	                				<c:param name="column" value="4"/>
+	                				<c:param name="column" value="COMPANY_NAME"/>
 	                				<c:param name="order" value="${orderReversed}"/>
 	                			</c:url>
                         	 ">Company
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 4}">
+         						<c:when test = "${order == 'ASC' && column == 'COMPANY_NAME'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 4}">
+						        <c:when test = "${order == 'DESC' && column == 'COMPANY_NAME'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>

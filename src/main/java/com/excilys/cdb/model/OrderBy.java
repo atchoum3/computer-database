@@ -1,14 +1,18 @@
 package com.excilys.cdb.model;
 
 public enum OrderBy {
-	ASC,
-	DESC;
+	COMPUTER_NAME(2),
+	INTRODUCED(3),
+	DISCONTINUED(4),
+	COMPANY_NAME(5);
 
-	public OrderBy reverse() {
-		if (this.equals(ASC)) {
-			return OrderBy.DESC;
-		} else {
-			return OrderBy.ASC;
-		}
+	private int index;
+
+	private OrderBy(int index) {
+		this.index = index;
+	}
+
+	public int getIndex() {
+		return index;
 	}
 }
