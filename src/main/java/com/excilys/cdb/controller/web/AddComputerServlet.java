@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.bindingFront.AddComputerDTO;
+import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
 import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -97,9 +98,7 @@ public class AddComputerServlet extends HttpServlet {
 	 */
 	private boolean addComputer(HttpServletRequest req, AddComputerDTO addComputerDTO) {
 		Map<String, String> errors = new HashMap<String, String>();
-		AddComputerValidator addComputerValidator = new AddComputerValidator(errors);
-
-		Optional<Computer> computer = addComputerValidator.map(addComputerDTO);
+		Optional<Computer> computer = AddComputerMapper.getInstance().toComputer(addComputerDTO, errors);
 
 		if (computer.isPresent()) {
 			try {

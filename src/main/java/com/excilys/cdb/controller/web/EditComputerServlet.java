@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.bindingFront.EditComputerDTO;
-import com.excilys.cdb.bindingFront.mapper.ComputerMapper;
+import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
 import com.excilys.cdb.bindingFront.validator.EditComputerValidator;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -28,9 +28,9 @@ public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected static Logger logger = LoggerFactory.getLogger(EditComputerServlet.class);
-	
+
 	public static final String VIEW = "/WEB-INF/view/editComputer.jsp";
-	
+
 	private static final String INPUT_COMPUTER_NAME = "computerName";
 	private static final String INPUT_INTRODUCED = "introduced";
 	private static final String INPUT_DISCONTINUED = "discontinued";
@@ -42,10 +42,10 @@ public class EditComputerServlet extends HttpServlet {
 	private static final String ATT_COMPUTER = "computer";
 	private static final String INPUT_ID = "id";
 	private static final String URL_PARAM_ID = "id";
-	
+
 	private CompanyService companyService = CompanyService.getInstance();
 	private ComputerService computerService = ComputerService.getInstance();
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		try {
@@ -56,20 +56,20 @@ public class EditComputerServlet extends HttpServlet {
 			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
 			req.setAttribute(ATT_ERRORS, errors);
 		}
-		
+
 		try {
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	private void setCompanyListOnView(HttpServletRequest req) throws CustomSQLException {
 		req.setAttribute(ATT_ALL_COMPANIES, companyService.getAll());
 	}
-	
+
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {		
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		try {
 			setCompanyListOnView(req);
 		} catch (CustomSQLException e) {
@@ -77,7 +77,7 @@ public class EditComputerServlet extends HttpServlet {
 			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
 			req.setAttribute(ATT_ERRORS, errors);
 		}
-		
+
 		EditComputerDTO editComputerDTO = mapToDTO(req);
 		editComputer(req, resp, editComputerDTO);
 		try {
@@ -86,7 +86,7 @@ public class EditComputerServlet extends HttpServlet {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	private EditComputerDTO mapToDTO(HttpServletRequest req) {
 		int companyId = 0, id = 0;
 		String name = req.getParameter(INPUT_COMPUTER_NAME);
@@ -105,13 +105,11 @@ public class EditComputerServlet extends HttpServlet {
 		return new EditComputerDTO.Builder(name).withIntroduced(introduced)
 				.withDiscontinued(discontinued).withCompanyId(companyId).withId(id).build();
 	}
-	
+
 	private void editComputer(HttpServletRequest req,  HttpServletResponse resp, EditComputerDTO  editComputerDTO) {
-		Map<String, String> errors = new HashMap<String, String>(); 
-		EditComputerValidator editComputerValidator = new EditComputerValidator(errors); 
-		
-		Optional<Computer> computer = editComputerValidator.map(editComputerDTO);
-		
+		Map<String, String> errors = new HashMap<String, String>();
+		Optional<Computer> computer = EditComputerMapper.getInstance().toComputer(editComputerDTO, errors);
+
 		if (computer.isPresent()) {
 			try {
 				computerService.update(computer.get());
@@ -126,13 +124,13 @@ public class EditComputerServlet extends HttpServlet {
 		}
 		req.setAttribute(ATT_COMPUTER, editComputerDTO);
 	}
-	
+
 	private void setComputerOnView(HttpServletRequest req) throws CustomSQLException {
 		int id = getNbElemByPage(req);
 		if (id != -1) {
 			Optional<Computer> computer = computerService.getById(id);
 			if (computer.isPresent()) {
-				EditComputerDTO editComputerDTO = ComputerMapper.getInstance().toEditComputerDTO(computer.get());
+				EditComputerDTO editComputerDTO = EditComputerMapper.getInstance().toEditComputerDTO(computer.get());
 				req.setAttribute(ATT_COMPUTER, editComputerDTO);
 			}
 		}
@@ -141,7 +139,7 @@ public class EditComputerServlet extends HttpServlet {
 	/**
 	 * Get the id of the computer to update.
 	 * @param req object to get the number of element by page
-	 * @return (1) the number of element by page passed by GET method. (2) -1 if the parameter in URL does not exist. 
+	 * @return (1) the number of element by page passed by GET method. (2) -1 if the parameter in URL does not exist.
 	 */
 	private int getNbElemByPage(HttpServletRequest req) {
 		int id;

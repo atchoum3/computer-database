@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
-import com.excilys.cdb.bindingFront.mapper.ComputerMapper;
+import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.OrderBy;
@@ -56,7 +56,7 @@ public class ListComputerServlet extends HttpServlet {
 	private static final String URL_PARAM_SEARCH_NAME = "search";
 
 	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerMapper computerMapper = ComputerMapper.getInstance();
+	private ComputerCompanyNameMapper mapper = ComputerCompanyNameMapper.getInstance();
 
 
 	@Override
@@ -75,7 +75,7 @@ public class ListComputerServlet extends HttpServlet {
 				computers = computerService.searchByName(searchName, page);
 			}
 
-			List<ComputerCompanyNameDTO> computersDTO = computerMapper.toComputerCompanyName(computers);
+			List<ComputerCompanyNameDTO> computersDTO = mapper.toComputerCompanyName(computers);
 			req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
 			setPageAttributes(req, searchName, page);
 
