@@ -34,6 +34,7 @@ public class Page {
 			elementByPage = DEFAULT_ELEM_BY_PAGE;
 			order = DEFAULT_ORDER;
 			currentPage = INDEX_FIRST_PAGE;
+			indexColumn = INDEX_FIRST_PAGE;
 		}
 
 		public Builder withCurrentPage(int currentPage) {

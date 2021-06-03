@@ -66,7 +66,6 @@ public class ListComputerServlet extends HttpServlet {
 
 		try {
 			Page page = getPage(req);
-			System.err.println(page);
 
 			if (searchName == null) {
 				page.setTotalNumberElem(computerService.count());

@@ -214,7 +214,7 @@ public class ComputerDAO {
 		return false;
 	}
 
-	public int deleteByCompanyId(Connection con, long computerId) throws CustomSQLException {
+	int deleteByCompanyId(Connection con, long computerId) throws CustomSQLException {
 		int nbDeleted = 0;
 		try (
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE_BY_COMPUTER_ID)
