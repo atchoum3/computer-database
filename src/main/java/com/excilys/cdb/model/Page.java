@@ -85,11 +85,11 @@ public class Page {
 	}
 
 	public int getIndexFirstElement() {
-		return currentPage * elementByPage;
+		return (currentPage - 1) * elementByPage;
 	}
 
 	private void computeLastPage() {
-		indexLastPage = (int) Math.ceil(totalNumberElem / elementByPage);
+		indexLastPage = (int) Math.ceil(totalNumberElem / elementByPage) + INDEX_FIRST_PAGE;
 	}
 
 	@Override
