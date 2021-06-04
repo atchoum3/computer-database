@@ -152,8 +152,8 @@ public class ConsoleControler {
 	 * @throws CustomSQLException
 	 */
 	private void displayAllCompanies() throws CustomSQLException {
-		Page page = new Page.Builder().withElementByPage(10)
-				.withTotalNumberElem(CompanyService.getInstance().count()).build();
+		Page page = new Page.Builder().withNbElementByPage(10)
+				.withNbElement(CompanyService.getInstance().count()).build();
 		do {
 			DisplayCompany.displayCollection(CompanyService.getInstance().getAll(page));
 			console.displayFooterPage(page);
@@ -165,8 +165,8 @@ public class ConsoleControler {
 	 * @throws CustomSQLException
 	 */
 	private void displayAllComputers() throws CustomSQLException {
-		Page page = new Page.Builder().withElementByPage(10)
-				.withTotalNumberElem(CompanyService.getInstance().count()).build();
+		Page page = new Page.Builder().withNbElementByPage(10)
+				.withNbElement(CompanyService.getInstance().count()).build();
 		do {
 			DisplayComputer.displayCollection(ComputerService.getInstance().getAll(page));
 			console.displayFooterPage(page);

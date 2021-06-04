@@ -2,35 +2,38 @@ package com.excilys.cdb.model;
 
 public class Page {
 	public static final int INDEX_FIRST_PAGE = 1;
+	private static final int INDEX_PAGE_WINDOW = 5;
 
 	private int currentPage;
-	private int elementByPage;
-	private int totalNumberElem;
+	private int nbElement;
+	private int nbElementByPage;
 	private int indexLastPage;
 	private OrderBy column;
 	private Order order;
+	private int pageIndexBegin;
+	private int pageIndexEnd;
 
 	private Page(Builder builder) {
-		elementByPage = builder.elementByPage;
-		totalNumberElem = builder.totalNumberElem;
+		nbElement = builder.nbElement;
+		nbElementByPage = builder.nbElementByPage;
 		column = builder.column;
 		order = builder.order;
 		computeLastPage();
 
-		setCurrentPage(currentPage);
+		setCurrentPage(builder.currentPage);
 	}
 
 	public static class Builder {
-		private static final int DEFAULT_ELEM_BY_PAGE = 10;
+		private static final int DEFAULT_NB_ELEMENT_BY_PAGE = 10;
 
 		private int currentPage;
-		private int elementByPage;
-		private int totalNumberElem;
+		private int nbElement;
+		private int nbElementByPage;
 		private OrderBy column;
 		private Order order;
 
 		public Builder() {
-			elementByPage = DEFAULT_ELEM_BY_PAGE;
+			nbElementByPage = DEFAULT_NB_ELEMENT_BY_PAGE;
 			order = Order.ASC;
 			currentPage = INDEX_FIRST_PAGE;
 			column = OrderBy.COMPUTER_NAME;
@@ -41,13 +44,13 @@ public class Page {
 			return this;
 		}
 
-		public Builder withElementByPage(int elementByPage) {
-			this.elementByPage = elementByPage;
+		public Builder withNbElement(int nbElement) {
+			this.nbElement = nbElement;
 			return this;
 		}
 
-		public Builder withTotalNumberElem(int totalNumberElem) {
-			this.totalNumberElem = totalNumberElem;
+		public Builder withNbElementByPage(int nbElementByPage) {
+			this.nbElementByPage = nbElementByPage;
 			return this;
 		}
 
@@ -79,17 +82,24 @@ public class Page {
 	}
 
 	public int getIndexFirstElement() {
-		return (currentPage - 1) * elementByPage;
+		return (currentPage - 1) * nbElementByPage;
 	}
 
 	private void computeLastPage() {
-		indexLastPage = (int) Math.ceil(totalNumberElem / elementByPage) + INDEX_FIRST_PAGE;
+		indexLastPage = (int) Math.ceil(nbElement / nbElementByPage) + INDEX_FIRST_PAGE;
 	}
 
 	@Override
 	public String toString() {
-		return "Page [currentPage=" + currentPage + ", elementByPage=" + elementByPage + ", totalNumberElem="
-				+ totalNumberElem + ", indexLastPage=" + indexLastPage + "]";
+		return "Page [currentPage=" + currentPage + ", nbElement=" + nbElement + ", nbElementByPage=" + nbElementByPage
+				+ ", indexLastPage=" + indexLastPage + ", column=" + column + ", order=" + order + ", pageIndexBegin="
+				+ pageIndexBegin + ", pageIndexEnd=" + pageIndexEnd + "]";
+	}
+
+	private void computeIndex() {
+		int halfPageWindow = INDEX_PAGE_WINDOW / 2;
+		pageIndexBegin = Math.max(currentPage - halfPageWindow, Page.INDEX_FIRST_PAGE);
+		pageIndexEnd = Math.min(pageIndexBegin + INDEX_PAGE_WINDOW - 1, indexLastPage);
 	}
 
 	/// setters & getters
@@ -102,22 +112,23 @@ public class Page {
 		} else {
 			currentPage = page;
 		}
+		computeIndex();
 	}
 
-	public void setElementByPage(int elementByPage) {
-		this.elementByPage = elementByPage;
+	public void setNbElementByPage(int nbElementByPage) {
+		this.nbElementByPage = nbElementByPage;
 		computeLastPage();
 		setCurrentPage(currentPage);
 	}
 
-	public void setTotalNumberElem(int totalNumberElem) {
-		this.totalNumberElem = totalNumberElem;
+	public void setNbElement(int nbElement) {
+		this.nbElement = nbElement;
 		computeLastPage();
 		setCurrentPage(currentPage);
 	}
 
-	public int getTotalNumberElem() {
-		return totalNumberElem;
+	public int getTotalNumberElement() {
+		return nbElementByPage;
 	}
 
 	public int getIndexLastPage() {
@@ -128,9 +139,14 @@ public class Page {
 		return currentPage;
 	}
 
-	public int getElementByPage() {
-		return elementByPage;
+	public int getNbElementByPage() {
+		return nbElementByPage;
 	}
+
+	public int getNbElement() {
+		return nbElement;
+	}
+
 
 	public OrderBy getColumn() {
 		return column;
@@ -146,5 +162,13 @@ public class Page {
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+
+	public int getPageIndexBegin() {
+		return pageIndexBegin;
+	}
+
+	public int getPageIndexEnd() {
+		return pageIndexEnd;
 	}
 }

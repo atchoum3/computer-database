@@ -298,7 +298,7 @@ public class ComputerDAO {
 	private void setPage(PreparedStatement ps, int pos, Page page) throws SQLException {
 		ps.setInt(pos, page.getColumn().getIndex());
 		ps.setInt(++pos, page.getIndexFirstElement());
-		ps.setInt(++pos, page.getElementByPage());
+		ps.setInt(++pos, page.getNbElementByPage());
 	}
 }
 

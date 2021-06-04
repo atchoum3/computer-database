@@ -23,11 +23,12 @@
         <div class="container">
         	<div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
             <h1 id="homeTitle">
-                <c:out value="${computerNumber}"></c:out> Computers found
+                <c:out value="${page.nbElement}"></c:out> Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
+	         			<input type="hidden" name="nbElementByPage" value="${page.nbElementByPage}"/>
                         <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${search}"/>
                         <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
                     </form>
@@ -61,10 +62,11 @@
                         <th>
                        		<a href="
                         	 	<c:url value="/dashboard">
-	                				<c:param name="page" value="${currentPage}"/>
-	                				<c:param name="search" value="${search}"/>
 	                				<c:param name="column" value="COMPUTER_NAME"/>
+	                				<c:param name="currentPage" value="${page.currentPage}"/>
+	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	">Computer name
                         	<c:choose>
@@ -80,10 +82,11 @@
                         <th>
                         	<a href="
                         		<c:url value="/dashboard">
-	                				<c:param name="page" value="${currentPage}"/>
-	                				<c:param name="search" value="${search}"/>
 	                				<c:param name="column" value="INTRODUCED"/>
+	                				<c:param name="currentPage" value="${page.currentPage}"/>
+	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Introduced date
                         	 <c:choose>
@@ -100,10 +103,11 @@
                         <th>
                         	<a href="
                         	 	<c:url value="/dashboard">
-	                				<c:param name="page" value="${currentPage}"/>
-	                				<c:param name="search" value="${search}"/>
 	                				<c:param name="column" value="DISCONTINUED"/>
+	                				<c:param name="currentPage" value="${page.currentPage}"/>
+	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Discontinued date
                         	 <c:choose>
@@ -120,10 +124,11 @@
                         <th>
                         	<a href="
                         	 	<c:url value="/dashboard">
-	                				<c:param name="page" value="${currentPage}"/>
-	                				<c:param name="search" value="${search}"/>
 	                				<c:param name="column" value="COMPANY_NAME"/>
+	                				<c:param name="currentPage" value="${page.currentPage}"/>
+	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Company
                         	 <c:choose>
@@ -164,38 +169,41 @@
             <ul class="pagination">
                <li>
                     <a href="
-                   		<c:if test="${currentPage > 1}">
+                   		<c:if test="${page.currentPage > 1}">
                       		<c:url value="/dashboard">
-                      			<c:param name="page" value="${currentPage - 1}"/>
+                				<c:param name="order" value="${page.order}"/>
+                     			<c:param name="column" value="${page.column}"/>
+                     			<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
+                      			<c:param name="currentPage" value="${page.currentPage - 1}"/>
                       			<c:param name="search" value="${search}"/>
-                     			<c:param name="column" value="${column}"/>
-                				<c:param name="order" value="${order}"/>
                       		</c:url>
                       	</c:if>"
 			  		  	aria-label="Previous">
                     	<span aria-hidden="true">&laquo;</span>
                   	</a>
 	              </li>
-	              <c:forEach var="i" begin="${pageIndexBegin}" end="${pageIndexEnd}" step="1">
-		              <li class="<c:if test="${i == currentPage}">active</c:if>">
+	              <c:forEach var="i" begin="${page.pageIndexBegin}" end="${page.pageIndexEnd}" step="1">
+		              <li class="<c:if test="${i == page.currentPage}">active</c:if>">
 		              	<a href="
 		              		<c:url value="/dashboard">
-					  			<c:param name="page" value="${i}"/>
+					  			<c:param name="column" value="${page.column}"/>
+					  			<c:param name="currentPage" value="${i}"/>
+					  			<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 					  			<c:param name="search" value="${search}"/>
-					  			<c:param name="column" value="${column}"/>
-                				<c:param name="order" value="${order}"/>
+                				<c:param name="order" value="${page.order}"/>
 					  		</c:url>">
 					  	${i}</a>
 					  </li>
 				  </c:forEach>
 	              <li>
 	                	<a href="
-	                		<c:if test="${currentPage < pageIndexEnd}">
+	                		<c:if test="${page.currentPage < page.pageIndexEnd}">
 	                			<c:url value="/dashboard">
-	                				<c:param name="page" value="${currentPage + 1}"/>
+									<c:param name="column" value="${page.column}"/>
+									<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
+	                				<c:param name="currentPage" value="${page.currentPage + 1}"/>
 	                				<c:param name="search" value="${search}"/>
-									<c:param name="column" value="${column}"/>
-                					<c:param name="order" value="${order}"/>
+                					<c:param name="order" value="${page.order}"/>
 	                			</c:url>
 	                		</c:if>
 	                	" aria-label="Next">
@@ -207,13 +215,13 @@
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
-	         		<input type="hidden" value="${currentPage}" name="page"/>
-	         		<input type="hidden" value="${search}" name="search"/>
-	         		<input type="hidden" value="${column}" name="column"/>
-                	<input type="hidden" value="${order}" name="order"/>
-		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElemByPage" value="10">10</button>
-		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElemByPage" value="50">50</button>
-		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElemByPage" value="100">100</button>
+	         		<input type="hidden" name="column" value="${page.column}"/>
+	         		<input type="hidden" name="currentPage"  value="${page.currentPage}" />
+	         		<input type="hidden" name="search"  value="${search}"/>
+                	<input type="hidden" name="order" value="${page.order}"/>
+		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElementByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElementByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElementByPage" value="100">100</button>
 	            </form>
 	        </div>
         </div>

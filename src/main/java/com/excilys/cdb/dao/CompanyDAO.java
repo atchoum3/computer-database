@@ -54,7 +54,7 @@ public class CompanyDAO {
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
 		) {
 			ps.setInt(1, page.getIndexFirstElement());
-			ps.setInt(2, page.getElementByPage());
+			ps.setInt(2, page.getNbElementByPage());
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {
 

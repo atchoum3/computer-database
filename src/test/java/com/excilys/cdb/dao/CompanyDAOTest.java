@@ -18,16 +18,16 @@ public class CompanyDAOTest {
 	private final int COMPANY_REFERENCED_ID = 22;
 	private final Company COMPANY_COMPUTER_REFERENCED;
 	private Page page;
-	
+
 	public CompanyDAOTest() {
 		COMPANY_COMPUTER_REFERENCED = new Company(COMPANY_REFERENCED_ID, "Timex Sinclair");
 		try {
-			page = new Page.Builder().withElementByPage(ELEM_BY_PAGE).withTotalNumberElem(companyDAO.count()).build();
+			page = new Page.Builder().withNbElementByPage(ELEM_BY_PAGE).withNbElement(companyDAO.count()).build();
 		} catch (CustomSQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void getAllShouldSucced() {
 		List<Company> companies;
@@ -38,9 +38,9 @@ public class CompanyDAOTest {
 			e.printStackTrace();
 			fail("CustomSQLException thrown");
 		}
-		
+
 	}
-	
+
 	@Test
 	public void getByIdShouldSucced() {
 		Optional<Company> companies;
