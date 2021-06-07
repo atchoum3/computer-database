@@ -23,7 +23,7 @@
         <div class="container">
         	<div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
             <h1 id="homeTitle">
-                <c:out value="${page.nbElement}"></c:out> Computers found
+                <c:out value="${page.nbElementTotal}"></c:out> Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -182,7 +182,7 @@
                     	<span aria-hidden="true">&laquo;</span>
                   	</a>
 	              </li>
-	              <c:forEach var="i" begin="${page.pageIndexBegin}" end="${page.pageIndexEnd}" step="1">
+	              <c:forEach var="i" begin="${page.beginSlider}" end="${page.endSlider}" step="1">
 		              <li class="<c:if test="${i == page.currentPage}">active</c:if>">
 		              	<a href="
 		              		<c:url value="/dashboard">
@@ -197,7 +197,7 @@
 				  </c:forEach>
 	              <li>
 	                	<a href="
-	                		<c:if test="${page.currentPage < page.pageIndexEnd}">
+	                		<c:if test="${page.currentPage < page.endSlider}">
 	                			<c:url value="/dashboard">
 									<c:param name="column" value="${page.column}"/>
 									<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -219,9 +219,9 @@
 	         		<input type="hidden" name="currentPage"  value="${page.currentPage}" />
 	         		<input type="hidden" name="search"  value="${search}"/>
                 	<input type="hidden" name="order" value="${page.order}"/>
-		        	<button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 10}">active</c:if>" name="nbElementByPage" value="10">10</button>
-		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 50}">active</c:if>" name="nbElementByPage" value="50">50</button>
-		            <button type="submit" class="btn btn-default <c:if test="${sessionScope.page.elementByPage == 100}">active</c:if>" name="nbElementByPage" value="100">100</button>
+		        	<button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 10}">active</c:if>" name="nbElementByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 50}">active</c:if>" name="nbElementByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 100}">active</c:if>" name="nbElementByPage" value="100">100</button>
 	            </form>
 	        </div>
         </div>

@@ -25,6 +25,7 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.ComputerMapper;
+import com.excilys.cdb.service.Paginable;
 
 @Scope
 @Repository
@@ -50,6 +51,8 @@ public class ComputerDAO {
 	private ComputerMapper mapper;
 	@Autowired
 	private Database database;
+	@Autowired
+	private Paginable paginable;
 
 	/**
 	 * Get all Computer present on the range of the page.
@@ -297,7 +300,7 @@ public class ComputerDAO {
 
 	private void setPage(PreparedStatement ps, int pos, Page page) throws SQLException {
 		ps.setInt(pos, page.getColumn().getIndex());
-		ps.setInt(++pos, page.getIndexFirstElement());
+		ps.setInt(++pos, paginable.getIndexFirstElement(page));
 		ps.setInt(++pos, page.getNbElementByPage());
 	}
 }

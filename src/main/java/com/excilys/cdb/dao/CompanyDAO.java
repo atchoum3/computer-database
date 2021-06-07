@@ -19,6 +19,7 @@ import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.CompanyMapper;
+import com.excilys.cdb.service.Paginable;
 
 @Scope
 @Repository
@@ -38,6 +39,8 @@ public class CompanyDAO {
 	private ComputerDAO computerDAO;
 	@Autowired
 	private Database database;
+	@Autowired
+	private Paginable paginable;
 
 	/**
 	 * Get all Company present on the range of the page.
@@ -51,7 +54,7 @@ public class CompanyDAO {
 				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
 		) {
-			ps.setInt(1, page.getIndexFirstElement());
+			ps.setInt(1, paginable.getIndexFirstElement(page));
 			ps.setInt(2, page.getNbElementByPage());
 			logger.debug(ps.toString());
 			try (ResultSet rs = ps.executeQuery()) {

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 
@@ -57,7 +58,7 @@ public class AddComputerServlet extends HttpServlet {
 	public void init() {
 		try {
 			super.init();
-			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+			ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
 			companyService = context.getBean(CompanyService.class);
 			computerService = context.getBean(ComputerService.class);
 			addComputerMapper = context.getBean(AddComputerMapper.class);

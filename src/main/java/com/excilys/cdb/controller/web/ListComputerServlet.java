@@ -9,7 +9,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.SpringConfig;
@@ -23,6 +26,7 @@ import com.excilys.cdb.model.OrderBy;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.service.Paginable;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -59,14 +63,16 @@ public class ListComputerServlet extends HttpServlet {
 
 	private ComputerService computerService;
 	private ComputerCompanyNameMapper mapper;
+	private Paginable paginable;
 
 	@Override
 	public void init() {
 		try {
 			super.init();
-			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+			ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
 			computerService = context.getBean(ComputerService.class);
 			mapper = context.getBean(ComputerCompanyNameMapper.class);
+			paginable = context.getBean(Paginable.class);
 
 		} catch (ServletException e) {
 			logger.error(e.getMessage(), e);
@@ -76,6 +82,8 @@ public class ListComputerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+		logger.debug(req.getQueryString());
+
 		String searchName = (String) req.getParameter(URL_PARAM_SEARCH_NAME);
 		if (searchName == null) {
 			searchName = "";
@@ -83,12 +91,15 @@ public class ListComputerServlet extends HttpServlet {
 
 		try {
 			Page page = getPage(req);
-			page.setNbElement(computerService.countSearchByName(searchName));
-			page.setCurrentPage(getCurrentpage(req));
+			paginable.setNbElementTotal(page, computerService.countSearchByName(searchName));
+			System.out.println(page);
+			paginable.changeCurrentPage(page, getCurrentpage(req));
+			System.out.println(page);
+			paginable.updatePage(page);
+
 			List<Computer> computers = computerService.searchByName(searchName, page);
-
-
 			List<ComputerCompanyNameDTO> computersDTO = mapper.toComputerCompanyName(computers);
+
 			req.setAttribute(ATT_COMPUTER_LIST, computersDTO);
 			setPageAttributes(req, searchName, page);
 
@@ -104,6 +115,8 @@ public class ListComputerServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+		logger.debug(req.getQueryString());
+
 		String stringId = (String) req.getParameter(INPUT_ID_DELETE);
 
 		Arrays.stream(stringId.split(","))

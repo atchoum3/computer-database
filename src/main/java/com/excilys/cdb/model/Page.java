@@ -2,32 +2,30 @@ package com.excilys.cdb.model;
 
 public class Page {
 	public static final int INDEX_FIRST_PAGE = 1;
-	private static final int INDEX_PAGE_WINDOW = 5;
+	public static final int INDEX_PAGE_WINDOW = 5;
 
 	private int currentPage;
-	private int nbElement;
+	private int nbElementTotal;
 	private int nbElementByPage;
 	private int indexLastPage;
 	private OrderBy column;
 	private Order order;
-	private int pageIndexBegin;
-	private int pageIndexEnd;
+	private int endSlider;
+	private int beginSlider;
 
 	private Page(Builder builder) {
-		nbElement = builder.nbElement;
+		nbElementTotal = builder.nbElementTotal;
 		nbElementByPage = builder.nbElementByPage;
 		column = builder.column;
 		order = builder.order;
-		computeLastPage();
-
-		setCurrentPage(builder.currentPage);
+		currentPage = builder.currentPage;
 	}
 
 	public static class Builder {
 		private static final int DEFAULT_NB_ELEMENT_BY_PAGE = 10;
 
 		private int currentPage;
-		private int nbElement;
+		private int nbElementTotal;
 		private int nbElementByPage;
 		private OrderBy column;
 		private Order order;
@@ -44,8 +42,8 @@ public class Page {
 			return this;
 		}
 
-		public Builder withNbElement(int nbElement) {
-			this.nbElement = nbElement;
+		public Builder withNbElementTotal(int nbElementTotal) {
+			this.nbElementTotal = nbElementTotal;
 			return this;
 		}
 
@@ -69,62 +67,28 @@ public class Page {
 		}
 	}
 
-	public void previousPage() {
-		if (currentPage > INDEX_FIRST_PAGE) {
-			currentPage--;
-		}
-	}
 
-	public void nextPage() {
-		if (currentPage < indexLastPage) {
-			currentPage++;
-		}
-	}
 
-	public int getIndexFirstElement() {
-		return (currentPage - 1) * nbElementByPage;
-	}
-
-	private void computeLastPage() {
-		indexLastPage = (int) Math.ceil(nbElement / nbElementByPage) + INDEX_FIRST_PAGE;
-	}
-
-	@Override
-	public String toString() {
-		return "Page [currentPage=" + currentPage + ", nbElement=" + nbElement + ", nbElementByPage=" + nbElementByPage
-				+ ", indexLastPage=" + indexLastPage + ", column=" + column + ", order=" + order + ", pageIndexBegin="
-				+ pageIndexBegin + ", pageIndexEnd=" + pageIndexEnd + "]";
-	}
-
-	private void computeIndex() {
-		int halfPageWindow = INDEX_PAGE_WINDOW / 2;
-		pageIndexBegin = Math.max(currentPage - halfPageWindow, Page.INDEX_FIRST_PAGE);
-		pageIndexEnd = Math.min(pageIndexBegin + INDEX_PAGE_WINDOW - 1, indexLastPage);
-	}
 
 	/// setters & getters
 
-	public void setCurrentPage(int page) {
-		if (page < INDEX_FIRST_PAGE) {
-			currentPage = INDEX_FIRST_PAGE;
-		} else if (page > indexLastPage) {
-			currentPage = indexLastPage;
-		} else {
-			currentPage = page;
-		}
-		computeIndex();
+	@Override
+	public String toString() {
+		return "Page [currentPage=" + currentPage + ", nbElementTotal=" + nbElementTotal + ", nbElementByPage="
+				+ nbElementByPage + ", indexLastPage=" + indexLastPage + ", column=" + column + ", order=" + order
+				+ ", endSlider=" + endSlider + ", beginSlider=" + beginSlider + "]";
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
 	}
 
 	public void setNbElementByPage(int nbElementByPage) {
 		this.nbElementByPage = nbElementByPage;
-		computeLastPage();
-		setCurrentPage(currentPage);
 	}
 
-	public void setNbElement(int nbElement) {
-		this.nbElement = nbElement;
-		computeLastPage();
-		setCurrentPage(currentPage);
+	public void setNbElementTotal(int nbElementTotal) {
+		this.nbElementTotal = nbElementTotal;
 	}
 
 	public int getTotalNumberElement() {
@@ -143,10 +107,9 @@ public class Page {
 		return nbElementByPage;
 	}
 
-	public int getNbElement() {
-		return nbElement;
+	public int getNbElementTotal() {
+		return nbElementTotal;
 	}
-
 
 	public OrderBy getColumn() {
 		return column;
@@ -164,11 +127,23 @@ public class Page {
 		this.order = order;
 	}
 
-	public int getPageIndexBegin() {
-		return pageIndexBegin;
+	public void setIndexLastPage(int indexLastPage) {
+		this.indexLastPage = indexLastPage;
 	}
 
-	public int getPageIndexEnd() {
-		return pageIndexEnd;
+	public int getEndSlider() {
+		return endSlider;
+	}
+
+	public void setEndSlider(int endSlider) {
+		this.endSlider = endSlider;
+	}
+
+	public int getBeginSlider() {
+		return beginSlider;
+	}
+
+	public void setBeginSlider(int beginSlider) {
+		this.beginSlider = beginSlider;
 	}
 }

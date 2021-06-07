@@ -20,6 +20,7 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
+import com.excilys.cdb.service.Paginable;
 import com.excilys.cdb.ui.ChoiceMainMenu;
 import com.excilys.cdb.ui.ChoicePageMenu;
 import com.excilys.cdb.ui.Console;
@@ -37,6 +38,8 @@ public class ConsoleControler {
 	private CompanyService companyService;
 	@Autowired
 	private ComputerService computerService;
+	@Autowired
+	private Paginable paginable;
 
 	private Scanner scanner;
 
@@ -83,10 +86,10 @@ public class ConsoleControler {
 		try {
 			switch (ChoicePageMenu.fromPropertyName(input)) {
 			case NEXT_PAGE:
-				page.nextPage();
+				paginable.nextPage(page);
 				break;
 			case PREVIOUS_PAGE:
-				page.previousPage();
+				paginable.previousPage(page);
 				break;
 			case QUIT:
 				return false;
@@ -154,7 +157,7 @@ public class ConsoleControler {
 	 */
 	private void displayAllCompanies() throws CustomSQLException {
 		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElement(companyService.count()).build();
+				.withNbElementTotal(companyService.count()).build();
 		do {
 			DisplayCompany.displayCollection(companyService.getAll(page));
 			console.displayFooterPage(page);
@@ -167,7 +170,7 @@ public class ConsoleControler {
 	 */
 	private void displayAllComputers() throws CustomSQLException {
 		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElement(companyService.count()).build();
+				.withNbElementTotal(companyService.count()).build();
 		do {
 			DisplayComputer.displayCollection(computerService.getAll(page));
 			console.displayFooterPage(page);
