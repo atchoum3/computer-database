@@ -4,23 +4,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingBack.ComputerDTO;
 import com.excilys.cdb.model.Computer;
 
+@Scope
+@Component
 public class ComputerMapper {
-	private static ComputerMapper instance = new ComputerMapper();
 
-	private ComputerMapper() { }
-
-	public static ComputerMapper getInstance() {
-		return instance;
-	}
+	@Autowired
+	private CompanyMapper companyMapper;
 
 	public Computer toComputer(ComputerDTO dto) {
 		Computer.Builder builder = new Computer.Builder(dto.getName());
 		builder.withId(dto.getId());
 		if (dto.getCompany() != null) {
-			builder.withCompany(CompanyMapper.getInstance().toCompany(dto.getCompany()));
+			builder.withCompany(companyMapper.toCompany(dto.getCompany()));
 		}
 
 

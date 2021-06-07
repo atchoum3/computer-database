@@ -9,6 +9,9 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -23,24 +26,22 @@ import com.excilys.cdb.ui.Console;
 import com.excilys.cdb.ui.DisplayCompany;
 import com.excilys.cdb.ui.DisplayComputer;
 
+@Scope("singleton")
+@Controller
 public class ConsoleControler {
 	private static Logger logger = LoggerFactory.getLogger(ConsoleControler.class);
 
-	private static ConsoleControler instance = null;
+	@Autowired
 	private Console console;
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
+
 	private Scanner scanner;
 
-	private ConsoleControler() {
-		console = Console.getInstance();
-
+	public ConsoleControler() {
 		scanner = new Scanner(System.in);
-	}
-
-	public static ConsoleControler getInstance() {
-		if (instance == null) {
-			instance = new ConsoleControler();
-		}
-		return instance;
 	}
 
 	/**
@@ -153,9 +154,9 @@ public class ConsoleControler {
 	 */
 	private void displayAllCompanies() throws CustomSQLException {
 		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElement(CompanyService.getInstance().count()).build();
+				.withNbElement(companyService.count()).build();
 		do {
-			DisplayCompany.displayCollection(CompanyService.getInstance().getAll(page));
+			DisplayCompany.displayCollection(companyService.getAll(page));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
@@ -166,9 +167,9 @@ public class ConsoleControler {
 	 */
 	private void displayAllComputers() throws CustomSQLException {
 		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElement(CompanyService.getInstance().count()).build();
+				.withNbElement(companyService.count()).build();
 		do {
-			DisplayComputer.displayCollection(ComputerService.getInstance().getAll(page));
+			DisplayComputer.displayCollection(computerService.getAll(page));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
@@ -176,7 +177,7 @@ public class ConsoleControler {
 	private void displayComputer() throws CustomSQLException {
 		long id = askComputerId();
 
-		Optional<Computer> opt = ComputerService.getInstance().getById(id);
+		Optional<Computer> opt = computerService.getById(id);
 		if (opt.isPresent()) {
 			DisplayComputer.displayComputer(opt.get());
 		} else {
@@ -210,7 +211,7 @@ public class ConsoleControler {
 		Computer computer = new Computer.Builder("").build();
 		updateComputer(computer);
 		try {
-			ComputerService.getInstance().create(computer);
+			computerService.create(computer);
 		} catch (ComputerCompanyIdException e) {
 			System.err.println(e.getMessage());
 			System.out.println("Computer not created");
@@ -286,12 +287,12 @@ public class ConsoleControler {
 
 	private void updateComputer() throws CustomSQLException, ComputerCompanyIdException {
 		long id = askComputerId();
-		Optional<Computer> optComputer = ComputerService.getInstance().getById(id);
+		Optional<Computer> optComputer = computerService.getById(id);
 
 		if (optComputer.isPresent()) {
 			Computer computer = new Computer.Builder("").build();
 			updateComputer(computer);
-			ComputerService.getInstance().update(computer);
+			computerService.update(computer);
 		} else {
 			System.out.println("This company id is not on the database.");
 		}
@@ -299,12 +300,12 @@ public class ConsoleControler {
 
 	private void deleteComputer() throws CustomSQLException {
 		long id = askComputerId();
-		ComputerService.getInstance().delete(id);
+		computerService.delete(id);
 	}
 
 	private void deleteCompany() throws CustomSQLException {
 		long id = askCompanyId();
-		CompanyService.getInstance().delete(id);
+		companyService.delete(id);
 	}
 
 	/**

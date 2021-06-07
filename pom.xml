@@ -27,6 +27,7 @@
     <mockito.version>1.10.19</mockito.version>
     <mysql-connector-java.version>8.0.25</mysql-connector-java.version>
     <slf4j.verion>1.7.30</slf4j.verion>
+    <spring.version>5.3.7</spring.version>
   </properties>
 
   <dependencies>
@@ -72,6 +73,17 @@
     <groupId>com.zaxxer</groupId>
 	    <artifactId>HikariCP</artifactId>
 	    <version>${HikariCP.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>${spring.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-test</artifactId>
+	    <version>${spring.version}</version>
+	    <scope>test</scope>
 	</dependency>
   </dependencies>
 

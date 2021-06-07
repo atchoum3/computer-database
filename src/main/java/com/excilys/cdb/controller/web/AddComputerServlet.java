@@ -7,10 +7,16 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
 
+import com.excilys.cdb.SpringConfig;
 import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
 import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
+import com.excilys.cdb.controller.cli.ConsoleControler;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
@@ -23,7 +29,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
+@Controller
 @WebServlet(urlPatterns = {"/addComputer"}, name = "addComputer")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -42,11 +48,23 @@ public class AddComputerServlet extends HttpServlet {
 
 	public static final String VIEW = "/WEB-INF/view/addComputer.jsp";
 
-	private CompanyService companyService = CompanyService.getInstance();
-	private ComputerService computerService = ComputerService.getInstance();
+	private CompanyService companyService;
+	private ComputerService computerService;
+	private AddComputerMapper addComputerMapper;
 
-	public AddComputerServlet() {
-		super();
+
+	@Override
+	public void init() {
+		try {
+			super.init();
+			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+			companyService = context.getBean(CompanyService.class);
+			computerService = context.getBean(ComputerService.class);
+			addComputerMapper = context.getBean(AddComputerMapper.class);
+
+		} catch (ServletException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -98,7 +116,7 @@ public class AddComputerServlet extends HttpServlet {
 	 */
 	private boolean addComputer(HttpServletRequest req, AddComputerDTO addComputerDTO) {
 		Map<String, String> errors = new HashMap<String, String>();
-		Optional<Computer> computer = AddComputerMapper.getInstance().toComputer(addComputerDTO, errors);
+		Optional<Computer> computer = addComputerMapper.toComputer(addComputerDTO, errors);
 
 		if (computer.isPresent()) {
 			try {

@@ -8,13 +8,16 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.exception.CustomSQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+@Scope
+@Component
 public class Database implements AutoCloseable {
-	private static Database instance;
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
 
 	private static final String FILE_NAME_CONFIGURATION = "db.properties";
@@ -36,17 +39,9 @@ public class Database implements AutoCloseable {
 		return properties;
 	}
 
-	private Database() throws CustomSQLException {
+	public Database() throws CustomSQLException {
 		config = new HikariConfig(readProperties());
 		ds = new HikariDataSource(config);
-	}
-
-
-	public static Database getInstance() throws CustomSQLException {
-		if (instance == null) {
-			instance = new Database();
-		}
-		return instance;
 	}
 
 	public Connection getConnection() throws SQLException {

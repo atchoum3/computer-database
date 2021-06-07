@@ -8,16 +8,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import com.excilys.cdb.SpringTestConfig;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
+@SpringJUnitConfig(SpringTestConfig.class)
 public class ComputerDAOTest {
 
-	private static ComputerDAO computerDAO = ComputerDAO.getInstance();
+	private ComputerDAO computerDAO;
+
 	private final long COMPUTER_REFERENCED_ID = 321;
 	private final long COMPUTER_REFERENCED_ID_DELETE = 232;
 	private final Computer COMPUTER_TO_UPDATE;
@@ -26,7 +31,10 @@ public class ComputerDAOTest {
 	private final long COMPANY_ID_NOT_EXIST = -1;
 	private  Page page;
 
-	public ComputerDAOTest() {
+	@Autowired
+	public ComputerDAOTest(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
+
 		LocalDate date1 = LocalDate.of(2010, 1, 7);
 		LocalDate date2 = LocalDate.of(2011, 1, 3);
 		COMPANY_COMPUTER_TO_UPDATE = new Company(4, "Netronics"); // company exist on database

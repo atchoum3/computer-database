@@ -8,28 +8,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-/**
- * Mapper between DTO and DAO.
- */
+@Scope
+@Component
 public class AddComputerMapper {
-	private static AddComputerMapper instance = new AddComputerMapper();
 
 	public static final String ERROR_INTRODUCED = "introduced";
 	public static final String ERROR_DISCONTINUED = "discontinued";
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
 	private static final int COMPANY_ID_NULL = 0;
-
-	private AddComputerMapper() { }
-
-	public static AddComputerMapper getInstance() {
-		return instance;
-	}
 
 	public Optional<Computer> toComputer(AddComputerDTO dto, Map<String, String> errors) {
 		AddComputerValidator addComputerValidator = new AddComputerValidator(errors);
@@ -80,7 +75,7 @@ public class AddComputerMapper {
 	}
 
 
-	
+
 
 
 

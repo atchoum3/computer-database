@@ -3,17 +3,15 @@ package com.excilys.cdb.model.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.model.Company;
 
+@Scope
+@Component
 public class CompanyMapper {
-	private static CompanyMapper instance = new CompanyMapper();
-
-	private CompanyMapper() { }
-
-	public static CompanyMapper getInstance() {
-		return instance;
-	}
 
 	public Company toCompany(CompanyDTO dto) {
 		return new Company(dto.getId(), dto.getName());

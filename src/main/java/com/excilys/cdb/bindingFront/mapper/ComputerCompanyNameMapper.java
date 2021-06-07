@@ -3,18 +3,15 @@ package com.excilys.cdb.bindingFront.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 import com.excilys.cdb.model.Computer;
 
+@Scope
+@Component
 public class ComputerCompanyNameMapper {
-	private static ComputerCompanyNameMapper instance = new ComputerCompanyNameMapper();
-
-	private ComputerCompanyNameMapper() { }
-
-	public static ComputerCompanyNameMapper getInstance() {
-		return instance;
-	}
-
 
 	public List<ComputerCompanyNameDTO> toComputerCompanyName(List<Computer> computers) {
 		List<ComputerCompanyNameDTO> result = new ArrayList<>();

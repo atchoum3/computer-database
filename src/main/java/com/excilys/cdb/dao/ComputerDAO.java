@@ -12,10 +12,12 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
 import com.excilys.cdb.bindingBack.mapper.ComputerDTOMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -24,8 +26,9 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.ComputerMapper;
 
+@Scope
+@Repository
 public class ComputerDAO {
-	private static ComputerDAO instance = new ComputerDAO();
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 
 	private static final String QUERY_SELECT_ALL = "SELECT l.id, l.name, l.introduced, l.discontinued, c.id, c.name FROM computer AS l LEFT JOIN company AS c ON l.company_id = c.id";
@@ -41,15 +44,12 @@ public class ComputerDAO {
 	private static final String ORDER_BY = " ORDER BY ? ";
 	private static final String LIMIT = " LIMIT ?,? ";
 
-	private static ComputerDTOMapper mapperDTO = ComputerDTOMapper.getInstance();
-	private static ComputerMapper mapper = ComputerMapper.getInstance();
-
-
-	private ComputerDAO() { }
-
-	public static ComputerDAO getInstance() {
-		return instance;
-	}
+	@Autowired
+	private ComputerDTOMapper mapperDTO;
+	@Autowired
+	private ComputerMapper mapper;
+	@Autowired
+	private Database database;
 
 	/**
 	 * Get all Computer present on the range of the page.
@@ -61,7 +61,7 @@ public class ComputerDAO {
 		List<Computer> computers = new ArrayList<>();
 		String query = QUERY_SELECT_ALL + ORDER_BY + page.getOrder().toString() + LIMIT;
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(query)
 		) {
 			setPage(ps, 1, page);
@@ -83,7 +83,7 @@ public class ComputerDAO {
 		List<Computer> computers = new ArrayList<>();
 		String query = QUERY_SERCH_NAME + ORDER_BY + page.getOrder().toString() + LIMIT;
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(query)
 		) {
 			ps.setString(1, name);
@@ -112,7 +112,7 @@ public class ComputerDAO {
 	public Optional<Computer> getById(long id) throws CustomSQLException {
 		Optional<Computer> computer = Optional.empty();
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);
@@ -139,7 +139,7 @@ public class ComputerDAO {
 	 */
 	public void create(Computer c) throws ComputerCompanyIdException, CustomSQLException {
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
 			ps.setString(1, c.getName());
@@ -173,7 +173,7 @@ public class ComputerDAO {
 	 */
 	public void update(Computer c) throws CustomSQLException, ComputerCompanyIdException {
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
 		) {
 			ps.setString(1, c.getName());
@@ -199,7 +199,7 @@ public class ComputerDAO {
 	 */
 	public boolean delete(long id) throws CustomSQLException {
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE)
 		) {
 			ps.setLong(1, id);
@@ -232,7 +232,7 @@ public class ComputerDAO {
 
 	public int count() throws CustomSQLException {
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_COUNT)
 		) {
 			logger.debug(ps.toString());
@@ -250,7 +250,7 @@ public class ComputerDAO {
 
 	public int countSearchByName(String name) throws CustomSQLException {
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_COUNT_SERCH_NAME)
 		) {
 			ps.setString(1, name);

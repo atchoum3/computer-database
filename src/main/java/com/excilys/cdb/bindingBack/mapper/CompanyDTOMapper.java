@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingBack.CompanyDTO;
 
+@Scope
+@Component
 public class CompanyDTOMapper {
-	private static CompanyDTOMapper instance = new CompanyDTOMapper();
-
-	public static CompanyDTOMapper getInstance() {
-		return instance;
-	}
 
 	/**
 	 * Get data from a ResultSet to build a CompanyDTO object.

@@ -8,14 +8,20 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
 
+import com.excilys.cdb.SpringConfig;
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
+import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Order;
 import com.excilys.cdb.model.OrderBy;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
 import jakarta.servlet.ServletException;
@@ -25,6 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+@Controller
 @WebServlet(urlPatterns = {"/dashboard"}, name = "dashboard")
 public class ListComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -50,9 +57,21 @@ public class ListComputerServlet extends HttpServlet {
 	private static final String VIEW = "/WEB-INF/view/dashboard.jsp";
 
 
+	private ComputerService computerService;
+	private ComputerCompanyNameMapper mapper;
 
-	private ComputerService computerService = ComputerService.getInstance();
-	private ComputerCompanyNameMapper mapper = ComputerCompanyNameMapper.getInstance();
+	@Override
+	public void init() {
+		try {
+			super.init();
+			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+			computerService = context.getBean(ComputerService.class);
+			mapper = context.getBean(ComputerCompanyNameMapper.class);
+
+		} catch (ServletException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 
 
 	@Override

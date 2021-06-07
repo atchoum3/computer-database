@@ -10,6 +10,9 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -17,8 +20,9 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.CompanyMapper;
 
+@Scope
+@Repository
 public class CompanyDAO {
-	private static CompanyDAO instance = null;
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 
 	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company ORDER BY name";
@@ -26,20 +30,14 @@ public class CompanyDAO {
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 	private static final String QUERY_DELETE = "DELETE FROM company WHERE id = ?";
 
-	private static final CompanyMapper mapper = CompanyMapper.getInstance();
-	private static final CompanyDTOMapper mapperDTO = CompanyDTOMapper.getInstance();
-
-
-	private CompanyDAO() {
-		super();
-	}
-
-	public static CompanyDAO getInstance() {
-		if (instance == null) {
-			instance = new CompanyDAO();
-		}
-		return instance;
-	}
+	@Autowired
+	private CompanyMapper mapper;
+	@Autowired
+	private CompanyDTOMapper mapperDTO;
+	@Autowired
+	private ComputerDAO computerDAO;
+	@Autowired
+	private Database database;
 
 	/**
 	 * Get all Company present on the range of the page.
@@ -50,7 +48,7 @@ public class CompanyDAO {
 	public List<Company> getAll(Page page) throws CustomSQLException {
 		List<Company> companies = new ArrayList<>();
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
 		) {
 			ps.setInt(1, page.getIndexFirstElement());
@@ -77,7 +75,7 @@ public class CompanyDAO {
 	public List<Company> getAll() throws CustomSQLException {
 		List<Company> companies = new ArrayList<>();
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
 		) {
 			logger.debug(ps.toString());
@@ -103,7 +101,7 @@ public class CompanyDAO {
 	public Optional<Company> getById(long id) throws CustomSQLException {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection con = Database.getInstance().getConnection();
+				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
 		) {
 			ps.setLong(1, id);
@@ -129,11 +127,11 @@ public class CompanyDAO {
 	public int delete(long id) throws CustomSQLException {
 		int nbComputerDeleted = 0;
 
-		try (Connection con = Database.getInstance().getConnection()) {
+		try (Connection con = database.getConnection()) {
 			try {
 				con.setAutoCommit(false);
 
-				int nbCompanyDeleted = ComputerDAO.getInstance().deleteByCompanyId(con,  id);
+				int nbCompanyDeleted = computerDAO.deleteByCompanyId(con,  id);
 
 				PreparedStatement ps = con.prepareStatement(QUERY_DELETE);
 				ps.setLong(1, id);

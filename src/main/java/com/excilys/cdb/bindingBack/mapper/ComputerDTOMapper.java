@@ -5,19 +5,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.bindingBack.ComputerDTO;
 
+@Scope
+@Component
 public class ComputerDTOMapper {
-	private static ComputerDTOMapper instance = new ComputerDTOMapper();
-
-	private ComputerDTOMapper() { }
 
 	private static final long COMPANY_ID_NULL = 0;
-
-	public static ComputerDTOMapper getInstance() {
-		return instance;
-	}
 
 	/**
 	 * Get data from a ResultSet to build a ComputerDTO object.

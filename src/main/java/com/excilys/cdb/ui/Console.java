@@ -1,18 +1,11 @@
 package com.excilys.cdb.ui;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.model.Page;
 
+@Component
 public class Console {
-	private static Console instance;
-
-	private Console() { }
-
-	public static Console getInstance() {
-		if (instance == null) {
-			instance = new Console();
-		}
-		return instance;
-	}
 
 	/**
 	 * display all possible choices.
