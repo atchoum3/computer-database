@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 import com.excilys.cdb.model.Computer;
 
-@Scope
 @Component
 public class ComputerCompanyNameMapper {
 

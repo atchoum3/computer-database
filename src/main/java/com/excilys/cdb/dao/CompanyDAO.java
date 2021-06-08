@@ -10,8 +10,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
@@ -21,7 +19,6 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.CompanyMapper;
 import com.excilys.cdb.service.Paginable;
 
-@Scope
 @Repository
 public class CompanyDAO {
 	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
@@ -31,16 +28,19 @@ public class CompanyDAO {
 	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 	private static final String QUERY_DELETE = "DELETE FROM company WHERE id = ?";
 
-	@Autowired
 	private CompanyMapper mapper;
-	@Autowired
 	private CompanyDTOMapper mapperDTO;
-	@Autowired
 	private ComputerDAO computerDAO;
-	@Autowired
 	private Database database;
-	@Autowired
 	private Paginable paginable;
+
+	public CompanyDAO(CompanyMapper mapper, CompanyDTOMapper mapperDTO, ComputerDAO computerDAO, Database database, Paginable paginable) {
+		this.mapper = mapper;
+		this.mapperDTO = mapperDTO;
+		this.computerDAO = computerDAO;
+		this.database = database;
+		this.paginable = paginable;
+	}
 
 	/**
 	 * Get all Company present on the range of the page.

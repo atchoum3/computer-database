@@ -5,15 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,13 +20,11 @@ import com.excilys.cdb.bindingBack.ComputerDTO;
 import com.excilys.cdb.bindingBack.mapper.ComputerDTOMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
-import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.model.mapper.ComputerMapper;
 import com.excilys.cdb.service.Paginable;
 
-@Scope
 @Repository
 public class ComputerDAO {
 	private static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
@@ -47,14 +42,17 @@ public class ComputerDAO {
 	private static final String ORDER_BY = " ORDER BY ? ";
 	private static final String LIMIT = " LIMIT ?,? ";
 
-	@Autowired
 	private ComputerDTOMapper mapperDTO;
-	@Autowired
 	private ComputerMapper mapper;
-	@Autowired
 	private Database database;
-	@Autowired
 	private Paginable paginable;
+
+	public ComputerDAO(ComputerDTOMapper mapperDTO, ComputerMapper mapper, Database database, Paginable paginable) {
+		this.mapperDTO = mapperDTO;
+		this.mapper = mapper;
+		this.database = database;
+		this.paginable = paginable;
+	}
 
 	/**
 	 * Get all Computer present on the range of the page.

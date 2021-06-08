@@ -25,8 +25,7 @@ public class CompanyDAOTest {
 	private final Company COMPANY_COMPUTER_REFERENCED;
 	private Page page;
 
-	@Autowired
-	public CompanyDAOTest(CompanyDAO companyDAO) {
+	public CompanyDAOTest(@Autowired CompanyDAO companyDAO) {
 		this.companyDAO = companyDAO;
 
 		COMPANY_COMPUTER_REFERENCED = new Company(COMPANY_REFERENCED_ID, "Timex Sinclair");

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.model.Company;
 
-@Scope
 @Component
 public class CompanyMapper {
 

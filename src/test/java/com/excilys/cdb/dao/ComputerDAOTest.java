@@ -31,8 +31,7 @@ public class ComputerDAOTest {
 	private final long COMPANY_ID_NOT_EXIST = -1;
 	private  Page page;
 
-	@Autowired
-	public ComputerDAOTest(ComputerDAO computerDAO) {
+	public ComputerDAOTest(@Autowired ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
 
 		LocalDate date1 = LocalDate.of(2010, 1, 7);

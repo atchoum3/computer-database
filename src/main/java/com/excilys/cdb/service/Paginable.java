@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.model.Page;
 
-@Scope
 @Service
 public class Paginable {
 

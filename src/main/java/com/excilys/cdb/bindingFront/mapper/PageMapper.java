@@ -1,7 +1,5 @@
 package com.excilys.cdb.bindingFront.mapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.PageDTO;
@@ -9,14 +7,16 @@ import com.excilys.cdb.bindingFront.validator.PageValidator;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.Paginable;
 
-@Scope
 @Component
 public class PageMapper {
 
-	@Autowired
 	private PageValidator validator;
-	@Autowired
 	private Paginable paginable;
+
+	public PageMapper(PageValidator validator, Paginable paginable) {
+		this.validator = validator;
+		this.paginable = paginable;
+	}
 
 	public PageDTO toPageDTO(Page p) {
 		PageDTO.Builder builder = new PageDTO.Builder();

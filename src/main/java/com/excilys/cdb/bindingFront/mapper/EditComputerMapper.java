@@ -11,12 +11,16 @@ import com.excilys.cdb.bindingFront.EditComputerDTO;
 import com.excilys.cdb.bindingFront.validator.EditComputerValidator;
 import com.excilys.cdb.model.Computer;
 
-@Scope
 @Component
 public class EditComputerMapper {
 
-	@Autowired
 	private AddComputerMapper addComputerMapper;
+
+	public EditComputerMapper(AddComputerMapper addComputerMapper) {
+		this.addComputerMapper = addComputerMapper;
+	}
+
+
 
 	public Optional<Computer> toComputer(EditComputerDTO dto,  Map<String, String> errors) {
 		EditComputerValidator editComputerValidator = new EditComputerValidator(errors);

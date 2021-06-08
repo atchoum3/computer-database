@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.PageDTO;
 
-@Scope
 @Component
 public class PageValidator {
 

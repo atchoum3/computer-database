@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingBack.CompanyDTO;
 
-@Scope
 @Component
 public class CompanyDTOMapper {
 

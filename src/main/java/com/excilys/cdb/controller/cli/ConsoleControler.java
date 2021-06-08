@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.exception.ComputerCompanyIdException;
@@ -27,23 +25,23 @@ import com.excilys.cdb.ui.Console;
 import com.excilys.cdb.ui.DisplayCompany;
 import com.excilys.cdb.ui.DisplayComputer;
 
-@Scope("singleton")
 @Controller
 public class ConsoleControler {
 	private static Logger logger = LoggerFactory.getLogger(ConsoleControler.class);
 
-	@Autowired
 	private Console console;
-	@Autowired
 	private CompanyService companyService;
-	@Autowired
 	private ComputerService computerService;
-	@Autowired
 	private Paginable paginable;
 
 	private Scanner scanner;
 
-	public ConsoleControler() {
+	public ConsoleControler(Console console, CompanyService companyService, ComputerService computerService, Paginable paginable) {
+		this.console = console;
+		this.companyService = companyService;
+		this.computerService = computerService;
+		this.paginable = paginable;
+
 		scanner = new Scanner(System.in);
 	}
 

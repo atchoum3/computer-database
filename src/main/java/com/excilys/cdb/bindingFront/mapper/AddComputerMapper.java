@@ -16,7 +16,6 @@ import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-@Scope
 @Component
 public class AddComputerMapper {
 

@@ -3,8 +3,6 @@ package com.excilys.cdb.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.ComputerDAO;
@@ -13,12 +11,14 @@ import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
-@Scope
 @Service
 public class ComputerService {
 
-	@Autowired
 	private ComputerDAO computerDAO;
+
+	public ComputerService(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
+	}
 
 
 	public List<Computer> getAll(Page page) throws CustomSQLException {

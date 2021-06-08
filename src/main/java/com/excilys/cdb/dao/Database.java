@@ -15,7 +15,6 @@ import com.excilys.cdb.exception.CustomSQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@Scope
 @Component
 public class Database implements AutoCloseable {
 	private static Logger logger = LoggerFactory.getLogger(Database.class);
