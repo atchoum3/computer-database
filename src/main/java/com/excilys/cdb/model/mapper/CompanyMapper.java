@@ -20,4 +20,8 @@ public class CompanyMapper {
 	public List<Company> toListCompany(List<CompanyDTO> list) {
 		return list.stream().map(c -> toCompany(c)).collect(Collectors.toList());
 	}
+
+	public CompanyDTO toCompanyDTO(Company company) {
+		return new CompanyDTO(company.getId(), company.getName());
+	}
 }

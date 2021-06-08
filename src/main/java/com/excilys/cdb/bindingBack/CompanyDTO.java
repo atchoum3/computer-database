@@ -6,7 +6,12 @@ public class CompanyDTO {
 
 	public CompanyDTO(long id, String name) {
 		this.id = id;
-		this.name = name;
+
+		if (name == null) {
+			name = "";
+		} else {
+			this.name = name;
+		}
 	}
 
 	@Override

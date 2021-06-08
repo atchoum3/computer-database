@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import com.excilys.cdb.bindingBack.CompanyDTO;
+import com.excilys.cdb.bindingBack.ComputerDTO;
 import com.excilys.cdb.bindingBack.mapper.ComputerDTOMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.CustomSQLException;
@@ -141,14 +143,16 @@ public class ComputerDAO {
 	 * @throws CustomSQLException
 	 */
 	public void create(Computer c) throws ComputerCompanyIdException, CustomSQLException {
+		ComputerDTO dto = mapper.toComputerDTO(c);
 		try (
 				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)
 		) {
-			ps.setString(1, c.getName());
-			setTimestampOrNull(ps, 2, c.getIntroduced());
-			setTimestampOrNull(ps, 3, c.getDiscontinued());
-			setCompanyOrNull(ps, 4, c.getCompany());
+			ps.setString(1, dto.getName());
+			setTimestampOrNull(ps, 2, dto.getIntroduced());
+			setTimestampOrNull(ps, 3, dto.getDiscontinued());
+			setCompanyIdOrNull(ps, 4, dto.getCompany());
+
 			logger.debug(ps.toString());
 			ps.executeUpdate();
 
@@ -175,17 +179,20 @@ public class ComputerDAO {
 	 * @throws ComputerCompanyIdException
 	 */
 	public void update(Computer c) throws CustomSQLException, ComputerCompanyIdException {
+		ComputerDTO dto = mapper.toComputerDTO(c);
 		try (
 				Connection con = database.getConnection();
 				PreparedStatement ps = con.prepareStatement(QUERY_UPDATE)
 		) {
-			ps.setString(1, c.getName());
-			setTimestampOrNull(ps, 2, c.getIntroduced());
-			setTimestampOrNull(ps, 3, c.getDiscontinued());
-			setCompanyOrNull(ps, 4, c.getCompany());
-			ps.setLong(5, c.getId());
+			ps.setString(1, dto.getName());
+			setTimestampOrNull(ps, 2, dto.getIntroduced());
+			setTimestampOrNull(ps, 3, dto.getDiscontinued());
+			setCompanyIdOrNull(ps, 4, dto.getCompany());
+			ps.setLong(5, dto.getId());
+
 			logger.debug(ps.toString());
 			ps.executeUpdate();
+
 		} catch (SQLIntegrityConstraintViolationException e) {
 			throw new ComputerCompanyIdException("This company id does not exist");
 		} catch (SQLException e) {
@@ -272,29 +279,19 @@ public class ComputerDAO {
 		}
 	}
 
-	/**
-	 * To insert a Timestamp on a PreparedStatement. This method insert the timestamp or the null value.
-	 * @param ps a PreparedStatement object
-	 * @param pos the position where will be inserted the Timestamp value
-	 * @param localDate this value will be converted in Timestamp value.
-	 * If this value is null, null value is insert on the prepared statement
-	 * @throws SQLException
-	 */
-	private void setTimestampOrNull(PreparedStatement ps, int pos, LocalDate localDate)
-			throws SQLException {
-		if (localDate == null) {
-			ps.setNull(pos, java.sql.Types.NULL);
+	private void setTimestampOrNull(PreparedStatement ps, int pos, String date) throws SQLException {
+		if ("".equals(date)) {
+			ps.setNull(pos, java.sql.Types.TIMESTAMP);
 		} else {
-			ps.setTimestamp(pos, Timestamp.valueOf(localDate.atStartOfDay()));
+			ps.setString(pos, date);
 		}
 	}
 
-	private void setCompanyOrNull(PreparedStatement ps, int pos, Company company)
-			throws SQLException {
-		if (company == null) {
+	private void setCompanyIdOrNull(PreparedStatement ps, int pos, CompanyDTO companyDTO) throws SQLException {
+		if (companyDTO == null) {
 			ps.setNull(pos, java.sql.Types.NULL);
 		} else {
-			ps.setLong(pos, company.getId());
+			ps.setLong(4, companyDTO.getId());
 		}
 	}
 

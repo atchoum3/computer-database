@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.bindingBack.ComputerDTO;
 import com.excilys.cdb.model.Computer;
 
@@ -40,6 +41,25 @@ public class ComputerMapper {
 
 	public List<Computer> toListComputer(List<ComputerDTO> listDto) {
 		return listDto.stream().map(c -> toComputer(c)).collect(Collectors.toList());
+	}
+
+
+	public ComputerDTO toComputerDTO(Computer computer) {
+		ComputerDTO.Builder builder = new ComputerDTO.Builder(computer.getName());
+		builder.withId(computer.getId());
+
+		if (computer.getIntroduced() != null) {
+			builder.withIntroduced(computer.getIntroduced().toString());
+		}
+
+		if (computer.getDiscontinued() != null) {
+			builder.withDiscontinued(computer.getDiscontinued().toString());
+		}
+
+		if (computer.getCompany() != null) {
+			builder.withCompany(companyMapper.toCompanyDTO(computer.getCompany()));
+		}
+		return builder.build();
 	}
 
 }

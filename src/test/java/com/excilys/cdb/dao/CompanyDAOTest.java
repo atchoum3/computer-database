@@ -31,7 +31,7 @@ public class CompanyDAOTest {
 
 		COMPANY_COMPUTER_REFERENCED = new Company(COMPANY_REFERENCED_ID, "Timex Sinclair");
 		try {
-			page = new Page.Builder().withNbElementByPage(ELEM_BY_PAGE).withNbElement(companyDAO.count()).build();
+			page = new Page.Builder().withNbElementByPage(ELEM_BY_PAGE).withNbElementTotal(companyDAO.count()).build();
 		} catch (CustomSQLException e) {
 			e.printStackTrace();
 		}
