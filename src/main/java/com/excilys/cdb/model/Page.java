@@ -19,6 +19,8 @@ public class Page {
 		column = builder.column;
 		order = builder.order;
 		currentPage = builder.currentPage;
+		beginSlider = builder.beginSlider;
+		endSlider = builder.endSlider;
 	}
 
 	public static class Builder {
@@ -29,12 +31,16 @@ public class Page {
 		private int nbElementByPage;
 		private OrderBy column;
 		private Order order;
+		private int endSlider;
+		private int beginSlider;
 
 		public Builder() {
 			nbElementByPage = DEFAULT_NB_ELEMENT_BY_PAGE;
 			order = Order.ASC;
 			currentPage = INDEX_FIRST_PAGE;
 			column = OrderBy.COMPUTER_NAME;
+			beginSlider = INDEX_FIRST_PAGE;
+			endSlider = INDEX_FIRST_PAGE;
 		}
 
 		public Builder withCurrentPage(int currentPage) {
@@ -59,6 +65,16 @@ public class Page {
 
 		public Builder withOrder(Order order) {
 			this.order = order;
+			return this;
+		}
+
+		public Builder withBeginSlider(int beginSlider) {
+			this.beginSlider = beginSlider;
+			return this;
+		}
+
+		public Builder withEndSlider(int endSlider) {
+			this.endSlider = endSlider;
 			return this;
 		}
 

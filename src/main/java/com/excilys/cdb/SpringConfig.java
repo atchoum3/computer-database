@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 		"com.excilys.cdb.service",
 		"com.excilys.cdb.ui",
 		"com.excilys.cdb.bindingFront.mapper",
+		"com.excilys.cdb.bindingFront.validator",
 		"com.excilys.cdb.bindingBack.mapper",
 		"com.excilys.cdb.dao",
 		"com.excilys.cdb.model.mapper",

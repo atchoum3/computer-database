@@ -65,15 +65,15 @@
 	                				<c:param name="column" value="COMPUTER_NAME"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
-	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	">Computer name
                         	<c:choose>
-         						<c:when test = "${order == 'ASC' && column == 'COMPUTER_NAME'}">
+         						<c:when test = "${page.order == 'ASC' && page.column == 'COMPUTER_NAME'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 'COMPUTER_NAME'}">
+						        <c:when test = "${page.order == 'DESC' && page.column == 'COMPUTER_NAME'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -85,15 +85,15 @@
 	                				<c:param name="column" value="INTRODUCED"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
-	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Introduced date
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 'INTRODUCED'}">
+         						<c:when test = "${page.order == 'ASC' && page.column == 'INTRODUCED'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 'INTRODUCED'}">
+						        <c:when test = "${page.order == 'DESC' && page.column == 'INTRODUCED'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -106,15 +106,15 @@
 	                				<c:param name="column" value="DISCONTINUED"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
-	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Discontinued date
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 'DISCONTINUED'}">
+         						<c:when test = "${page.order == 'ASC' && page.column == 'DISCONTINUED'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 'DISCONTINUED'}">
+						        <c:when test = "${page.order == 'DESC' && page.column == 'DISCONTINUED'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>
@@ -127,15 +127,15 @@
 	                				<c:param name="column" value="COMPANY_NAME"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
-	                				<c:param name="order" value="${orderReversed}"/>
+	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
                         	 ">Company
                         	 <c:choose>
-         						<c:when test = "${order == 'ASC' && column == 'COMPANY_NAME'}">
+         						<c:when test = "${page.order == 'ASC' && page.column == 'COMPANY_NAME'}">
 									&#x25BC
 						        </c:when>
-						        <c:when test = "${order == 'DESC' && column == 'COMPANY_NAME'}">
+						        <c:when test = "${page.order == 'DESC' && page.column == 'COMPANY_NAME'}">
 									&#x25B2
 						        </c:when>
 						    </c:choose>

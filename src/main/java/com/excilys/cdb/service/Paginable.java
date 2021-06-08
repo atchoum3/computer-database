@@ -50,16 +50,17 @@ public class Paginable {
 	}
 
 	public void changeCurrentPage(Page page, int newCurrentPage) {
-		int currentPage = page.getCurrentPage();
 		int indexLastpage = page.getIndexLastPage();
 
-		if (currentPage < Page.INDEX_FIRST_PAGE) {
+		if (newCurrentPage < Page.INDEX_FIRST_PAGE) {
 			page.setCurrentPage(Page.INDEX_FIRST_PAGE);
-		} else if (currentPage > indexLastpage) {
+		} else if (newCurrentPage > indexLastpage) {
 			page.setCurrentPage(indexLastpage);
 		} else {
 			page.setCurrentPage(newCurrentPage);
 		}
+		setBeginSlider(page);
+		setEndSlider(page);
 	}
 
 	public void setNbElementByPage(Page page, int nbElementByPage) {

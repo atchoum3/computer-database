@@ -17,8 +17,10 @@ import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.SpringConfig;
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
+import com.excilys.cdb.bindingFront.PageDTO;
 import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
 import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
+import com.excilys.cdb.bindingFront.mapper.PageMapper;
 import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Order;
@@ -48,7 +50,6 @@ public class ListComputerServlet extends HttpServlet {
 
 	private static final String ATT_COMPUTER_LIST = "computerList";
 	private static final String ATT_ERRORS = "errors";
-	private static final String ATT_ORDER_REVERSED = "orderReversed";
 	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String ATT_PAGE = "page";
 	private static final String ATT_SEARCH = "search";
@@ -63,6 +64,7 @@ public class ListComputerServlet extends HttpServlet {
 
 	private ComputerService computerService;
 	private ComputerCompanyNameMapper mapper;
+	private PageMapper pageMapper;
 	private Paginable paginable;
 
 	@Override
@@ -73,6 +75,7 @@ public class ListComputerServlet extends HttpServlet {
 			computerService = context.getBean(ComputerService.class);
 			mapper = context.getBean(ComputerCompanyNameMapper.class);
 			paginable = context.getBean(Paginable.class);
+			pageMapper = context.getBean(PageMapper.class);
 
 		} catch (ServletException e) {
 			logger.error(e.getMessage(), e);
@@ -92,10 +95,7 @@ public class ListComputerServlet extends HttpServlet {
 		try {
 			Page page = getPage(req);
 			paginable.setNbElementTotal(page, computerService.countSearchByName(searchName));
-			System.out.println(page);
 			paginable.changeCurrentPage(page, getCurrentpage(req));
-			System.out.println(page);
-			paginable.updatePage(page);
 
 			List<Computer> computers = computerService.searchByName(searchName, page);
 			List<ComputerCompanyNameDTO> computersDTO = mapper.toComputerCompanyName(computers);
@@ -173,17 +173,17 @@ public class ListComputerServlet extends HttpServlet {
 
 
 	private Page getPage(HttpServletRequest req) throws CustomSQLException {
-		Page.Builder builder = new Page.Builder();
+		PageDTO.Builder builder = new PageDTO.Builder();
 		builder.withColumn(getSortedColumn(req));
 		builder.withOrder(getOrder(req));
 		builder.withNbElementByPage(getNbElemByPage(req));
-		return builder.build();
+		return pageMapper.toPage(builder.build());
 	}
 
 	private void setPageAttributes(HttpServletRequest req, String searchName, Page page) {
-		req.setAttribute(ATT_PAGE, page);
+		PageDTO pageDTO = pageMapper.toPageDTO(page);
+		req.setAttribute(ATT_PAGE, pageDTO);
 		req.setAttribute(ATT_SEARCH, searchName);
-		req.setAttribute(ATT_ORDER_REVERSED, page.getOrder().reverse().name());
 	}
 
 
