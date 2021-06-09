@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.ComputerDAO;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -20,36 +19,27 @@ public class ComputerService {
 		this.computerDAO = computerDAO;
 	}
 
-
-	public List<Computer> getAll(Page page) throws CustomSQLException {
-		return computerDAO.getAll(page);
-	}
-
-	public List<Computer> searchByName(String name, Page page) throws CustomSQLException {
+	public List<Computer> searchByName(String name, Page page) {
 		return computerDAO.searchByName(name, page);
 	}
 
-	public Optional<Computer> getById(long id) throws CustomSQLException {
+	public Optional<Computer> getById(long id) {
 		return computerDAO.getById(id);
 	}
 
-	public void create(Computer computer) throws ComputerCompanyIdException, CustomSQLException {
+	public void create(Computer computer) throws ComputerCompanyIdException {
 		computerDAO.create(computer);
 	}
 
-	public boolean delete(long id) throws CustomSQLException {
+	public int delete(long id) {
 		return computerDAO.delete(id);
 	}
 
-	public void update(Computer computer) throws CustomSQLException, ComputerCompanyIdException {
+	public void update(Computer computer) throws ComputerCompanyIdException {
 		computerDAO.update(computer);
 	}
 
-	public int count() throws CustomSQLException {
-		return computerDAO.count();
-	}
-
-	public int countSearchByName(String name) throws CustomSQLException {
+	public int countSearchByName(String name) {
 		return computerDAO.countSearchByName(name);
 	}
 }

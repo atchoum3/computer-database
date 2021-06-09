@@ -21,7 +21,6 @@
 
     <section id="main">
         <div class="container">
-        	<div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
             <h1 id="homeTitle">
                 <c:out value="${page.nbElementTotal}"></c:out> Computers found
             </h1>

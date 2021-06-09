@@ -2,31 +2,23 @@ package com.excilys.cdb.controller.web;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.SpringConfig;
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 import com.excilys.cdb.bindingFront.PageDTO;
 import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
-import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
 import com.excilys.cdb.bindingFront.mapper.PageMapper;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Order;
 import com.excilys.cdb.model.OrderBy;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 import com.excilys.cdb.service.Paginable;
 
@@ -35,7 +27,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @WebServlet(urlPatterns = {"/dashboard"}, name = "dashboard")
@@ -49,8 +40,6 @@ public class ListComputerServlet extends HttpServlet {
 
 
 	private static final String ATT_COMPUTER_LIST = "computerList";
-	private static final String ATT_ERRORS = "errors";
-	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String ATT_PAGE = "page";
 	private static final String ATT_SEARCH = "search";
 	private static final String INPUT_ID_DELETE = "selection";
@@ -106,10 +95,6 @@ public class ListComputerServlet extends HttpServlet {
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
 			logger.error(e.getMessage(), e);
-		} catch (CustomSQLException e) {
-			Map<String, String> errors = new HashMap<>();
-			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
-			req.setAttribute(ATT_ERRORS, errors);
 		}
 	}
 
@@ -121,13 +106,7 @@ public class ListComputerServlet extends HttpServlet {
 
 		Arrays.stream(stringId.split(","))
 				.map(s -> Long.valueOf(s))
-				.forEach(id -> {
-					try {
-						computerService.delete(id);
-					} catch (CustomSQLException e1) {
-						req.setAttribute(ATT_OTHER_ERROR, "All select computers have not been deleted. Try again.");
-					}
-				});
+				.forEach(id -> computerService.delete(id));
 		doGet(req, resp);
 	}
 
@@ -172,7 +151,7 @@ public class ListComputerServlet extends HttpServlet {
 	}
 
 
-	private Page getPage(HttpServletRequest req) throws CustomSQLException {
+	private Page getPage(HttpServletRequest req) {
 		PageDTO.Builder builder = new PageDTO.Builder();
 		builder.withColumn(getSortedColumn(req));
 		builder.withOrder(getOrder(req));

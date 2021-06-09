@@ -1,12 +1,10 @@
 package com.excilys.cdb.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.dao.CompanyDAO;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 
@@ -19,23 +17,19 @@ public class CompanyService {
 		this.companyDAO = companyDAO;
 	}
 
-	public List<Company> getAll(Page page) throws CustomSQLException {
+	public List<Company> getAll(Page page)  {
 		return companyDAO.getAll(page);
 	}
 
-	public List<Company> getAll() throws CustomSQLException {
+	public List<Company> getAll() {
 		return companyDAO.getAll();
 	}
 
-	public Optional<Company> getById(long id) throws CustomSQLException {
-		return companyDAO.getById(id);
-	}
-
-	public int count() throws CustomSQLException {
+	public int count() {
 		return companyDAO.count();
 	}
 
-	public int delete(long id) throws CustomSQLException {
+	public int delete(long id) {
 		return companyDAO.delete(id);
 	}
 }

@@ -1,6 +1,5 @@
 package com.excilys.cdb.bindingFront.validator;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.PageDTO;

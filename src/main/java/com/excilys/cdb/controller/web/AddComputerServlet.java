@@ -7,8 +7,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -16,10 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.excilys.cdb.SpringConfig;
 import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
-import com.excilys.cdb.bindingFront.validator.AddComputerValidator;
-import com.excilys.cdb.controller.cli.ConsoleControler;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
@@ -44,7 +39,6 @@ public class AddComputerServlet extends HttpServlet {
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
 	private static final String ATT_SUCCESS = "success";
-	private static final String ATT_OTHER_ERROR = "otherError";
 	private static final String ATT_COMPUTER = "computer";
 
 	public static final String VIEW = "/WEB-INF/view/addComputer.jsp";
@@ -70,13 +64,8 @@ public class AddComputerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-		try {
-			addCompanyList(req);
-		} catch (CustomSQLException e) {
-			Map<String, String> errors = new HashMap<>();
-			errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
-			req.setAttribute(ATT_ERRORS, errors);
-		}
+		addCompanyList(req);
+
 		try {
 			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
 		} catch (ServletException | IOException e) {
@@ -84,7 +73,7 @@ public class AddComputerServlet extends HttpServlet {
 		}
 	}
 
-	private void addCompanyList(HttpServletRequest req) throws CustomSQLException {
+	private void addCompanyList(HttpServletRequest req) {
 		req.setAttribute(ATT_ALL_COMPANIES, companyService.getAll());
 	}
 
@@ -126,8 +115,6 @@ public class AddComputerServlet extends HttpServlet {
 				return true;
 			} catch (ComputerCompanyIdException e) {
 				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
-			} catch (CustomSQLException e) {
-				errors.put(ATT_OTHER_ERROR, "Error on database, try again.");
 			}
 		}
 		req.setAttribute(ATT_ERRORS, errors);

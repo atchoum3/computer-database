@@ -3,12 +3,9 @@ package com.excilys.cdb.bindingFront.mapper;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.AddComputerDTO;

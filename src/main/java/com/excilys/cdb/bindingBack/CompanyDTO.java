@@ -60,6 +60,4 @@ public class CompanyDTO {
 	public long getId() {
 		return id;
 	}
-
-
 }

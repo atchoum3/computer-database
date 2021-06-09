@@ -1,18 +1,19 @@
 package com.excilys.cdb.model;
 
 public enum OrderBy {
-	COMPUTER_NAME(2),
-	INTRODUCED(3),
-	DISCONTINUED(4),
-	COMPANY_NAME(5);
+	COMPUTER_NAME("computer.name"),
+	INTRODUCED("computer.introduced"),
+	DISCONTINUED("computer.discontinued"),
+	COMPANY_NAME("company.name");
 
-	private int index;
+	private String value;
 
-	private OrderBy(int index) {
-		this.index = index;
+	private OrderBy(String value) {
+		this.value = value;
 	}
 
-	public int getIndex() {
-		return index;
+	@Override
+	public String toString() {
+		return value;
 	}
 }

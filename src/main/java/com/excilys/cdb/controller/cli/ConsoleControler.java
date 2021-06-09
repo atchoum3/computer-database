@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.exception.ComputerCompanyIdException;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -143,9 +142,6 @@ public class ConsoleControler {
 			}
 		} catch (ComputerCompanyIdException e) {
 			System.out.println("This id of company does not exist.");
-		} catch (CustomSQLException e) {
-			logger.error(e.getMessage(), e);
-			System.out.println("Communication between the programm and database failed. Try again");
 		}
 	}
 
@@ -153,7 +149,7 @@ public class ConsoleControler {
 	 * To display a table of all Companies selected by page.
 	 * @throws CustomSQLException
 	 */
-	private void displayAllCompanies() throws CustomSQLException {
+	private void displayAllCompanies() {
 		Page page = new Page.Builder().withNbElementByPage(10)
 				.withNbElementTotal(companyService.count()).build();
 		do {
@@ -166,16 +162,16 @@ public class ConsoleControler {
 	 * To display a table of all computers selected by page.
 	 * @throws CustomSQLException
 	 */
-	private void displayAllComputers() throws CustomSQLException {
+	private void displayAllComputers(){
 		Page page = new Page.Builder().withNbElementByPage(10)
 				.withNbElementTotal(companyService.count()).build();
 		do {
-			DisplayComputer.displayCollection(computerService.getAll(page));
+			DisplayComputer.displayCollection(computerService.searchByName("", page));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
 
-	private void displayComputer() throws CustomSQLException {
+	private void displayComputer() {
 		long id = askComputerId();
 
 		Optional<Computer> opt = computerService.getById(id);
@@ -208,7 +204,7 @@ public class ConsoleControler {
 		}
 	}
 
-	private void createComputer() throws CustomSQLException {
+	private void createComputer() {
 		Computer computer = new Computer.Builder("").build();
 		updateComputer(computer);
 		try {
@@ -286,7 +282,7 @@ public class ConsoleControler {
 		computer.setCompany(askComputerCompanyId());
 	}
 
-	private void updateComputer() throws CustomSQLException, ComputerCompanyIdException {
+	private void updateComputer() throws ComputerCompanyIdException {
 		long id = askComputerId();
 		Optional<Computer> optComputer = computerService.getById(id);
 
@@ -299,12 +295,12 @@ public class ConsoleControler {
 		}
 	}
 
-	private void deleteComputer() throws CustomSQLException {
+	private void deleteComputer(){
 		long id = askComputerId();
 		computerService.delete(id);
 	}
 
-	private void deleteCompany() throws CustomSQLException {
+	private void deleteCompany() {
 		long id = askCompanyId();
 		companyService.delete(id);
 	}

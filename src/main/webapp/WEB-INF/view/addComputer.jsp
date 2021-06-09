@@ -51,7 +51,6 @@
                                 <div id="errorCompany" class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>"><c:out value="${errors['companyId']}"></c:out></div>
                             </div>
                         </fieldset>
-                        <div class="<c:if test="${not empty errors['otherError']}">alert alert-danger</c:if>"><c:out value="${errors['otherError']}"></c:out></div>
 						<div class="<c:if test="${not empty success}">alert alert-success</c:if>"><c:out value="${success}"></c:out></div>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary" disabled>

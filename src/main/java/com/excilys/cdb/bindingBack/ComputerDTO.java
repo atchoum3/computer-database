@@ -6,7 +6,7 @@ public class ComputerDTO {
 	private String introduced;
 	private String discontinued;
 	private CompanyDTO company;
-	
+
 	private ComputerDTO(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
@@ -14,47 +14,41 @@ public class ComputerDTO {
 		this.discontinued = builder.discontinued;
 		this.company = builder.company;
 	}
-	
+
 	public static class Builder {
 		private long id;
 		private String name = "";
-		private String introduced = "";
-		private String discontinued = "";
+		private String introduced;
+		private String discontinued;
 		private CompanyDTO company;
-		
+
 		public Builder(String name) {
 			if (name == null) {
 				name = "";
 			}
 			this.name = name;
 		}
-		
+
 		public Builder withId(long id) {
 			this.id = id;
 			return this;
 		}
-		
+
 		public Builder withIntroduced(String introduced) {
-			if (introduced == null) {
-				introduced = "";
-			}
 			this.introduced = introduced;
 			return this;
 		}
-		
+
 		public Builder withDiscontinued(String discontinued) {
-			if (discontinued == null) {
-				discontinued = "";
-			}
 			this.discontinued = discontinued;
 			return this;
 		}
-		
+
 		public Builder withCompany(CompanyDTO company) {
 			this.company = company;
 			return this;
 		}
-		
+
 		public ComputerDTO build() {
 			return new ComputerDTO(this);
 		}
@@ -117,7 +111,7 @@ public class ComputerDTO {
 		}
 		return true;
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -142,5 +136,13 @@ public class ComputerDTO {
 
 	public CompanyDTO getCompany() {
 		return company;
+	}
+
+	public Long getCompanyId() {
+		if (company != null) {
+			return company.getId();
+		} else {
+			return null;
+		}
 	}
 }

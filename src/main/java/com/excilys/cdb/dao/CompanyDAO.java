@@ -1,160 +1,74 @@
 package com.excilys.cdb.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.bindingBack.mapper.CompanyDTOMapper;
-import com.excilys.cdb.exception.CustomSQLException;
+import com.excilys.cdb.dao.mapper.CompanyDTORowMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.model.mapper.CompanyMapper;
 import com.excilys.cdb.service.Paginable;
 
 @Repository
 public class CompanyDAO {
-	private static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
+	private static final String QUERY_SELECT_ALL = "SELECT company.id, company.name FROM company ORDER BY name";
+	private static final String QUERY_COUNT = "SELECT COUNT(1) FROM company";
+	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company ORDER BY id LIMIT :startLimit,:offset";
+	private static final String QUERY_DELETE_BY_ID = "DELETE FROM company WHERE id = :id";
+	private static final String QUERY_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ?";
 
-	private static final String QUERY_SELECT_ALL = "SELECT id, name FROM company ORDER BY name";
-	private static final String QUERY_SELECT_ALL_LIMIT = "SELECT id, name FROM company ORDER BY id LIMIT ?,?";
-	private static final String QUERY_SELECT_BY_ID = "SELECT id, name FROM company WHERE id = ?";
-	private static final String QUERY_DELETE = "DELETE FROM company WHERE id = ?";
-
-	private CompanyMapper mapper;
-	private CompanyDTOMapper mapperDTO;
-	private ComputerDAO computerDAO;
-	private Database database;
+	private CompanyDTOMapper mapper;
+	private DataSource dataSource;
 	private Paginable paginable;
+	private CompanyDTORowMapper companyDTORowMapper;
 
-	public CompanyDAO(CompanyMapper mapper, CompanyDTOMapper mapperDTO, ComputerDAO computerDAO, Database database, Paginable paginable) {
+	public CompanyDAO(CompanyDTOMapper mapper, DataSource dataSource,
+			Paginable paginable, CompanyDTORowMapper companyDTORowMapper) {
 		this.mapper = mapper;
-		this.mapperDTO = mapperDTO;
-		this.computerDAO = computerDAO;
-		this.database = database;
+		this.dataSource = dataSource;
 		this.paginable = paginable;
+		this.companyDTORowMapper = companyDTORowMapper;
 	}
 
-	/**
-	 * Get all Company present on the range of the page.
-	 * @param page the page of values to take
-	 * @return A company List
-	 * @throws CustomSQLException
-	 */
-	public List<Company> getAll(Page page) throws CustomSQLException {
-		List<Company> companies = new ArrayList<>();
-		try (
-				Connection con = database.getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL_LIMIT)
-		) {
-			ps.setInt(1, paginable.getIndexFirstElement(page));
-			ps.setInt(2, page.getNbElementByPage());
-			logger.debug(ps.toString());
-			try (ResultSet rs = ps.executeQuery()) {
+	public List<Company> getAll(Page page) {
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		MapSqlParameterSource params = new MapSqlParameterSource();
 
-				if (rs.next()) {
-					companies = mapper.toListCompany(mapperDTO.toListCompany(rs));
-				}
-			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new CustomSQLException("failure to get all Companies by page.");
-		}
-		return companies;
+		params.addValue("startLimit", paginable.getIndexFirstElement(page));
+		params.addValue("offset", page.getNbElementByPage());
+		List<CompanyDTO> companiesDTO = jdbcTemplate.query(QUERY_SELECT_ALL_LIMIT, params, companyDTORowMapper);
+		return mapper.toListCompany(companiesDTO);
 	}
 
-	/**
-	 * Get all Company.
-	 * @return A company List
-	 * @throws CustomSQLException
-	 */
-	public List<Company> getAll() throws CustomSQLException {
-		List<Company> companies = new ArrayList<>();
-		try (
-				Connection con = database.getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_ALL)
-		) {
-			logger.debug(ps.toString());
-			try (ResultSet rs = ps.executeQuery()) {
+	public List<Company> getAll() {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-				if (rs.next()) {
-					companies = mapper.toListCompany(mapperDTO.toListCompany(rs));
-				}
-			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new CustomSQLException("failure to get all Companies.");
-		}
-		return companies;
+		List<CompanyDTO> companiesDTO = jdbcTemplate.query(QUERY_SELECT_ALL, companyDTORowMapper);
+		return mapper.toListCompany(companiesDTO);
 	}
 
-	/**
-	 * get a company by this id.
-	 * @param id the id of the company
-	 * @return the optional is empty if there is no company with this id
-	 * @throws CustomSQLException
-	 */
-	public Optional<Company> getById(long id) throws CustomSQLException {
-		Optional<Company> company = Optional.empty();
-		try (
-				Connection con = database.getConnection();
-				PreparedStatement ps = con.prepareStatement(QUERY_SELECT_BY_ID)
-		) {
-			ps.setLong(1, id);
-			logger.debug(ps.toString());
-			try (ResultSet rs = ps.executeQuery()) {
-
-				if (rs.next()) {
-					company = Optional.of(mapper.toCompany(mapperDTO.toCompany(rs)));
-				}
-			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new CustomSQLException("failure to get a Company.");
-		}
-		return company;
+	public int count() {
+		 return new JdbcTemplate(dataSource).queryForObject(QUERY_COUNT, Integer.class);
 	}
 
-	public int count() throws CustomSQLException {
+	@Transactional
+	public int delete(long id) {
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		MapSqlParameterSource params = new MapSqlParameterSource();
 
-		return 0;
-	}
-
-	public int delete(long id) throws CustomSQLException {
-		int nbComputerDeleted = 0;
-
-		try (Connection con = database.getConnection()) {
-			try {
-				con.setAutoCommit(false);
-
-				int nbCompanyDeleted = computerDAO.deleteByCompanyId(con,  id);
-
-				PreparedStatement ps = con.prepareStatement(QUERY_DELETE);
-				ps.setLong(1, id);
-				ps.executeUpdate();
-				logger.debug(ps.toString());
-
-				con.commit();
-				System.out.println("nbCompanyDeleted " + nbCompanyDeleted);
-
-			} catch (SQLException e) {
-				if (con != null) {
-					con.rollback();
-				}
-				logger.error(e.getMessage(), e);
-				throw new CustomSQLException("failure to delete a Company.");
-			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new CustomSQLException("failure to communicate with the database.");
-		}
+		params.addValue("id", id);
+		int nbComputerDeleted = jdbcTemplate.update(QUERY_DELETE_COMPUTER_BY_COMPANY_ID, params);
+		jdbcTemplate.update(QUERY_DELETE_BY_ID, params);
 		return nbComputerDeleted;
 	}
 }

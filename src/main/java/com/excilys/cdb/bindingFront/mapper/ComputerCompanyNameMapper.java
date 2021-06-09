@@ -3,7 +3,6 @@ package com.excilys.cdb.bindingFront.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;

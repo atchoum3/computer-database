@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.excilys.cdb.SpringTestConfig;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
-import com.excilys.cdb.exception.CustomSQLException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -40,26 +39,16 @@ public class ComputerDAOTest {
 		COMPUTER_TO_UPDATE = new Computer.Builder("MyCompyuter").withId(44).withIntroduced(date1)
 				.withDiscontinued(date2).withCompany(COMPANY_COMPUTER_TO_UPDATE).build();
 
-		try {
-			page = new Page.Builder().withNbElementByPage(ELEM_BY_PAGE).withNbElementTotal(computerDAO.count()).build();
-		} catch (CustomSQLException e) {
-			page = null;
-			e.printStackTrace();
-		}
+		page = new Page.Builder().withNbElementByPage(ELEM_BY_PAGE).withNbElementTotal(computerDAO.countSearchByName("")).build();
+
 	}
 
 	@Test
 	public void getByIdShouldSucced() {
 		Optional<Computer> computer;
-		try {
-			computer = computerDAO.getById(COMPUTER_REFERENCED_ID);
-			assertEquals(true, computer.isPresent());
-			assertEquals(COMPUTER_REFERENCED_ID, computer.get().getId());
-		} catch (CustomSQLException e) {
-			e.printStackTrace();
-			fail();
-		}
-
+		computer = computerDAO.getById(COMPUTER_REFERENCED_ID);
+		assertEquals(true, computer.isPresent());
+		assertEquals(COMPUTER_REFERENCED_ID, computer.get().getId());
 	}
 
 	@Test
@@ -69,7 +58,7 @@ public class ComputerDAOTest {
 			Optional<Computer> computer = computerDAO.getById(COMPUTER_TO_UPDATE.getId());
 			assertEquals(true, computer.isPresent());
 			assertEquals(COMPUTER_TO_UPDATE, computer.get());
-		} catch (CustomSQLException | ComputerCompanyIdException e) {
+		} catch (ComputerCompanyIdException e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -78,26 +67,15 @@ public class ComputerDAOTest {
 	@Test
 	public void getAllShouldSucced() {
 		List<Computer> computers;
-		try {
-			computers = computerDAO.getAll(page);
-			assertEquals(ELEM_BY_PAGE, computers.size());
-		} catch (CustomSQLException e) {
-			e.printStackTrace();
-			fail();
-		}
+		computers = computerDAO.searchByName("", page);
+		assertEquals(ELEM_BY_PAGE, computers.size());
 	}
 
 	@Test
 	public void deleteShouldSucced() {
-		try {
-			computerDAO.delete(COMPUTER_REFERENCED_ID_DELETE);
-			Optional<Computer> opt = computerDAO.getById(COMPUTER_REFERENCED_ID_DELETE);
-			assertEquals(false, opt.isPresent());
-		} catch (CustomSQLException e) {
-			e.printStackTrace();
-			fail();
-		}
-
+		computerDAO.delete(COMPUTER_REFERENCED_ID_DELETE);
+		Optional<Computer> opt = computerDAO.getById(COMPUTER_REFERENCED_ID_DELETE);
+		assertEquals(false, opt.isPresent());
 	}
 
 	@Test
@@ -108,12 +86,11 @@ public class ComputerDAOTest {
 
 		try {
 			computerDAO.create(computer);
-			System.out.println(computer.getId());
 			Optional<Computer> opt = computerDAO.getById(computer.getId());
 			assertEquals(true, opt.isPresent());
 			assertEquals(computer, opt.get());
 
-		} catch (ComputerCompanyIdException | CustomSQLException e) {
+		} catch (ComputerCompanyIdException e) {
 			e.printStackTrace();
 			fail();
 		}
@@ -131,9 +108,6 @@ public class ComputerDAOTest {
 			fail("exception ComputerCompanyIdException not thrown");
 		} catch (ComputerCompanyIdException e) {
 			// success test
-		} catch (CustomSQLException e) {
-			e.printStackTrace();
-			fail();
 		}
 	}
 

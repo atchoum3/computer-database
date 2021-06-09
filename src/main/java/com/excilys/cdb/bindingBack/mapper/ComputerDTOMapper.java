@@ -1,56 +1,63 @@
 package com.excilys.cdb.bindingBack.mapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.bindingBack.ComputerDTO;
-
+import com.excilys.cdb.model.Computer;
 
 @Component
 public class ComputerDTOMapper {
 
-	private static final long COMPANY_ID_NULL = 0;
+	private CompanyDTOMapper companyMapper;
 
-	/**
-	 * Get data from a ResultSet to build a ComputerDTO object.
-	 * @param rs a result set object from the SQL relation of computer
-	 * @return ComputerDTO object
-	 * @throws SQLException
-	 */
-	public ComputerDTO toComputer(ResultSet rs) throws SQLException {
-		String name = rs.getString(2);
-		ComputerDTO.Builder builder = new ComputerDTO.Builder(name);
+	public ComputerDTOMapper(CompanyDTOMapper companyMapper) {
+		this.companyMapper = companyMapper;
+	}
 
-		builder.withId(rs.getLong(1));
-		builder.withIntroduced(rs.getString(3));
-		builder.withDiscontinued(rs.getString(4));
+	public Computer toComputer(ComputerDTO dto) {
+		Computer.Builder builder = new Computer.Builder(dto.getName());
+		builder.withId(dto.getId());
+		if (dto.getCompany() != null) {
+			builder.withCompany(companyMapper.toCompany(dto.getCompany()));
+		}
 
-		long companyId = rs.getLong(5);
-		if (companyId != COMPANY_ID_NULL) {
-			String companyName = rs.getString(6);
-			builder.withCompany(new CompanyDTO(companyId, companyName));
+		if (dto.getIntroduced() != null) {
+			String introduced = dto.getIntroduced().substring(0, 10);
+			builder.withIntroduced(LocalDate.parse(introduced));
+		}
+		if (dto.getDiscontinued() != null) {
+			String discontinued = dto.getDiscontinued().substring(0, 10);
+			builder.withDiscontinued(LocalDate.parse(discontinued));
+		}
+
+		return builder.build();
+	}
+
+	public List<Computer> toListComputer(List<ComputerDTO> listDto) {
+		return listDto.stream().map(c -> toComputer(c)).collect(Collectors.toList());
+	}
+
+
+	public ComputerDTO toComputerDTO(Computer computer) {
+		ComputerDTO.Builder builder = new ComputerDTO.Builder(computer.getName());
+		builder.withId(computer.getId());
+
+		if (computer.getIntroduced() != null) {
+			builder.withIntroduced(computer.getIntroduced().toString());
+		}
+
+		if (computer.getDiscontinued() != null) {
+			builder.withDiscontinued(computer.getDiscontinued().toString());
+		}
+
+		if (computer.getCompany() != null) {
+			builder.withCompany(companyMapper.toCompanyDTO(computer.getCompany()));
 		}
 		return builder.build();
 	}
 
-	/**
-	 * Get data from a ResultSet to fill in the collection.
-	 * @param rs a result set object from the SQL relation of computer
-	 * @param collection to fill in
-	 * @return {@link ComputerDTO} list
-	 * @throws SQLException
-	 */
-	public List<ComputerDTO> toListComputer(ResultSet rs) throws SQLException {
-		List<ComputerDTO> list = new ArrayList<>();
-		do {
-			list.add(toComputer(rs));
-		} while (rs.next());
-		return list;
-	}
 }
