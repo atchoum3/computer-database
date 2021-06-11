@@ -8,6 +8,7 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.Paginable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +24,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ComputerDAO {
-	private static final String QUERY_SEARCH_NAME_ORDER_BY_LIMIT = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE CONCAT('%',:search,'%') OR company.name LIKE CONCAT('%',:search,'%') ORDER BY :orderColumn :order LIMIT :startLimit,:offset";
+	private static final String QUERY_SEARCH_NAME = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE LOWER(computer.name) LIKE LOWER(CONCAT('%',:search,'%')) OR LOWER(company.name) LIKE LOWER(CONCAT('%',:search,'%'))";
 	private static final String QUERY_SELECT_BY_ID = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id=:id;";
-	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (:name, :introduced, ;discontinued, :companyId)";
+	private static final String QUERY_INSERT = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (:name, :introduced, :discontinued, :companyId)";
 	private static final String QUERY_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:companyId WHERE id=:id";
 	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=:id";
-	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.name LIKE CONCAT('%',:search,'%') OR company.name LIKE CONCAT('%',:search,'%')";
+	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE LOWER(computer.name) LIKE LOWER(CONCAT('%',:search,'%')) OR LOWER(company.name) LIKE LOWER(CONCAT('%',:search,'%'))";
+
+	private static final String ORDER_BY = " ORDER BY ";
+	private static final String LIMIT = " LIMIT :startLimit,:offset ";
 
 	private ComputerDTOMapper mapper;
 	private DataSource dataSource;
@@ -45,13 +49,12 @@ public class ComputerDAO {
 	public List<Computer> searchByName(String name, Page page) {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		MapSqlParameterSource params = new MapSqlParameterSource();
+		String query = QUERY_SEARCH_NAME + ORDER_BY + page.getColumn() + " " + page.getOrder().toString() + LIMIT;
 
 		params.addValue("search", name);
-		params.addValue("order", page.getOrder().toString());
-		params.addValue("orderColumn", page.getColumn().toString());
 		params.addValue("startLimit", paginable.getIndexFirstElement(page));
 		params.addValue("offset", page.getNbElementByPage());
-		List<ComputerDTO> computersDTO = jdbcTemplate.query(QUERY_SEARCH_NAME_ORDER_BY_LIMIT, params, computerDTORowMapper);
+		List<ComputerDTO> computersDTO = jdbcTemplate.query(query, params, computerDTORowMapper);
 		return mapper.toListComputer(computersDTO);
 	}
 

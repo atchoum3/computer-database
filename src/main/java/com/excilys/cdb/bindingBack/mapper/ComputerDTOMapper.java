@@ -33,7 +33,6 @@ public class ComputerDTOMapper {
 			String discontinued = dto.getDiscontinued().substring(0, 10);
 			builder.withDiscontinued(LocalDate.parse(discontinued));
 		}
-
 		return builder.build();
 	}
 

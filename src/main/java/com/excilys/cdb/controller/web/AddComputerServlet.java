@@ -1,125 +1,95 @@
 package com.excilys.cdb.controller.web;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.SpringConfig;
+import com.excilys.cdb.bindingBack.CompanyDTO;
 import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
+import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpServlet;
 @Controller
-@WebServlet(urlPatterns = {"/addComputer"}, name = "addComputer")
+@RequestMapping("/computer/add")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(AddComputerServlet.class);
-
-	private static final String INPUT_COMPUTER_NAME = "computerName";
-	private static final String INPUT_INTRODUCED = "introduced";
-	private static final String INPUT_DISCONTINUED = "discontinued";
 	private static final String INPUT_COMPANY_ID = "companyId";
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
 	private static final String ATT_SUCCESS = "success";
 	private static final String ATT_COMPUTER = "computer";
+	private static final String OTHER_ERROR = "otherError";
 
-	public static final String VIEW = "/WEB-INF/view/addComputer.jsp";
+	public static final String VIEW = "addComputer";
 
 	private CompanyService companyService;
 	private ComputerService computerService;
 	private AddComputerMapper addComputerMapper;
+	private CompanyMapper companyMapper;
 
-
-	@Override
-	public void init() {
-		try {
-			super.init();
-			ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-			companyService = context.getBean(CompanyService.class);
-			computerService = context.getBean(ComputerService.class);
-			addComputerMapper = context.getBean(AddComputerMapper.class);
-
-		} catch (ServletException e) {
-			logger.error(e.getMessage(), e);
-		}
+	public AddComputerServlet(CompanyService companyService, ComputerService computerService, AddComputerMapper addComputerMapper, CompanyMapper companyMapper) {
+		this.companyService = companyService;
+		this.computerService = computerService;
+		this.addComputerMapper = addComputerMapper;
+		this.companyMapper = companyMapper;
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-		addCompanyList(req);
 
-		try {
-			this.getServletContext().getRequestDispatcher(VIEW).forward(req, resp);
-		} catch (ServletException | IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+	@GetMapping
+	protected ModelAndView displayFormEmpty() {
+		ModelAndView modelAndView = new ModelAndView(VIEW);
+
+		addCompanyList(modelAndView);
+		modelAndView.addObject(ATT_COMPUTER, new AddComputerDTO.Builder<>("").build());
+
+		return modelAndView;
 	}
 
-	private void addCompanyList(HttpServletRequest req) {
-		req.setAttribute(ATT_ALL_COMPANIES, companyService.getAll());
+	private void addCompanyList(ModelAndView modelAndView) {
+		List<Company> companies = companyService.getAll();
+		List<CompanyDTO> companiesDTO = companyMapper.toListCompanyDTO(companies);
+		modelAndView.addObject(ATT_ALL_COMPANIES, companiesDTO);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-		AddComputerDTO computerDTO = mapToDTO(req);
-		addComputer(req, computerDTO);
-		doGet(req, resp);
-	}
-
-	private AddComputerDTO mapToDTO(HttpServletRequest req) {
-		int companyId = 0;
-		String name = req.getParameter(INPUT_COMPUTER_NAME);
-		String introduced = req.getParameter(INPUT_INTRODUCED);
-		String discontinued = req.getParameter(INPUT_DISCONTINUED);
-		try {
-			companyId = Integer.parseInt(req.getParameter(INPUT_COMPANY_ID));
-		} catch (NumberFormatException e) {
-			req.setAttribute(INPUT_COMPANY_ID, "The company id must be a number.");
-		}
-		return new AddComputerDTO.Builder<>(name).withIntroduced(introduced)
-				.withDiscontinued(discontinued).withCompanyId(companyId).build();
-	}
-
-	/**
-	 * Try to save the computer if each field are correct.
-	 * @param req object to set error on the page
-	 * @param addComputerDTO the computer to try to add
-	 * @return true if the computer is added, otherwise false.
-	 */
-	private boolean addComputer(HttpServletRequest req, AddComputerDTO addComputerDTO) {
+	@PostMapping
+	protected ModelAndView saveComputer(@ModelAttribute(ATT_COMPUTER) AddComputerDTO dto, BindingResult result) {
+		ModelAndView modelAndView = new ModelAndView(VIEW);
 		Map<String, String> errors = new HashMap<String, String>();
-		Optional<Computer> computer = addComputerMapper.toComputer(addComputerDTO, errors);
 
-		if (computer.isPresent()) {
-			try {
-				computerService.create(computer.get());
-				req.setAttribute(ATT_SUCCESS, "This company has been added.");
-				return true;
-			} catch (ComputerCompanyIdException e) {
-				errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
+		if (result.hasErrors()) {
+			errors.put(OTHER_ERROR, "Erreur de type dans le formulaire");
+		} else {
+			Optional<Computer> computer = addComputerMapper.toComputer(dto, errors);
+
+			if (errors.isEmpty()) {
+				try {
+					computerService.create(computer.get());
+					modelAndView.addObject(ATT_SUCCESS, "This company has been added.");
+				} catch (ComputerCompanyIdException e) {
+					errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
+				}
 			}
 		}
-		req.setAttribute(ATT_ERRORS, errors);
-		req.setAttribute(ATT_COMPUTER, addComputerDTO);
-		req.setAttribute(ATT_SUCCESS, "");
-		return false;
+		modelAndView.addObject(ATT_ERRORS, errors);
+		modelAndView.addObject(ATT_COMPUTER, dto);
+		addCompanyList(modelAndView);
+
+		return modelAndView;
 	}
 }

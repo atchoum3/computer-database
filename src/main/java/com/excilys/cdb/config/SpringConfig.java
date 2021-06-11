@@ -1,4 +1,4 @@
-package com.excilys.cdb;
+package com.excilys.cdb.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,20 +18,15 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @ComponentScan(basePackages =  {
-		"com.excilys.cdb.controller.cli",
-		"com.excilys.cdb.controller.web",
 		"com.excilys.cdb.service",
 		"com.excilys.cdb.ui",
-		"com.excilys.cdb.bindingFront.mapper",
-		"com.excilys.cdb.bindingFront.validator",
 		"com.excilys.cdb.bindingBack.mapper",
 		"com.excilys.cdb.dao",
 		"com.excilys.cdb.dao.mapper",
 		})
-public class SpringConfig {
+class SpringConfig {
 	private static Logger logger = LoggerFactory.getLogger(SpringConfig.class);
 	private static final String FILE_NAME_CONF_DB = "db.properties";
-
 
 	@Bean
 	public DataSource dataSource() {

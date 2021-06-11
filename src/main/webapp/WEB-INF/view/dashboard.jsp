@@ -1,5 +1,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <!DOCTYPE html>
 <html>
@@ -8,14 +9,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="./static/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="./static/css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="./static/css/main.css" rel="stylesheet" media="screen">
+<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="${pageContext.request.contextPath}/resources/css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" media="screen">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/computer/list"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -26,7 +27,7 @@
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
+                    <form id="searchForm" method="GET" class="form-inline">
 	         			<input type="hidden" name="nbElementByPage" value="${page.nbElementByPage}"/>
                         <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${search}"/>
                         <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
@@ -39,7 +40,7 @@
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="${pageContext.request.contextPath}/computer/delete" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -60,7 +61,7 @@
                         </th>
                         <th>
                        		<a href="
-                        	 	<c:url value="/dashboard">
+                        	 	<c:url value="/computer/list">
 	                				<c:param name="column" value="COMPUTER_NAME"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -80,7 +81,7 @@
                         </th>
                         <th>
                         	<a href="
-                        		<c:url value="/dashboard">
+                        		<c:url value="/computer/list">
 	                				<c:param name="column" value="INTRODUCED"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -101,7 +102,7 @@
                         <!-- Table header for Discontinued Date -->
                         <th>
                         	<a href="
-                        	 	<c:url value="/dashboard">
+                        	 	<c:url value="/computer/list">
 	                				<c:param name="column" value="DISCONTINUED"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -122,7 +123,7 @@
                         <!-- Table header for Company -->
                         <th>
                         	<a href="
-                        	 	<c:url value="/dashboard">
+                        	 	<c:url value="/computer/list">
 	                				<c:param name="column" value="COMPANY_NAME"/>
 	                				<c:param name="currentPage" value="${page.currentPage}"/>
 	                				<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -169,7 +170,7 @@
                <li>
                     <a href="
                    		<c:if test="${page.currentPage > 1}">
-                      		<c:url value="/dashboard">
+                      		<c:url value="/computer/list">
                 				<c:param name="order" value="${page.order}"/>
                      			<c:param name="column" value="${page.column}"/>
                      			<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -184,7 +185,7 @@
 	              <c:forEach var="i" begin="${page.beginSlider}" end="${page.endSlider}" step="1">
 		              <li class="<c:if test="${i == page.currentPage}">active</c:if>">
 		              	<a href="
-		              		<c:url value="/dashboard">
+		              		<c:url value="/computer/list">
 					  			<c:param name="column" value="${page.column}"/>
 					  			<c:param name="currentPage" value="${i}"/>
 					  			<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
@@ -197,7 +198,7 @@
 	              <li>
 	                	<a href="
 	                		<c:if test="${page.currentPage < page.endSlider}">
-	                			<c:url value="/dashboard">
+	                			<c:url value="/computer/list">
 									<c:param name="column" value="${page.column}"/>
 									<c:param name="nbElementByPage" value="${page.nbElementByPage}"/>
 	                				<c:param name="currentPage" value="${page.currentPage + 1}"/>
@@ -214,10 +215,6 @@
 
 	        <div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form method="GET">
-	         		<input type="hidden" name="column" value="${page.column}"/>
-	         		<input type="hidden" name="currentPage"  value="${page.currentPage}" />
-	         		<input type="hidden" name="search"  value="${search}"/>
-                	<input type="hidden" name="order" value="${page.order}"/>
 		        	<button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 10}">active</c:if>" name="nbElementByPage" value="10">10</button>
 		            <button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 50}">active</c:if>" name="nbElementByPage" value="50">50</button>
 		            <button type="submit" class="btn btn-default <c:if test="${page.nbElementByPage == 100}">active</c:if>" name="nbElementByPage" value="100">100</button>
@@ -226,9 +223,9 @@
         </div>
 
     </footer>
-<script src="./static/js/jquery.min.js"></script>
-<script src="./static/js/bootstrap.min.js"></script>
-<script src="./static/js/dashboard.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/dashboard.js"></script>
 
 </body>
 </html>

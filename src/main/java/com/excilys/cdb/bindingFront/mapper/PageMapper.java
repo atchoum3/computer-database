@@ -46,8 +46,13 @@ public class PageMapper {
 		if (validator.isValidCurrentPage(dto)) {
 			builder.withCurrentPage(dto.getCurrentPage());
 		}
-		builder.withColumn(dto.getColumn());
-		builder.withOrder(dto.getOrder());
+
+		if (dto.getColumn() != null) {
+			builder.withColumn(dto.getColumn());
+		}
+		if (dto.getOrder() != null) {
+			builder.withOrder(dto.getOrder());
+		}
 
 		Page page = builder.build();
 		paginable.updatePage(page);

@@ -14,6 +14,8 @@ public class PageDTO {
 	private int endSlider;
 	private int beginSlider;
 
+	public PageDTO() { }
+
 	public PageDTO(Builder builder) {
 		currentPage = builder.currentPage;
 		nbElementTotal = builder.nbElementTotal;
@@ -89,6 +91,43 @@ public class PageDTO {
 		}
 	}
 
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public void setNbElementTotal(int nbElementTotal) {
+		this.nbElementTotal = nbElementTotal;
+	}
+
+	public void setNbElementByPage(int nbElementByPage) {
+		this.nbElementByPage = nbElementByPage;
+	}
+
+	public void setIndexLastPage(int indexLastPage) {
+		this.indexLastPage = indexLastPage;
+	}
+
+	public void setColumn(OrderBy column) {
+		this.column = column;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public void setReversedOrder(Order reversedOrder) {
+		this.reversedOrder = reversedOrder;
+	}
+
+	public void setEndSlider(int endSlider) {
+		this.endSlider = endSlider;
+	}
+
+	public void setBeginSlider(int beginSlider) {
+		this.beginSlider = beginSlider;
+	}
+
 	public int getCurrentPage() {
 		return currentPage;
 	}
@@ -123,6 +162,14 @@ public class PageDTO {
 
 	public int getBeginSlider() {
 		return beginSlider;
+	}
+
+	@Override
+	public String toString() {
+		return "PageDTO [currentPage=" + currentPage + ", nbElementTotal=" + nbElementTotal + ", nbElementByPage="
+				+ nbElementByPage + ", indexLastPage=" + indexLastPage + ", column=" + column + ", order=" + order
+				+ ", reversedOrder=" + reversedOrder + ", endSlider=" + endSlider + ", beginSlider=" + beginSlider
+				+ "]";
 	}
 
 

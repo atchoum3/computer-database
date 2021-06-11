@@ -2,14 +2,13 @@ let inputDiscontinued = $("#discontinued")
 let inputIntroduced = $("#introduced")
 let submitBtn = $("#submitBtn")
 
-
 // add listener
 inputDiscontinued.change(function() {
-	checkDiscontinuedIfNotIntroduced();
+	checkDiscontinuedIfNotIntroduced()
 });
 
 inputIntroduced.change(function() {
-	checkDiscontinuedIfNotIntroduced();
+	checkDiscontinuedIfNotIntroduced()
 });
 
 

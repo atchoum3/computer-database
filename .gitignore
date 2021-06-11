@@ -95,7 +95,7 @@ hs_err_pid*
 
 ### Java-Web ###
 ## ignoring target file
-target/
+/target/
 
 ### Maven ###
 pom.xml.tag

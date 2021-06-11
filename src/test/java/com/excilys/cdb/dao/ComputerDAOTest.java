@@ -28,6 +28,7 @@ public class ComputerDAOTest {
 	private final Company COMPANY_COMPUTER_TO_UPDATE;
 	private final int ELEM_BY_PAGE = 4;
 	private final long COMPANY_ID_NOT_EXIST = -1;
+	private final String COUNT_SEARCH = "ApPle";
 	private  Page page;
 
 	public ComputerDAOTest(@Autowired ComputerDAO computerDAO) {
@@ -65,9 +66,9 @@ public class ComputerDAOTest {
 	}
 
 	@Test
-	public void getAllShouldSucced() {
+	public void searchByNameShouldSucced() {
 		List<Computer> computers;
-		computers = computerDAO.searchByName("", page);
+		computers = computerDAO.searchByName(COUNT_SEARCH, page);
 		assertEquals(ELEM_BY_PAGE, computers.size());
 	}
 
@@ -94,6 +95,12 @@ public class ComputerDAOTest {
 			e.printStackTrace();
 			fail();
 		}
+	}
+
+	@Test
+	public void countSearchByNameShouldSucced() {
+		int nb = computerDAO.countSearchByName(COUNT_SEARCH);
+		assertEquals(46, nb);
 	}
 
 	@Test
