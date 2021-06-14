@@ -34,20 +34,23 @@
                             <div class="form-group">
                             	<spring:message code="text.computerName" var="computerNamePlaceholder"/>
                                 <form:label path="name"><spring:message code="text.computerName" /></form:label>
-                                <form:input type="text" class="form-control" id="name" placeholder="${computerNamePlaceholder}" path="name" required="required" value="${computer.name}" />
-                                <div id="errorComputerName" class="<c:if test="${not empty errors['computerName']}">alert alert-danger</c:if>"><c:out value="${errors['computerName']}"></c:out></div>
+                                <form:input type="text" class="form-control" id="name" placeholder="${computerNamePlaceholder}" path="name" value="${computer.name}" />
+                                <spring:message code="${errors['computerName']}" var="computerNameError"/>
+                                <div id="errorComputerName" class="<c:if test="${not empty errors['computerName']}">alert alert-danger</c:if>">${computerNameError}</div>
                             </div>
                             <div class="form-group">
                             	<spring:message code="text.computerIntroduced" var="computerIntroducedPlaceholder"/>
                                 <form:label path="introduced"><spring:message code="text.computerIntroduced" /></form:label>
                                 <form:input type="date" class="form-control" id="introduced" placeholder="${computerIntroducedPlaceholder}" path="introduced" value="${computer.introduced}" />
-                                <div id="errorIntroduced" class="<c:if test="${not empty errors['introduced']}">alert alert-danger</c:if>"><c:out value="${errors['introduced']}"></c:out></div>
+                                <spring:message code="${errors['introduced']}" var="introducedError"/>
+                                <div id="errorIntroduced" class="<c:if test="${not empty errors['introduced']}">alert alert-danger</c:if>">${introducedError}</div>
                             </div>
                             <div class="form-group">
                             	<spring:message code="text.computerDiscontinued" var="computerDiscontinuedPlaceholder"/>
                                 <form:label path="discontinued"><spring:message code="text.computerDiscontinued" /></form:label>
                                 <form:input type="date" class="form-control" id="discontinued" placeholder="${computerDiscontinuedPlaceholder}" path="discontinued" value="${computer.discontinued}"/>
-                                <div id="errorDiscontinued" class="<c:if test="${not empty errors['discontinued']}">alert alert-danger</c:if>"><c:out value="${errors['discontinued']}"></c:out></div>
+                                <spring:message code="${errors['discontinued']}" var="discontinuedError"/>
+                                <div id="errorDiscontinued" class="<c:if test="${not empty errors['discontinued']}">alert alert-danger</c:if>">${discontinuedError}</div>
                             </div>
                             <div class="form-group">
                                 <label for="companyId"><spring:message code="text.company" /></label>
@@ -55,11 +58,14 @@
                                     <form:option value="0">--</form:option>
 									<form:options items="${allCompanies}" itemLabel="name" itemValue="id" />
                                 </form:select>
-                                <div id="errorCompany" class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>"><c:out value="${errors['companyId']}"></c:out></div>
+                                <spring:message code="${errors['companyId']}" var="companyIdError"/>
+                                <div id="errorCompany" class="<c:if test="${not empty errors['companyId']}">alert alert-danger</c:if>">${companyIdError}</div>
                             </div>
                         </fieldset>
-                        <c:if test="${not empty errors['otherError']}"> <div class="alert alert-danger"><c:out value="${errors['otherError']}"></c:out></div></c:if>
-                        <div class="<c:if test="${not empty success}">alert alert-success</c:if>"><c:out value="${success}"></c:out></div>
+                        <spring:message code="${errors['otherError']}" var="otherErrorError"/>
+                        <c:if test="${not empty errors['otherError']}"> <div class="alert alert-danger">${otherErrorError}</div></c:if>
+                       	<spring:message code="${success}" var="successMessage"/>
+						<div class="<c:if test="${not empty success}">alert alert-success</c:if>">${successMessage}</div>
                         <div class="actions pull-right">
                             <input type="submit" value="<spring:message code="text.editComputer" />" class="btn btn-primary">
                             <spring:message code="text.or" />

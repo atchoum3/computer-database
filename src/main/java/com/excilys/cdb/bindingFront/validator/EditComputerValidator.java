@@ -2,25 +2,22 @@ package com.excilys.cdb.bindingFront.validator;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.bindingFront.EditComputerDTO;
 
+@Component
 public class EditComputerValidator {
 	public static final String ERROR_ID = "otherError";
 
-	private Map<String, String> errors;
-
-	public EditComputerValidator(Map<String, String> errors) {
-		this.errors = errors;
-	}
-
-	public Map<String, String> validate(EditComputerDTO computerDTO) {
-		validateId(computerDTO.getId());
+	public Map<String, String> validate(EditComputerDTO computerDTO, Map<String, String> errors) {
+		validateId(computerDTO.getId(), errors);
 		return errors;
 	}
 
-	private void validateId(long id) {
+	private void validateId(long id, Map<String, String> errors) {
 		if (id < 0) {
-			errors.put(ERROR_ID, "Incorrect id.");
+			errors.put(ERROR_ID, "error.computer.incorrectId");
 		}
 	}
 

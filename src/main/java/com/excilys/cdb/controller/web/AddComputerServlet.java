@@ -73,16 +73,16 @@ public class AddComputerServlet extends HttpServlet {
 		Map<String, String> errors = new HashMap<String, String>();
 
 		if (result.hasErrors()) {
-			errors.put(OTHER_ERROR, "Erreur de type dans le formulaire");
+			errors.put(OTHER_ERROR, "error.computer.errorType");
 		} else {
 			Optional<Computer> computer = addComputerMapper.toComputer(dto, errors);
 
 			if (errors.isEmpty()) {
 				try {
 					computerService.create(computer.get());
-					modelAndView.addObject(ATT_SUCCESS, "This company has been added.");
+					modelAndView.addObject(ATT_SUCCESS, "text.added");
 				} catch (ComputerCompanyIdException e) {
-					errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
+					errors.put(INPUT_COMPANY_ID, "error.computer.companyIdNotExist");
 				}
 			}
 		}

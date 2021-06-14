@@ -21,11 +21,16 @@ public class AddComputerMapper {
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
 	private static final int COMPANY_ID_NULL = 0;
+	
+	private AddComputerValidator addComputerValidator;
+	
+	public AddComputerMapper(AddComputerValidator addComputerValidator) {
+		this.addComputerValidator = addComputerValidator;
+	}
 
 	public Optional<Computer> toComputer(AddComputerDTO dto, Map<String, String> errors) {
-		AddComputerValidator addComputerValidator = new AddComputerValidator(errors);
 
-		if (addComputerValidator.validate(dto).isEmpty()) {
+		if (addComputerValidator.validate(dto, errors).isEmpty()) {
 			Computer.Builder builder = new Computer.Builder(dto.getName());
 
 			mapIntroducedToCompuer(builder, dto, errors);
@@ -49,8 +54,7 @@ public class AddComputerMapper {
 						DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
 			} catch (DateTimeParseException e) {
-				errors.put(ERROR_INTRODUCED, "The introduced date '" + dto.getIntroduced()
-						+ "' have not the good format.");
+				errors.put(ERROR_INTRODUCED, "error.computer.introducedNotGoodFormat");
 			}
 		}
 	}
@@ -64,15 +68,8 @@ public class AddComputerMapper {
 						DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
 			} catch (DateTimeParseException e) {
-				errors.put(ERROR_DISCONTINUED, "The discontinued date '" + dto.getDiscontinued()
-						+ "' have not the good format.");
+				errors.put(ERROR_DISCONTINUED, "error.computer.introducedNotGoodFormat");
 			}
 		}
 	}
-
-
-
-
-
-
 }

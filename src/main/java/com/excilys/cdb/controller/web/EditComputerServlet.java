@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.cdb.bindingBack.CompanyDTO;
-import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.EditComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
 import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
@@ -92,16 +90,16 @@ public class EditComputerServlet extends HttpServlet {
 		Map<String, String> errors = new HashMap<String, String>();
 
 		if (result.hasErrors()) {
-			errors.put(OTHER_ERROR, "Erreur de type dans le formulaire");
+			errors.put(OTHER_ERROR, "error.computer.errorType");
 		} else {
 			Optional<Computer> computer = editComputerMapper.toComputer(dto, errors);
 
 			if (errors.isEmpty()) {
 				try {
 					computerService.create(computer.get());
-					modelAndView.addObject(ATT_SUCCESS, "This company has been edited.");
+					modelAndView.addObject(ATT_SUCCESS, "text.edited");
 				} catch (ComputerCompanyIdException e) {
-					errors.put(INPUT_COMPANY_ID, "This company id does not exist.");
+					errors.put(INPUT_COMPANY_ID, "error.computer.companyIdNotExist");
 				}
 			}
 		}

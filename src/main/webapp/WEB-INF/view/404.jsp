@@ -21,7 +21,7 @@
         <div class="container">
             <div class="alert alert-danger">
             	<spring:message code="text.error404" />
-                <br/>
+            </div>
         </div>
     </section>
 

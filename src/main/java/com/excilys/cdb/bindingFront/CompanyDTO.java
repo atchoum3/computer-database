@@ -1,4 +1,4 @@
-package com.excilys.cdb.bindingFront.validator;
+package com.excilys.cdb.bindingFront;
 
 public class CompanyDTO {
 	private String name;

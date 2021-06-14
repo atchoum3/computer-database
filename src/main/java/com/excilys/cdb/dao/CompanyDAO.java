@@ -29,29 +29,28 @@ public class CompanyDAO {
 	private DataSource dataSource;
 	private Paginable paginable;
 	private CompanyDTORowMapper companyDTORowMapper;
+	private NamedParameterJdbcTemplate npJdbcTemplate;
 
-	public CompanyDAO(CompanyDTOMapper mapper, DataSource dataSource,
-			Paginable paginable, CompanyDTORowMapper companyDTORowMapper) {
+	public CompanyDAO(CompanyDTOMapper mapper, DataSource dataSource, Paginable paginable,
+			CompanyDTORowMapper companyDTORowMapper, NamedParameterJdbcTemplate npJdbcTemplate) {
 		this.mapper = mapper;
 		this.dataSource = dataSource;
 		this.paginable = paginable;
 		this.companyDTORowMapper = companyDTORowMapper;
+		this.npJdbcTemplate = npJdbcTemplate;
 	}
 
 	public List<Company> getAll(Page page) {
-		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		MapSqlParameterSource params = new MapSqlParameterSource();
 
 		params.addValue("startLimit", paginable.getIndexFirstElement(page));
 		params.addValue("offset", page.getNbElementByPage());
-		List<CompanyDTO> companiesDTO = jdbcTemplate.query(QUERY_SELECT_ALL_LIMIT, params, companyDTORowMapper);
+		List<CompanyDTO> companiesDTO = npJdbcTemplate.query(QUERY_SELECT_ALL_LIMIT, params, companyDTORowMapper);
 		return mapper.toListCompany(companiesDTO);
 	}
 
 	public List<Company> getAll() {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-		List<CompanyDTO> companiesDTO = jdbcTemplate.query(QUERY_SELECT_ALL, companyDTORowMapper);
+		List<CompanyDTO> companiesDTO = npJdbcTemplate.query(QUERY_SELECT_ALL, companyDTORowMapper);
 		return mapper.toListCompany(companiesDTO);
 	}
 
@@ -61,12 +60,11 @@ public class CompanyDAO {
 	
 	@Transactional
 	public int delete(long id) {
-		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		MapSqlParameterSource params = new MapSqlParameterSource();
-
 		params.addValue("id", id);
-		int nbComputerDeleted = jdbcTemplate.update(QUERY_DELETE_COMPUTER_BY_COMPANY_ID, params);
-		jdbcTemplate.update(QUERY_DELETE_BY_ID, params);
+		
+		int nbComputerDeleted = npJdbcTemplate.update(QUERY_DELETE_COMPUTER_BY_COMPANY_ID, params);
+		npJdbcTemplate.update(QUERY_DELETE_BY_ID, params);
 		return nbComputerDeleted;
 	}
 }

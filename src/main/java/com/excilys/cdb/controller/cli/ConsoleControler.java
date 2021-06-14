@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Scanner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.cdb.exception.ComputerCompanyIdException;
@@ -26,8 +24,6 @@ import com.excilys.cdb.ui.DisplayComputer;
 
 @Controller
 public class ConsoleControler {
-	private static Logger logger = LoggerFactory.getLogger(ConsoleControler.class);
-
 	private Console console;
 	private CompanyService companyService;
 	private ComputerService computerService;

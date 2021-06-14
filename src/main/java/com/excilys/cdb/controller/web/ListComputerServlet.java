@@ -1,10 +1,6 @@
 package com.excilys.cdb.controller.web;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +29,6 @@ import javax.servlet.http.HttpServlet;
 @RequestMapping("/computer")
 public class ListComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private static Logger logger = LoggerFactory.getLogger(ListComputerServlet.class);
 
 	private static final int DEFAULT_CURRENT_PAGE = 1;
 	private static final int DEFAULT_ELEM_BY_PAGE = 10;

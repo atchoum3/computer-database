@@ -3,8 +3,6 @@ package com.excilys.cdb.bindingFront.mapper;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.bindingFront.EditComputerDTO;
@@ -15,18 +13,20 @@ import com.excilys.cdb.model.Computer;
 public class EditComputerMapper {
 
 	private AddComputerMapper addComputerMapper;
+	private EditComputerValidator editComputerValidator;
 
-	public EditComputerMapper(AddComputerMapper addComputerMapper) {
+	public EditComputerMapper(AddComputerMapper addComputerMapper, 
+			EditComputerValidator editComputerValidator) {
 		this.addComputerMapper = addComputerMapper;
+		this.editComputerValidator = editComputerValidator;
 	}
 
 
 
 	public Optional<Computer> toComputer(EditComputerDTO dto,  Map<String, String> errors) {
-		EditComputerValidator editComputerValidator = new EditComputerValidator(errors);
 		Optional<Computer> opt = Optional.empty();
 
-		if (editComputerValidator.validate(dto).isEmpty()) {
+		if (editComputerValidator.validate(dto, errors).isEmpty()) {
 			opt = addComputerMapper.toComputer(dto, errors);
 			opt.ifPresent(c -> c.setId(dto.getId()));
 		}
