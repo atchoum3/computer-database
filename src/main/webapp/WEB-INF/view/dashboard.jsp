@@ -1,11 +1,12 @@
-<%@ page pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="text.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -16,26 +17,26 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/computer/list"> Application - Computer Database </a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/computer/list"><spring:message code="text.navBar" /></a>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                <c:out value="${page.nbElementTotal}"></c:out> Computers found
+                <c:out value="${page.nbElementTotal}"></c:out> <spring:message code="text.foundComputer" />
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" method="GET" class="form-inline">
 	         			<input type="hidden" name="nbElementByPage" value="${page.nbElementByPage}"/>
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${search}"/>
-                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="<spring:message code="text.search.placeholder" />" value="${search}"/>
+                        <input type="submit" id="searchsubmit" value="<spring:message code="text.search" />" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a>
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="add"><spring:message code="text.addComputerDashboard" /></a>
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="text.editDashboard" /></a>
                 </div>
             </div>
         </div>
@@ -68,7 +69,7 @@
 	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
-                        	">Computer name
+                        	"><spring:message code="text.computerName" />
                         	<c:choose>
          						<c:when test = "${page.order == 'ASC' && page.column == 'COMPUTER_NAME'}">
 									&#x25BC
@@ -88,7 +89,7 @@
 	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
-                        	 ">Introduced date
+                        	 "><spring:message code="text.computerIntroduced" />
                         	 <c:choose>
          						<c:when test = "${page.order == 'ASC' && page.column == 'INTRODUCED'}">
 									&#x25BC
@@ -109,7 +110,7 @@
 	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
-                        	 ">Discontinued date
+                        	 "><spring:message code="text.computerDiscontinued" />
                         	 <c:choose>
          						<c:when test = "${page.order == 'ASC' && page.column == 'DISCONTINUED'}">
 									&#x25BC
@@ -130,7 +131,7 @@
 	                				<c:param name="order" value="${page.reversedOrder}"/>
 	                				<c:param name="search" value="${search}"/>
 	                			</c:url>
-                        	 ">Company
+                        	 "><spring:message code="text.company" />
                         	 <c:choose>
          						<c:when test = "${page.order == 'ASC' && page.column == 'COMPANY_NAME'}">
 									&#x25BC
@@ -152,7 +153,7 @@
 	                            <input type="checkbox" name="cb" class="cb" value="${computer.id}">
 	                        </td>
 	                        <td>
-	                            <a href="<c:url value="editComputer"><c:param name="id" value="${computer.id}"/></c:url>" onclick="">${computer.name}</a>
+	                            <a href="<c:url value="edit/${computer.id}"></c:url>" onclick="">${computer.name}</a>
 	                        </td>
 	                        <td>${computer.introduced}</td>
 	                        <td>${computer.discontinued}</td>
