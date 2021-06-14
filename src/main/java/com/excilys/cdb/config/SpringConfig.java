@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -43,5 +46,17 @@ class SpringConfig {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	//Transaction manager
+	@Bean
+	DataSourceTransactionManager transactionManager(DataSource dataSource){
+	    return new DataSourceTransactionManager(dataSource);
+	}
+	
+	//Transaction template
+	@Bean
+	TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager){
+	    return new TransactionTemplate(platformTransactionManager);
 	}
 }

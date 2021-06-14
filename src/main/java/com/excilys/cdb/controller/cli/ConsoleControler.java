@@ -210,7 +210,6 @@ public class ConsoleControler {
 		try {
 			computerService.create(computer);
 		} catch (ComputerCompanyIdException e) {
-			System.err.println(e.getMessage());
 			System.out.println("Computer not created");
 		}
 	}

@@ -13,13 +13,13 @@ public class Console {
 	public void displayMenuChoice() {
 		System.out.println("Possibilities :");
 		System.out.println("1 : see all companies");
-		System.out.println("2 : <id> delete a company");
+		System.out.println("2 : delete a company");
 		System.out.println("----------");
 		System.out.println("3 : see all computers");
-		System.out.println("4 <id> : see detail of a computer");
+		System.out.println("4 : see detail of a computer");
 		System.out.println("5 : create a computer");
-		System.out.println("6 <id> : update a computer");
-		System.out.println("7 <id> : delete a computer");
+		System.out.println("6 : update a computer");
+		System.out.println("7 : delete a computer");
 		System.out.println("----------");
 		System.out.println("8 : quit");
 		System.out.println("");
