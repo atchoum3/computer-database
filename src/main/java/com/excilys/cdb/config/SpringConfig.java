@@ -47,16 +47,4 @@ class SpringConfig {
 		}
 		return null;
 	}
-	
-	//Transaction manager
-	@Bean
-	DataSourceTransactionManager transactionManager(DataSource dataSource){
-	    return new DataSourceTransactionManager(dataSource);
-	}
-	
-	//Transaction template
-	@Bean
-	TransactionTemplate transactionTemplate(PlatformTransactionManager platformTransactionManager){
-	    return new TransactionTemplate(platformTransactionManager);
-	}
 }
