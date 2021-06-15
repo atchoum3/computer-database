@@ -20,7 +20,6 @@
     <h2.version>1.4.200</h2.version>
     <HikariCP.version>3.4.5</HikariCP.version>
     <jstl.version>1.2</jstl.version>
-    <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
     <junit.version>5.8.0-M1</junit.version>
     <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
     <maven.compiler.release>11</maven.compiler.release><!-- JDK -->
@@ -60,12 +59,6 @@
 	</dependency>
 	<dependency>
 	    <groupId>javax.servlet</groupId>
-	    <artifactId>javax.servlet-api</artifactId>
-	    <version>${javax.servlet-api.version}</version>
-	    <scope>provided</scope>
-	</dependency>
-	<dependency>
-	    <groupId>javax.servlet</groupId>
 	    <artifactId>jstl</artifactId>
 	    <version>${jstl.version}</version>
 	</dependency>
@@ -90,16 +83,6 @@
         <artifactId>spring-webmvc</artifactId>
         <version>${spring.version}</version>
     </dependency>
-    <dependency>
-	    <groupId>org.springframework</groupId>
-	    <artifactId>spring-web</artifactId>
-	    <version>${spring.version}</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.springframework</groupId>
-	    <artifactId>spring-tx</artifactId>
-	    <version>${spring.version}</version>
-	</dependency>
 	
   </dependencies>
 
