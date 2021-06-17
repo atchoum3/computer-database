@@ -1,13 +1,12 @@
 package com.excilys.cdb.ui;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
 
 public class DisplayComputer extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name", "introduced", "discontinued", "company_id"};
@@ -19,7 +18,7 @@ public class DisplayComputer extends DisplayTable {
 	 * To display a collection in a table.
 	 * @param collection the collection to display
 	 */
-	public static void displayCollection(Collection<Computer> collection) {
+	public static void display(Collection<ComputerCompanyNameDTO> collection) {
 		//if there is no data
 		if (collection.isEmpty()) {
 			System.out.println("");
@@ -30,7 +29,7 @@ public class DisplayComputer extends DisplayTable {
 			String introduced, discontinued, companyId;
 			
 			displayHeader(sizeColumn, HEADER_COLUMN);
-			for (Computer c : collection) {
+			for (ComputerCompanyNameDTO c : collection) {
 				
 				//to print introduced value if it's null
 				if (c.getIntroduced() == null) {
@@ -45,8 +44,8 @@ public class DisplayComputer extends DisplayTable {
 					discontinued = c.getDiscontinued().toString();
 				}
 				//to print companyId value if it's null
-				if (c.getCompany() != null) {
-					companyId = Long.toString(c.getCompany().getId());
+				if (c.getCompanyName() != null) {
+					companyId = c.getCompanyName();
 				} else {
 					companyId = PRINT_NO_VALUE;
 				}
@@ -62,10 +61,10 @@ public class DisplayComputer extends DisplayTable {
 	 * To display one line on a table.
 	 * @param c the computer to display
 	 */
-	public static void displayComputer(Computer c) {
-		List<Computer> l = new ArrayList<>();
+	public static void display(ComputerCompanyNameDTO c) {
+		List<ComputerCompanyNameDTO> l = new ArrayList<>();
 		l.add(c);
-		displayCollection(l);
+		display(l);
 	}
 	
 	/**
@@ -73,35 +72,32 @@ public class DisplayComputer extends DisplayTable {
 	 * @param collection the collection where computation will be made
 	 * @return Array of int with the max char on each column
 	 */
-	private static int[] maxCharEachColumn(Collection<Computer> collection) {
+	private static int[] maxCharEachColumn(Collection<ComputerCompanyNameDTO> collection) {
 		int[] array = new int[5];
 		// get max length to print value of each column
 		array[0] = collection.stream()
-				.mapToLong(Computer::getId)
+				.mapToLong(ComputerCompanyNameDTO::getId)
 				.mapToObj(Long::toString)
 				.mapToInt(String::length)
 				.max().getAsInt();
 		array[1] = collection.stream()
-				.map(Computer::getName)
+				.map(ComputerCompanyNameDTO::getName)
 				.filter(Objects::nonNull)
 				.mapToInt(String::length)
 				.max().getAsInt();
 		array[2] = collection.stream()
-				.map(Computer::getIntroduced)
+				.map(ComputerCompanyNameDTO::getIntroduced)
 				.filter(Objects::nonNull)
-				.map(LocalDate::toString)
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);
 		array[3] = collection.stream()
-				.map(Computer::getDiscontinued)
+				.map(ComputerCompanyNameDTO::getDiscontinued)
 				.filter(Objects::nonNull)
-				.map(LocalDate::toString)
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);
 		array[4] = collection.stream()
 				.filter(Objects::nonNull)
-				.mapToLong(Computer::getId)
-				.mapToObj(Long::toString)
+				.map(ComputerCompanyNameDTO::getCompanyName)
 				.mapToInt(String::length)
 				.max().getAsInt();
 		// get max between value length and header length

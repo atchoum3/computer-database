@@ -16,8 +16,11 @@ public class Paginable {
 
 	public void nextPage(Page page) {
 		int currentPage = page.getCurrentPage();
+		System.err.println("->" + page);
 		if (currentPage < page.getIndexLastPage()) {
+			System.err.println(page);
 			page.setCurrentPage(++currentPage);
+			System.err.println(page);
 		}
 	}
 

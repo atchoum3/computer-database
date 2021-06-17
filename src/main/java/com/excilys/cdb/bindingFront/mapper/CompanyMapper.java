@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.bindingBack.CompanyDTO;
+import com.excilys.cdb.bindingFront.CompanyDTO;
 import com.excilys.cdb.model.Company;
 
 @Component
