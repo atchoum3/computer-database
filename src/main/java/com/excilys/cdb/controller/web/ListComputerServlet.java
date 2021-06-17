@@ -22,9 +22,14 @@ import com.excilys.cdb.service.Paginable;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServlet;
+
+
 @Controller
 @RequestMapping("/computer")
-public class ListComputer {
+public class ListComputerServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	private static final int DEFAULT_CURRENT_PAGE = 1;
 	private static final int DEFAULT_ELEM_BY_PAGE = 10;
 
@@ -46,7 +51,7 @@ public class ListComputer {
 	private Paginable paginable;
 
 
-	public ListComputer(ComputerService computerService, PageMapper pageMapper, ComputerCompanyNameMapper computerMapper, Paginable paginable) {
+	public ListComputerServlet(ComputerService computerService, PageMapper pageMapper, ComputerCompanyNameMapper computerMapper, Paginable paginable) {
 		this.computerService = computerService;
 		this.pageMapper = pageMapper;
 		this.computerMapper = computerMapper;

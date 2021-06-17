@@ -3,7 +3,7 @@ package com.excilys.cdb.ui;
 import java.util.Collection;
 import java.util.Objects;
 
-import com.excilys.cdb.bindingFront.CompanyDTO;
+import com.excilys.cdb.model.Company;
 
 public class DisplayCompany extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name"};
@@ -14,7 +14,7 @@ public class DisplayCompany extends DisplayTable {
 	 * To display a collection in a table.
 	 * @param collection the collection to display
 	 */
-	public static void display(Collection<CompanyDTO> collection) {
+	public static void displayCollection(Collection<Company> collection) {
 		if (collection.isEmpty()) {
 			System.out.println("");
 			System.out.println("No data ¯\\_(ツ)_/¯");
@@ -23,7 +23,7 @@ public class DisplayCompany extends DisplayTable {
 			int[] sizeColumn = maxCharEachColumn(collection);
 			
 			displayHeader(sizeColumn, HEADER_COLUMN);
-			for (CompanyDTO c : collection) {
+			for (Company c : collection) {
 				displayLine(sizeColumn, Long.toString(c.getId()), c.getName());
 			}
 			System.out.println("");
@@ -35,16 +35,16 @@ public class DisplayCompany extends DisplayTable {
 	 * @param collection the collection where computation will be made
 	 * @return Array of int with the max char on each column
 	 */
-	private static int[] maxCharEachColumn(Collection<CompanyDTO> collection) {
+	private static int[] maxCharEachColumn(Collection<Company> collection) {
 		int[] array = new int[2];
 		// get max length to print value of each column
 		array[0] = collection.stream()
-				.mapToLong(CompanyDTO::getId)
+				.mapToLong(Company::getId)
 				.mapToObj(Long::toString)
 				.mapToInt(String::length)
 				.max().getAsInt();
 		array[1] = collection.stream()
-				.map(CompanyDTO::getName)
+				.map(Company::getName)
 				.filter(Objects::nonNull)
 				.mapToInt(String::length)
 				.max().orElse(SIZE_WORD_NULL);

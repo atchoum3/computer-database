@@ -1,25 +1,10 @@
 package com.excilys.cdb.bindingBack;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity(name = "CompanyEntity")
-@Table(name = "company")
-public class CompanyEntity {
-	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
-	
-	@Column(length = 255)
+public class CompanyDTO {
 	private String name;
-	
-	public CompanyEntity() { }
+	private long id;
 
-	public CompanyEntity(long id, String name) {
+	public CompanyDTO(long id, String name) {
 		this.id = id;
 
 		if (name == null) {
@@ -49,7 +34,7 @@ public class CompanyEntity {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		CompanyEntity other = (CompanyEntity) obj;
+		CompanyDTO other = (CompanyDTO) obj;
 		if (id != other.id) {
 			return false;
 		}
@@ -75,14 +60,4 @@ public class CompanyEntity {
 	public long getId() {
 		return id;
 	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	
 }

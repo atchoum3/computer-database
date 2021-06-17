@@ -20,6 +20,8 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 @Import({SpringConfig.class})
 @ComponentScan(basePackages =  {
 		"com.excilys.cdb.controller.web",
+		"com.excilys.cdb.bindingFront.mapper",
+		"com.excilys.cdb.bindingFront.validator",
 		})
 public class WebConfig implements WebMvcConfigurer {
     @Override

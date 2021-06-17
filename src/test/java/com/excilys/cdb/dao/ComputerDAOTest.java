@@ -103,7 +103,6 @@ public class ComputerDAOTest {
 		assertEquals(46, nb);
 	}
 
-	
 	@Test
 	public void createWrongCompanyId() {
 		LocalDate date1 = LocalDate.of(2007, 3, 7);
