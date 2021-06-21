@@ -95,7 +95,7 @@ hs_err_pid*
 
 ### Java-Web ###
 ## ignoring target file
-/target/
+target/
 
 ### Maven ###
 pom.xml.tag
@@ -121,5 +121,5 @@ reports/
 
 ### hidden files ###
 .checkstyle
-#.classpath
-#.project
+.classpath
+.project
