@@ -38,7 +38,7 @@ public class ListComputer {
 	private static final String URL_PARAM_ORDER_COLUMN = "column";
 	private static final String URL_PARAM_SEARCH_NAME = "search";
 
-	public static final String VIEW = "dashboard";
+	private static final String VIEW = "dashboard";
 
 	private ComputerService computerService;
 	private PageMapper pageMapper;

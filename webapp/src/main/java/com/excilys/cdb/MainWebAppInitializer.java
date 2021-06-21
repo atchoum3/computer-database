@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,25 +16,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
 
 @Configuration
 @EnableWebMvc
+@Import({SpringSecurityConfig.class})
 @ComponentScan(basePackages =  {
 		"com.excilys.cdb.controller.web",
 		"com.excilys.cdb.bindingFront.mapper",
@@ -82,6 +90,9 @@ public class MainWebAppInitializer implements WebApplicationInitializer, WebMvcC
         ServletRegistration.Dynamic appServlet = servletContext.addServlet("springmvc", new DispatcherServlet(context));
         appServlet.setLoadOnStartup(1);
         appServlet.addMapping("/");
+        
+        servletContext.addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
+        		.addMappingForUrlPatterns(null, false, "/*");
 	}
 
 	@Bean
@@ -121,4 +132,21 @@ public class MainWebAppInitializer implements WebApplicationInitializer, WebMvcC
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return hibernateProperties;
 	}
+	
+	@Override
+    public void addViewControllers(final ViewControllerRegistry registry) {
+		 registry.addViewController("/login.jsp");
+	}
+	
+	 @Autowired
+	    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	        auth.jdbcAuthentication()
+	            .dataSource(dataSource())
+	            .usersByUsernameQuery("select username,password "
+	                + "from appUser "
+	                + "where username = ?")
+	            .authoritiesByUsernameQuery("select email,authority "
+	                + "from authorities "
+	                + "where email = ?");
+	    }
 }

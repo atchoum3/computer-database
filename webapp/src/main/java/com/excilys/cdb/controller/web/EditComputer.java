@@ -34,8 +34,8 @@ public class EditComputer {
 	private static final String ATT_SUCCESS = "success";
 	private static final String ATT_COMPUTER = "computer";
 	private static final String OTHER_ERROR = "otherError";
-
-	public static final String VIEW = "editComputer";
+	
+	private static final String VIEW = "editComputer";
 
 	private CompanyService companyService;
 	private ComputerService computerService;
@@ -87,7 +87,7 @@ public class EditComputer {
 		Map<String, String> errors = new HashMap<String, String>();
 
 		if (result.hasErrors()) {
-			errors.put(OTHER_ERROR, "error.computer.errorType");
+			errors.put(OTHER_ERROR, "error.errorType");
 		} else {
 			Optional<Computer> computer = editComputerMapper.toComputer(dto, errors);
 
