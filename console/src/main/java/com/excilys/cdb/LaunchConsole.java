@@ -13,7 +13,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -28,6 +31,8 @@ import com.excilys.cdb.controller.cli.ConsoleControler;
 		"com.excilys.cdb.bindingBack.mapper",
 		"com.excilys.cdb.dao",
 		"com.excilys.cdb.dao.mapper",
+		"com.excilys.cdb.bindingFront.mapper",
+		"com.excilys.cdb.bindingFront.validator",
 })
 public class LaunchConsole {
 	private static final String FILE_NAME_CONF_DB = "db.properties";
@@ -62,7 +67,23 @@ public class LaunchConsole {
 	}
 	
 	@Bean
-	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-		return new NamedParameterJdbcTemplate(dataSource());
+	public LocalSessionFactoryBean sessionFactory() {
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan("com.excilys.cdb.bindingBack");
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+
+	@Bean
+	public PlatformTransactionManager txManager() {
+	    return new DataSourceTransactionManager(dataSource());
+	}
+	
+	private final Properties hibernateProperties() {
+		Properties hibernateProperties = new Properties();
+		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		return hibernateProperties;
 	}
 }

@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import org.springframework.stereotype.Controller;
 
+import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
+import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -28,14 +30,19 @@ public class ConsoleControler {
 	private CompanyService companyService;
 	private ComputerService computerService;
 	private Paginable paginable;
+	private CompanyMapper companyMapper;
+	private ComputerCompanyNameMapper computerMapper;
 
 	private Scanner scanner;
 
-	public ConsoleControler(Console console, CompanyService companyService, ComputerService computerService, Paginable paginable) {
+	public ConsoleControler(Console console, CompanyService companyService, ComputerService computerService,
+			Paginable paginable, CompanyMapper companyMapper, ComputerCompanyNameMapper computerMapper) {
 		this.console = console;
 		this.companyService = companyService;
 		this.computerService = computerService;
 		this.paginable = paginable;
+		this.companyMapper = companyMapper;
+		this.computerMapper = computerMapper;
 
 		scanner = new Scanner(System.in);
 	}
@@ -79,7 +86,9 @@ public class ConsoleControler {
 		try {
 			switch (ChoicePageMenu.fromPropertyName(input)) {
 			case NEXT_PAGE:
+				System.err.println(page);
 				paginable.nextPage(page);
+				System.err.println(page);
 				break;
 			case PREVIOUS_PAGE:
 				paginable.previousPage(page);
@@ -146,10 +155,10 @@ public class ConsoleControler {
 	 * @throws CustomSQLException
 	 */
 	private void displayAllCompanies() {
-		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElementTotal(companyService.count()).build();
+		Page page = new Page.Builder().withNbElementByPage(10).build();
+		paginable.setNbElementTotal(page, companyService.count());
 		do {
-			DisplayCompany.displayCollection(companyService.getAll(page));
+			DisplayCompany.display(companyMapper.toListCompanyDTO(companyService.getAll(page)));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
@@ -159,10 +168,10 @@ public class ConsoleControler {
 	 * @throws CustomSQLException
 	 */
 	private void displayAllComputers(){
-		Page page = new Page.Builder().withNbElementByPage(10)
-				.withNbElementTotal(companyService.count()).build();
+		Page page = new Page.Builder().build();
+		paginable.setNbElementTotal(page, companyService.count());
 		do {
-			DisplayComputer.displayCollection(computerService.searchByName("", page));
+			DisplayComputer.display(computerMapper.toComputerCompanyName(computerService.searchByName("", page)));
 			console.displayFooterPage(page);
 		} while (executeChoicePageMenu(page));
 	}
@@ -172,7 +181,7 @@ public class ConsoleControler {
 
 		Optional<Computer> opt = computerService.getById(id);
 		if (opt.isPresent()) {
-			DisplayComputer.displayComputer(opt.get());
+			DisplayComputer.display(computerMapper.toComputerCompanyName(opt.get()));
 		} else {
 			System.out.println("This id is not on the database.");
 		}

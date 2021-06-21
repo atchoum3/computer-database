@@ -24,7 +24,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/computer")
-public class ListComputerServlet {
+public class ListComputer {
 	private static final int DEFAULT_CURRENT_PAGE = 1;
 	private static final int DEFAULT_ELEM_BY_PAGE = 10;
 
@@ -46,7 +46,7 @@ public class ListComputerServlet {
 	private Paginable paginable;
 
 
-	public ListComputerServlet(ComputerService computerService, PageMapper pageMapper, ComputerCompanyNameMapper computerMapper, Paginable paginable) {
+	public ListComputer(ComputerService computerService, PageMapper pageMapper, ComputerCompanyNameMapper computerMapper, Paginable paginable) {
 		this.computerService = computerService;
 		this.pageMapper = pageMapper;
 		this.computerMapper = computerMapper;

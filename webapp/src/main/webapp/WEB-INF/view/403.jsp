@@ -1,4 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ page pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.bindingBack.CompanyDTO;
+import com.excilys.cdb.bindingFront.CompanyDTO;
 import com.excilys.cdb.bindingFront.EditComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
 import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
@@ -27,7 +27,7 @@ import com.excilys.cdb.service.ComputerService;
 
 @Controller
 @RequestMapping("/computer/edit/{id}")
-public class EditComputerServlet {
+public class EditComputer {
 	private static final String INPUT_COMPANY_ID = "companyId";
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
@@ -42,7 +42,7 @@ public class EditComputerServlet {
 	private EditComputerMapper editComputerMapper;
 	private CompanyMapper companyMapper;
 
-	public EditComputerServlet(CompanyService companyService, ComputerService computerService, EditComputerMapper editComputerMapper, CompanyMapper companyMapper) {
+	public EditComputer(CompanyService companyService, ComputerService computerService, EditComputerMapper editComputerMapper, CompanyMapper companyMapper) {
 		this.companyService = companyService;
 		this.computerService = computerService;
 		this.editComputerMapper = editComputerMapper;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.bindingBack.CompanyDTO;
+import com.excilys.cdb.bindingFront.CompanyDTO;
 import com.excilys.cdb.bindingFront.AddComputerDTO;
 import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
 import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
@@ -25,7 +25,7 @@ import com.excilys.cdb.service.ComputerService;
 
 @Controller
 @RequestMapping("/computer/add")
-public class AddComputerServlet {
+public class AddComputer {
 	private static final String INPUT_COMPANY_ID = "companyId";
 	private static final String ATT_ALL_COMPANIES = "allCompanies";
 	private static final String ATT_ERRORS = "errors";
@@ -40,7 +40,7 @@ public class AddComputerServlet {
 	private AddComputerMapper addComputerMapper;
 	private CompanyMapper companyMapper;
 
-	public AddComputerServlet(CompanyService companyService, ComputerService computerService, AddComputerMapper addComputerMapper, CompanyMapper companyMapper) {
+	public AddComputer(CompanyService companyService, ComputerService computerService, AddComputerMapper addComputerMapper, CompanyMapper companyMapper) {
 		this.companyService = companyService;
 		this.computerService = computerService;
 		this.addComputerMapper = addComputerMapper;

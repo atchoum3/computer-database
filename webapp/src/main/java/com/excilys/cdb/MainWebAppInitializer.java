@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Locale;
@@ -27,6 +26,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 
 
@@ -100,7 +102,23 @@ public class MainWebAppInitializer implements WebApplicationInitializer, WebMvcC
 	}
 	
 	@Bean
-	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-		return new NamedParameterJdbcTemplate(dataSource());
+	public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan("com.excilys.cdb.bindingBack");
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+
+	@Bean
+	public PlatformTransactionManager txManager() {
+	    return new DataSourceTransactionManager(dataSource());
+	}
+
+	private final Properties hibernateProperties() {
+		Properties hibernateProperties = new Properties();
+		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		return hibernateProperties;
 	}
 }

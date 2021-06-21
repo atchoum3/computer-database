@@ -5,21 +5,24 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.bindingBack.CompanyDTO;
+import com.excilys.cdb.bindingBack.CompanyEntity;
 import com.excilys.cdb.model.Company;
 
 @Component
-public class CompanyDTOMapper {
+public class CompanyEntityMapper {
 
-	public Company toCompany(CompanyDTO dto) {
+	public Company toCompany(CompanyEntity dto) {
 		return new Company(dto.getId(), dto.getName());
 	}
 
-	public List<Company> toListCompany(List<CompanyDTO> list) {
+	public List<Company> toListCompany(List<CompanyEntity> list) {
 		return list.stream().map(c -> toCompany(c)).collect(Collectors.toList());
 	}
 
-	public CompanyDTO toCompanyDTO(Company company) {
-		return new CompanyDTO(company.getId(), company.getName());
+	public CompanyEntity toCompanyDTO(Company company) {
+		if (company != null) {
+			return new CompanyEntity(company.getId(), company.getName());
+		}
+		return null;
 	}
-}
+} 

@@ -1,8 +1,7 @@
 package com.excilys.cdb.dao;
 
-import com.excilys.cdb.bindingBack.ComputerDTO;
-import com.excilys.cdb.bindingBack.mapper.ComputerDTOMapper;
-import com.excilys.cdb.dao.mapper.ComputerDTORowMapper;
+import com.excilys.cdb.bindingBack.ComputerEntity;
+import com.excilys.cdb.bindingBack.mapper.ComputerEntityMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -10,105 +9,100 @@ import com.excilys.cdb.model.Page;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.transaction.Transactional;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ComputerDAO {
-	private static final String TABLE_NAME = "computer";
-	private static final String COLUMN_ID_NAME = "id";
-	
-	private static final String QUERY_SEARCH_NAME = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE LOWER(computer.name) LIKE LOWER(CONCAT('%',:search,'%')) OR LOWER(company.name) LIKE LOWER(CONCAT('%',:search,'%'))";
-	private static final String QUERY_SELECT_BY_ID = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, company.id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id=:id;";
-	private static final String QUERY_UPDATE = "UPDATE computer SET name=:name, introduced=:introduced, discontinued=:discontinued, company_id=:companyId WHERE id=:id";
-	private static final String QUERY_DELETE = "DELETE FROM computer WHERE id=:id";
-	private static final String QUERY_COUNT_SERCH_NAME = "SELECT COUNT(1)  FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE LOWER(computer.name) LIKE LOWER(CONCAT('%',:search,'%')) OR LOWER(company.name) LIKE LOWER(CONCAT('%',:search,'%'))";
 
-	private static final String ORDER_BY = " ORDER BY ";
-	private static final String LIMIT = " LIMIT :startLimit,:offset ";
+	private ComputerEntityMapper mapper;
+	private CriteriaBuilder cb;
+	private EntityManager em;
+	private SessionFactory sessionFactory;
 
-	private ComputerDTOMapper mapper;
-	private DataSource dataSource;
-	private ComputerDTORowMapper computerDTORowMapper;
-	private NamedParameterJdbcTemplate npJdbcTemplate;
-
-	public ComputerDAO(ComputerDTOMapper mapper, DataSource dataSource, 
-			ComputerDTORowMapper computerDTORowMapper, NamedParameterJdbcTemplate npJdbcTemplate) {
+	public ComputerDAO(SessionFactory sessionFactory, ComputerEntityMapper mapper) {
 		this.mapper = mapper;
-		this.dataSource = dataSource;
-		this.computerDTORowMapper = computerDTORowMapper;
-		this.npJdbcTemplate = npJdbcTemplate;
+		this.sessionFactory = sessionFactory;
+		em = this.sessionFactory.createEntityManager();
+		cb = em.getCriteriaBuilder();
 	}
 
 	public List<Computer> searchByName(String name, Page page) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		String query = QUERY_SEARCH_NAME + ORDER_BY + page.getColumn() + " " + page.getOrder().toString() + LIMIT;
-
-		params.addValue("search", name);
-		params.addValue("startLimit", (page.getCurrentPage() -1) * page.getNbElementByPage());
-		params.addValue("offset", page.getNbElementByPage());
-		List<ComputerDTO> computersDTO = npJdbcTemplate.query(query, params, computerDTORowMapper);
-		return mapper.toListComputer(computersDTO);
+		CriteriaQuery<ComputerEntity> cr = cb.createQuery(ComputerEntity.class);
+		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
+		cr.orderBy(cb.asc(root.get("name")));
+		
+		 List<ComputerEntity> dao = em.createQuery(cr)
+				.setFirstResult((page.getCurrentPage() - 1) * page.getNbElementByPage())
+				.setMaxResults(page.getNbElementByPage())
+				.getResultList();
+		
+		return mapper.toListComputer(dao);
 	}
 
 	public Optional<Computer> getById(long id) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-
-		params.addValue("id", id);
-		try {
-			ComputerDTO computerDTO = npJdbcTemplate.queryForObject(QUERY_SELECT_BY_ID, params, computerDTORowMapper);
-			return Optional.of(mapper.toComputer(computerDTO));
-		} catch (EmptyResultDataAccessException e) {
-			return Optional.empty();
-		}
+		CriteriaQuery<ComputerEntity> cr = cb.createQuery(ComputerEntity.class);
+		Root<ComputerEntity> computer = cr.from(ComputerEntity.class);
+		cr.where(cb.equal(computer.get("id"), id));
+		return Optional.ofNullable(mapper.toComputer(em.createQuery(cr).getSingleResult()));
 	}
 
 	public void create(Computer computer) throws ComputerCompanyIdException {
-		ComputerDTO computerDTO = mapper.toComputerDTO(computer);
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-		          .withTableName(TABLE_NAME).usingGeneratedKeyColumns(COLUMN_ID_NAME);
+		ComputerEntity computerEntity = mapper.toComputerDTO(computer);
 		
-		SqlParameterSource params = new BeanPropertySqlParameterSource(computerDTO);
-		try {
-		    Number newId = simpleJdbcInsert.executeAndReturnKey(params);
-		    computer.setId(newId.longValue());
-		} catch (DataIntegrityViolationException e) {
-			throw new ComputerCompanyIdException("This company does not exist.");
+		try (Session session = sessionFactory.openSession()) {
+			Transaction tx = session.beginTransaction();
+			session.persist(computerEntity);
+			tx.commit();
 		}
 	}
 
+	@Transactional
 	public void update(Computer computer) throws ComputerCompanyIdException {
-		ComputerDTO computerDTO = mapper.toComputerDTO(computer);
-
-		SqlParameterSource params = new BeanPropertySqlParameterSource(computerDTO);
-		try {
-			npJdbcTemplate.update(QUERY_UPDATE, params);
-		} catch (DataIntegrityViolationException e) {
-			throw new ComputerCompanyIdException("This company does not exist.");
-		}
+		ComputerEntity computerEntity = mapper.toComputerDTO(computer);
+		
+		
+		CriteriaUpdate<ComputerEntity> cr = cb.createCriteriaUpdate(ComputerEntity.class);
+		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
+		cr.set("name", computerEntity.getName())
+				.set(root.get("introduced"), computerEntity.getIntroduced())
+				.set(root.get("discontinued"), computerEntity.getDiscontinued())
+				.set(root.get("company"), computerEntity.getCompany())
+				.where(cb.equal(root.get("id"), computerEntity.getId()));
+		
+		Session session = sessionFactory.getCurrentSession();
+		em.createQuery(cr).executeUpdate();
+		session.close();
 	}
 
 
 	public int delete(long id) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-
-		params.addValue("id", id);
-		return npJdbcTemplate.update(QUERY_DELETE, params);
+		CriteriaDelete<ComputerEntity> cr = cb.createCriteriaDelete(ComputerEntity.class);
+		Root<ComputerEntity> computer = cr.from(ComputerEntity.class);
+		cr.where(cb.equal(computer.get("id"), id));
+		return em.createQuery(cr).executeUpdate();
 	}
 
 	public int countSearchByName(String name) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-
-		params.addValue("search", name);
-		return npJdbcTemplate.queryForObject(QUERY_COUNT_SERCH_NAME, params, Integer.class);
+		CriteriaQuery<Long> cr = cb.createQuery(Long.class);
+		Root<ComputerEntity> rootComputer = cr.from(ComputerEntity.class);
+		EntityType<ComputerEntity> typeComputer = em.getMetamodel().entity(ComputerEntity.class);
+		
+		cr.where(cb.like(cb.lower(rootComputer.get(typeComputer.getDeclaredSingularAttribute("name", String.class))), "%" + name.toLowerCase() + "%"));
+		
+		cr.select(cb.count(rootComputer));
+		return em.createQuery(cr).getSingleResult().intValue();
 	}
 }
 
