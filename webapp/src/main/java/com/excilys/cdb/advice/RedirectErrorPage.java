@@ -13,7 +13,7 @@ public class RedirectErrorPage {
     public String handleError404(HttpServletRequest req, Exception ex) {
     	return "404";
     }
-    
+
     @ExceptionHandler(Exception.class)
     public String handleError(HttpServletRequest req, Exception ex) {
     	return "500";

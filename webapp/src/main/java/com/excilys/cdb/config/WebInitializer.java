@@ -6,20 +6,25 @@ import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class WebInitializer implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-		
+
 		AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SpringConfig.class);
         context.setServletContext(servletContext);
 
+        servletContext.addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
+        		.addMappingForUrlPatterns(null, false, "/*");
+        
+
         DispatcherServlet dispatcher = new DispatcherServlet(context);
         dispatcher.setThrowExceptionIfNoHandlerFound(true);
-        
+
         Dynamic servlet = servletContext.addServlet("dispatcher", dispatcher);
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");

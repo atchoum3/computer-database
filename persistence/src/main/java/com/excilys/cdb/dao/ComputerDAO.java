@@ -1,6 +1,5 @@
 package com.excilys.cdb.dao;
 
-import com.excilys.cdb.bindingBack.CompanyEntity;
 import com.excilys.cdb.bindingBack.ComputerEntity;
 import com.excilys.cdb.bindingBack.mapper.ComputerEntityMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
@@ -31,6 +30,7 @@ public class ComputerDAO {
 
 	private ComputerEntityMapper mapper;
 	private CriteriaBuilder cb;
+	@PersistenceContext
 	private EntityManager em;
 	private SessionFactory sessionFactory;
 

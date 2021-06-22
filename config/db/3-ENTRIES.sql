@@ -1,3 +1,7 @@
+insert into appUser (id,username,password,role,enabled) values (  1,'user1','$2a$10$RS.AR8jVfZyuqlvlAmQqeujHSVCWWagQYgsMwoKKIhukysDptd9Fu','user',1);
+insert into appUser (id,username,password,role,enabled) values (  2,'admin','admin','admin',1);
+insert into appUser (id,username,password,role,enabled) values (  3,'user2','user2','user',0);
+
 insert into company (id,name) values (  1,'Apple Inc.');
 insert into company (id,name) values (  2,'Thinking Machines');
 insert into company (id,name) values (  3,'RCA');

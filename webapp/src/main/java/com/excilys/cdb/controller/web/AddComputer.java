@@ -33,7 +33,7 @@ public class AddComputer {
 	private static final String ATT_COMPUTER = "computer";
 	private static final String OTHER_ERROR = "otherError";
 
-	public static final String VIEW = "addComputer";
+	private static final String VIEW = "addComputer";
 
 	private CompanyService companyService;
 	private ComputerService computerService;
@@ -70,7 +70,7 @@ public class AddComputer {
 		Map<String, String> errors = new HashMap<String, String>();
 
 		if (result.hasErrors()) {
-			errors.put(OTHER_ERROR, "error.computer.errorType");
+			errors.put(OTHER_ERROR, "error.errorType");
 		} else {
 			Optional<Computer> computer = addComputerMapper.toComputer(dto, errors);
 
