@@ -1,5 +1,6 @@
 package com.excilys.cdb.dao;
 
+import com.excilys.cdb.bindingBack.CompanyEntity;
 import com.excilys.cdb.bindingBack.ComputerEntity;
 import com.excilys.cdb.bindingBack.mapper.ComputerEntityMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
@@ -14,6 +15,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
@@ -63,7 +66,7 @@ public class ComputerDAO {
 		
 		try (Session session = sessionFactory.openSession()) {
 			Transaction tx = session.beginTransaction();
-			session.persist(computerEntity);
+			session.save(computerEntity);
 			tx.commit();
 		}
 	}
@@ -97,9 +100,11 @@ public class ComputerDAO {
 	public int countSearchByName(String name) {
 		CriteriaQuery<Long> cr = cb.createQuery(Long.class);
 		Root<ComputerEntity> rootComputer = cr.from(ComputerEntity.class);
+		
 		EntityType<ComputerEntity> typeComputer = em.getMetamodel().entity(ComputerEntity.class);
 		
-		cr.where(cb.like(cb.lower(rootComputer.get(typeComputer.getDeclaredSingularAttribute("name", String.class))), "%" + name.toLowerCase() + "%"));
+		Predicate preName = cb.like(cb.lower(rootComputer.get(typeComputer.getDeclaredSingularAttribute("name", String.class))), "%" + name.toLowerCase() + "%");
+		cr.where(preName);
 		
 		cr.select(cb.count(rootComputer));
 		return em.createQuery(cr).getSingleResult().intValue();
