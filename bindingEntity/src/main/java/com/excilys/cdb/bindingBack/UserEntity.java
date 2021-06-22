@@ -19,8 +19,8 @@ public class UserEntity {
     private String username;
     private String password;
     private String role;
-	private boolean isEnabled;
-	
+	private boolean enabled;
+
     public String getRole() {
 		return role;
 	}
@@ -28,7 +28,7 @@ public class UserEntity {
 	public void setRole(String role) {
 		this.role = role;
 	}
-    
+
     public UserEntity() { }
 
 	public Long getId() {
@@ -56,12 +56,12 @@ public class UserEntity {
 	}
 
 	public boolean isEnabled() {
-		return isEnabled;
+		return enabled;
 	}
 
-	public void setEnabled(boolean isEnabled) {
-		this.isEnabled = isEnabled;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
-    
+
 }

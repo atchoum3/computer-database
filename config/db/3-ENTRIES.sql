@@ -1,6 +1,6 @@
-insert into appUser (id,username,password,role,enabled) values (  1,'user1','$2a$10$RS.AR8jVfZyuqlvlAmQqeujHSVCWWagQYgsMwoKKIhukysDptd9Fu','user',1);
-insert into appUser (id,username,password,role,enabled) values (  2,'admin','admin','admin',1);
-insert into appUser (id,username,password,role,enabled) values (  3,'user2','user2','user',0);
+insert into appUser (id,username,password,role,enabled) values (  1,'user1','$2a$10$RS.AR8jVfZyuqlvlAmQqeujHSVCWWagQYgsMwoKKIhukysDptd9Fu','USER',1);
+insert into appUser (id,username,password,role,enabled) values (  2,'admin','$2a$10$.XAUdwiOLkhq6NycYE5wQ.Dkn01IOZn/W/NziLrIe9VbPb64XIbGe','ADMIN',1);
+insert into appUser (id,username,password,role,enabled) values (  3,'user2','$2a$10$OL9frsYT4vFTJOtFo93Vk.LL9TF8FdGXANZ5VkUmWNw5FoLJ9U0wG','USER',0);
 
 insert into company (id,name) values (  1,'Apple Inc.');
 insert into company (id,name) values (  2,'Thinking Machines');

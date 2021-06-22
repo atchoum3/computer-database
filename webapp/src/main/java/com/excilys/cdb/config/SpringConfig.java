@@ -10,12 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.excilys.cdb.service.UserService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
@@ -25,14 +23,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -51,7 +42,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 		"com.excilys.cdb.dao",
 		"com.excilys.cdb.service",
 		})
-public class SpringConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class SpringConfig implements WebMvcConfigurer {
 	private static Logger logger = LoggerFactory.getLogger(SpringConfig.class);
 	private static final String FILE_NAME_CONF_DB = "db.properties";
 
@@ -111,40 +102,5 @@ public class SpringConfig extends WebSecurityConfigurerAdapter implements WebMvc
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return hibernateProperties;
-	}
-
-	@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Autowired
-    public UserDetailsService userDetailsService() {
-		return new UserService();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-    	System.out.println("authenticationProvider");
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-
-        return authProvider;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-    }
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.mvcMatchers("/login").permitAll()
-				.mvcMatchers("/computer/add", "/computer/edit").hasRole("ADMIN")
-				.mvcMatchers("/", "/computer/list").authenticated()
-				.and().formLogin().defaultSuccessUrl("/computer/list", false)
-				.and().logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
 	}
 }

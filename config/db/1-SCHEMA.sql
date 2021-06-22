@@ -25,7 +25,7 @@ drop schema if exists `computer-database-db`;
     id                        bigint not null auto_increment,
     username                  varchar(50) null,
     password                  char(64) null,
-    role                      enum('admin', 'user') default 'user',
+    role                      enum('ADMIN', 'USER') default 'USER',
     enabled                   tinyint(1) default 0,
     constraint pk_user primary key (id)
   );

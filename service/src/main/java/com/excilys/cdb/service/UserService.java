@@ -15,36 +15,18 @@ import com.excilys.cdb.model.User;
 @Service
 public class UserService implements UserDetailsService {
 
-	@Autowired
 	private UserDAO userDAO;
-
-	public UserService() {
-		super();
-	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		/*System.out.println("UserService.loadUserByUsername " + userDAO);
 		Optional<User> optUser = userDAO.getByUsername(username);
-		System.out.println("UserService.loadUserByUsername 1");
 		optUser.orElseThrow(() -> new UsernameNotFoundException(username));
-	    System.out.println("UserService.loadUserByUsername 2");*/
-		System.err.println(userDAO);
-		User u = new User();
-		u.setEnabled(true);
-		u.setUsername("user1");
-		u.setPassword("$2a$10$RS.AR8jVfZyuqlvlAmQqeujHSVCWWagQYgsMwoKKIhukysDptd9Fu");
-		u.setRole(Role.USER);
-		System.out.println(u);
-	    return u;
+		return optUser.get();
 	}
 
-
-
-	/*public void setUserDAO(UserDAO userDAO) {
-		System.out.println("Add userDAO");
+	@Autowired
+	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
-		System.out.println("added on userDAO" + this.userDAO);
-	}*/
+	}
 
 }
