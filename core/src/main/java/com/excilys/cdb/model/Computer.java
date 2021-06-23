@@ -80,7 +80,7 @@ public class Computer {
 
 	@Override
 	public String toString() {
-		return "{id=" + id + " name=" + name + " introduced=" + introduced + " discontinued=" + discontinued + " company=" + company + "}";
+		return "Computer {id=" + id + " name=" + name + " introduced=" + introduced + " discontinued=" + discontinued + " company=" + company + "}";
 	}
 
 	/// setters & getters

@@ -18,12 +18,13 @@ import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
-import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ComputerDAO {
@@ -45,12 +46,12 @@ public class ComputerDAO {
 		CriteriaQuery<ComputerEntity> cr = cb.createQuery(ComputerEntity.class);
 		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
 		cr.orderBy(cb.asc(root.get("name")));
-		
+
 		 List<ComputerEntity> dao = em.createQuery(cr)
 				.setFirstResult((page.getCurrentPage() - 1) * page.getNbElementByPage())
 				.setMaxResults(page.getNbElementByPage())
 				.getResultList();
-		
+
 		return mapper.toListComputer(dao);
 	}
 
@@ -63,19 +64,22 @@ public class ComputerDAO {
 
 	public void create(Computer computer) throws ComputerCompanyIdException {
 		ComputerEntity computerEntity = mapper.toComputerDTO(computer);
-		
+
 		try (Session session = sessionFactory.openSession()) {
-			Transaction tx = session.beginTransaction();
+			session.beginTransaction();
 			session.save(computerEntity);
-			tx.commit();
+			session.getTransaction().commit();
+		}catch (ConstraintViolationException e) {
+			throw new ComputerCompanyIdException("Company id does not exist.");
 		}
+		computer.setId(computerEntity.getId());
 	}
 
 	@Transactional
 	public void update(Computer computer) throws ComputerCompanyIdException {
 		ComputerEntity computerEntity = mapper.toComputerDTO(computer);
-		
-		
+
+
 		CriteriaUpdate<ComputerEntity> cr = cb.createCriteriaUpdate(ComputerEntity.class);
 		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
 		cr.set("name", computerEntity.getName())
@@ -83,29 +87,42 @@ public class ComputerDAO {
 				.set(root.get("discontinued"), computerEntity.getDiscontinued())
 				.set(root.get("company"), computerEntity.getCompany())
 				.where(cb.equal(root.get("id"), computerEntity.getId()));
-		
-		Session session = sessionFactory.getCurrentSession();
-		em.createQuery(cr).executeUpdate();
-		session.close();
+
+		try (Session session = sessionFactory.openSession()) {
+			Transaction tx = session.beginTransaction();
+			session.createQuery(cr).executeUpdate();
+			tx.commit();
+		} catch (ConstraintViolationException e) {
+			throw new ComputerCompanyIdException("Company id does not exist.");
+		}
 	}
 
-
+	@Transactional
 	public int delete(long id) {
 		CriteriaDelete<ComputerEntity> cr = cb.createCriteriaDelete(ComputerEntity.class);
-		Root<ComputerEntity> computer = cr.from(ComputerEntity.class);
-		cr.where(cb.equal(computer.get("id"), id));
-		return em.createQuery(cr).executeUpdate();
+		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
+		cr.where(cb.equal(root.get("id"), id));
+
+		int nbDeleted = 0;
+		try (Session session = sessionFactory.openSession()) {
+			Transaction tx = session.beginTransaction();
+			nbDeleted = session.createQuery(cr).executeUpdate();
+			tx.commit();
+		}
+		return nbDeleted;
 	}
 
 	public int countSearchByName(String name) {
 		CriteriaQuery<Long> cr = cb.createQuery(Long.class);
 		Root<ComputerEntity> rootComputer = cr.from(ComputerEntity.class);
-		
+
 		EntityType<ComputerEntity> typeComputer = em.getMetamodel().entity(ComputerEntity.class);
-		
+
 		Predicate preName = cb.like(cb.lower(rootComputer.get(typeComputer.getDeclaredSingularAttribute("name", String.class))), "%" + name.toLowerCase() + "%");
 		cr.where(preName);
-		
+
+
+
 		cr.select(cb.count(rootComputer));
 		return em.createQuery(cr).getSingleResult().intValue();
 	}

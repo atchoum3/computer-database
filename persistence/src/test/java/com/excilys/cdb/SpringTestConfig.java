@@ -11,16 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan(basePackages =  {
 		"com.excilys.cdb.bindingBack",
 		"com.excilys.cdb.bindingBack.mapper",
@@ -47,7 +48,7 @@ public class SpringTestConfig {
 		}
 		return null;
 	}
-	
+
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -62,7 +63,7 @@ public class SpringTestConfig {
 	public PlatformTransactionManager txManager() {
 	    return new DataSourceTransactionManager(dataSource());
 	}
-	
+
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");

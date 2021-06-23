@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -23,6 +24,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import com.excilys.cdb.controller.cli.ConsoleControler;
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan(basePackages =  {
 		"com.excilys.cdb.controller.cli",
 		"com.excilys.cdb.service",
@@ -64,7 +66,7 @@ public class LaunchConsole {
 		}
 		return null;
 	}
-	
+
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -79,7 +81,7 @@ public class LaunchConsole {
 	public PlatformTransactionManager txManager() {
 	    return new DataSourceTransactionManager(dataSource());
 	}
-	
+
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");

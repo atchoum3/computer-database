@@ -20,9 +20,6 @@ public class CompanyEntityMapper {
 	}
 
 	public CompanyEntity toCompanyDTO(Company company) {
-		if (company != null) {
-			return new CompanyEntity(company.getId(), company.getName());
-		}
-		return null;
+		return new CompanyEntity(company.getId(), company.getName());
 	}
-} 
+}

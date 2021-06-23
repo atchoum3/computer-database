@@ -44,8 +44,10 @@ public class ComputerEntityMapper {
 		entity.setId(computer.getId());
 		entity.setIntroduced(computer.getIntroduced());
 		entity.setDiscontinued(computer.getDiscontinued());
-		entity.setCompany(companyMapper.toCompanyDTO(computer.getCompany()));
+		if (computer.getCompany() != null) {
+			entity.setCompany(companyMapper.toCompanyDTO(computer.getCompany()));
+		}
 		return entity;
 	}
 
-} 
+}

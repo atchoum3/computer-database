@@ -23,7 +23,7 @@ public class ComputerDAOTest {
 	private ComputerDAO computerDAO;
 
 	private final long COMPUTER_REFERENCED_ID = 321;
-	private final long COMPUTER_REFERENCED_ID_DELETE = 232;
+	private final long COMPUTER_REFERENCED_ID_DELETE = 12;
 	private final Computer COMPUTER_TO_UPDATE;
 	private final Company COMPANY_COMPUTER_TO_UPDATE;
 	private final int ELEM_BY_PAGE = 4;
