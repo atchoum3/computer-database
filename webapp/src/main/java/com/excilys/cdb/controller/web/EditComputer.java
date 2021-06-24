@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.bindingFront.CompanyDTO;
-import com.excilys.cdb.bindingFront.EditComputerDTO;
-import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
-import com.excilys.cdb.bindingFront.mapper.EditComputerMapper;
+import com.excilys.cdb.binding.web.CompanyDTO;
+import com.excilys.cdb.binding.web.EditComputerDTO;
+import com.excilys.cdb.binding.web.mapper.CompanyMapper;
+import com.excilys.cdb.binding.web.mapper.EditComputerMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.exception.ResourceNotFoundException;
 import com.excilys.cdb.model.Company;
@@ -34,7 +34,7 @@ public class EditComputer {
 	private static final String ATT_SUCCESS = "success";
 	private static final String ATT_COMPUTER = "computer";
 	private static final String OTHER_ERROR = "otherError";
-	
+
 	private static final String VIEW = "editComputer";
 
 	private CompanyService companyService;

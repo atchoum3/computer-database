@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
+import com.excilys.cdb.binding.web.ComputerCompanyNameDTO;
 
 public class DisplayComputer extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name", "introduced", "discontinued", "company_id"};

@@ -1,7 +1,7 @@
 package com.excilys.cdb.dao;
 
-import com.excilys.cdb.bindingBack.ComputerEntity;
-import com.excilys.cdb.bindingBack.mapper.ComputerEntityMapper;
+import com.excilys.cdb.binding.persistence.ComputerEntity;
+import com.excilys.cdb.binding.persistence.mapper.ComputerEntityMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -9,7 +9,10 @@ import com.excilys.cdb.model.Page;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -29,16 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class ComputerDAO {
 
-	private ComputerEntityMapper mapper;
-	private CriteriaBuilder cb;
 	@PersistenceContext
 	private EntityManager em;
-	private SessionFactory sessionFactory;
+	private ComputerEntityMapper mapper;
+	private CriteriaBuilder cb;
 
-	public ComputerDAO(SessionFactory sessionFactory, ComputerEntityMapper mapper) {
+	public ComputerDAO(EntityManagerFactory emf, ComputerEntityMapper mapper) {
 		this.mapper = mapper;
-		this.sessionFactory = sessionFactory;
-		em = this.sessionFactory.createEntityManager();
+		em = emf.createEntityManager();
 		cb = em.getCriteriaBuilder();
 	}
 
@@ -56,20 +57,29 @@ public class ComputerDAO {
 	}
 
 	public Optional<Computer> getById(long id) {
+
 		CriteriaQuery<ComputerEntity> cr = cb.createQuery(ComputerEntity.class);
 		Root<ComputerEntity> computer = cr.from(ComputerEntity.class);
 		cr.where(cb.equal(computer.get("id"), id));
-		return Optional.ofNullable(mapper.toComputer(em.createQuery(cr).getSingleResult()));
+
+		ComputerEntity entity = null;
+		try {
+			entity = em.createQuery(cr).getSingleResult();
+		} catch (NoResultException e) {
+			return Optional.empty();
+		}
+		return Optional.of(mapper.toComputer(entity));
 	}
+
 
 	public void create(Computer computer) throws ComputerCompanyIdException {
 		ComputerEntity computerEntity = mapper.toComputerDTO(computer);
 
-		try (Session session = sessionFactory.openSession()) {
-			session.beginTransaction();
+		try (Session session = em.unwrap(Session.class)) {
+			Transaction tx = session.beginTransaction();
 			session.save(computerEntity);
-			session.getTransaction().commit();
-		}catch (ConstraintViolationException e) {
+			tx.commit();
+		} catch (ConstraintViolationException e) {
 			throw new ComputerCompanyIdException("Company id does not exist.");
 		}
 		computer.setId(computerEntity.getId());
@@ -88,10 +98,8 @@ public class ComputerDAO {
 				.set(root.get("company"), computerEntity.getCompany())
 				.where(cb.equal(root.get("id"), computerEntity.getId()));
 
-		try (Session session = sessionFactory.openSession()) {
-			Transaction tx = session.beginTransaction();
-			session.createQuery(cr).executeUpdate();
-			tx.commit();
+		try  {
+			em.createQuery(cr).executeUpdate();
 		} catch (ConstraintViolationException e) {
 			throw new ComputerCompanyIdException("Company id does not exist.");
 		}
@@ -103,13 +111,7 @@ public class ComputerDAO {
 		Root<ComputerEntity> root = cr.from(ComputerEntity.class);
 		cr.where(cb.equal(root.get("id"), id));
 
-		int nbDeleted = 0;
-		try (Session session = sessionFactory.openSession()) {
-			Transaction tx = session.beginTransaction();
-			nbDeleted = session.createQuery(cr).executeUpdate();
-			tx.commit();
-		}
-		return nbDeleted;
+		return em.createQuery(cr).executeUpdate();
 	}
 
 	public int countSearchByName(String name) {

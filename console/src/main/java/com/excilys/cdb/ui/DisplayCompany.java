@@ -3,7 +3,7 @@ package com.excilys.cdb.ui;
 import java.util.Collection;
 import java.util.Objects;
 
-import com.excilys.cdb.bindingFront.CompanyDTO;
+import com.excilys.cdb.binding.web.CompanyDTO;
 
 public class DisplayCompany extends DisplayTable {
 	private static final String[] HEADER_COLUMN = {"id", "name"};

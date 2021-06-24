@@ -1,26 +1,41 @@
 create schema if not exists `computer-database-db`;
-use `computer-database-db`;
+  use `computer-database-db`;
 
-drop table if exists computer;
-drop table if exists company;
+  drop table if exists computer;
+  drop table if exists company;
+  drop table if exists appUser;
 
-create table company (
-id                        bigint not null auto_increment,
-name                      varchar(255),
-constraint pk_company primary key (id))
-;
+  create table company (
+    id                        bigint not null auto_increment,
+    name                      varchar(255),
+    constraint pk_company primary key (id))
+  ;
 
-create table computer (
-id                        bigint not null auto_increment,
-name                      varchar(255),
-introduced                timestamp NULL,
-discontinued              timestamp NULL,
-company_id                bigint default NULL,
-constraint pk_computer primary key (id))
-;
+  create table computer (
+    id                        bigint not null auto_increment,
+    name                      varchar(255) ,
+    introduced                timestamp NULL,
+    discontinued              timestamp NULL,
+    company_id                bigint default NULL,
+    constraint pk_computer primary key (id))
+  ;
 
-alter table computer add constraint fk_computer_company_1 foreign key (company_id) references company (id) on delete restrict on update restrict;
-create index ix_computer_company_1 on computer (company_id);
+  create table appUser (
+    id                        bigint not null auto_increment,
+    username                  varchar(50) null,
+    password                  char(64) null,
+    role                      enum('ADMIN', 'USER') default 'USER',
+    enabled                   tinyint(1) default 0,
+    constraint pk_user primary key (id)
+  );
+
+  alter table computer add constraint fk_computer_company_1 foreign key (company_id) references company (id) on delete restrict on update restrict;
+  create index ix_computer_company_1 on computer (company_id);
+
+
+insert into appUser (id,username,password,role,enabled) values (  1,'user1','$2a$10$RS.AR8jVfZyuqlvlAmQqeujHSVCWWagQYgsMwoKKIhukysDptd9Fu','USER',1);
+insert into appUser (id,username,password,role,enabled) values (  2,'admin','$2a$10$.XAUdwiOLkhq6NycYE5wQ.Dkn01IOZn/W/NziLrIe9VbPb64XIbGe','ADMIN',1);
+insert into appUser (id,username,password,role,enabled) values (  3,'user2','$2a$10$OL9frsYT4vFTJOtFo93Vk.LL9TF8FdGXANZ5VkUmWNw5FoLJ9U0wG','USER',0);
 
 insert into company (id,name) values (  1,'Apple Inc.');
 insert into company (id,name) values (  2,'Thinking Machines');
@@ -40,30 +55,30 @@ insert into company (id,name) values ( 15,'Canon');
 insert into company (id,name) values ( 16,'Nokia');
 insert into company (id,name) values ( 17,'Sony');
 insert into company (id,name) values ( 18,'OQO');
-insert into company (id,name) values ( 19,'NeXT');    
+insert into company (id,name) values ( 19,'NeXT');
 insert into company (id,name) values ( 20,'Atari');
-insert into company (id,name) values ( 21,'Acorn computer');
-insert into company (id,name) values ( 22,'Timex Sinclair');
-insert into company (id,name) values ( 23,'Nintendo');
-insert into company (id,name) values ( 24,'Sinclair Research Ltd');
-insert into company (id,name) values ( 25,'Xerox');
-insert into company (id,name) values ( 26,'Hewlett-Packard');
-insert into company (id,name) values ( 27,'Zemmix');
-insert into company (id,name) values ( 28,'ACVS');
-insert into company (id,name) values ( 29,'Sanyo');
-insert into company (id,name) values ( 30,'Cray');
-insert into company (id,name) values ( 31,'Evans & Sutherland');    
-insert into company (id,name) values ( 32,'E.S.R. Inc.');
-insert into company (id,name) values ( 33,'OMRON');
-insert into company (id,name) values ( 34,'BBN Technologies');
-insert into company (id,name) values ( 35,'Lenovo Group');
-insert into company (id,name) values ( 36,'ASUS');
-insert into company (id,name) values ( 37,'Amstrad');
-insert into company (id,name) values ( 38,'Sun Microsystems');
-insert into company (id,name) values ( 39,'Texas Instruments');
-insert into company (id,name) values ( 40,'HTC Corporation');
-insert into company (id,name) values ( 41,'Research In Motion');
-insert into company (id,name) values ( 42,'Samsung Electronics');
+insert into company (id,name) values ( 22,'Acorn computer');
+insert into company (id,name) values ( 23,'Timex Sinclair');
+insert into company (id,name) values ( 24,'Nintendo');
+insert into company (id,name) values ( 25,'Sinclair Research Ltd');
+insert into company (id,name) values ( 26,'Xerox');
+insert into company (id,name) values ( 27,'Hewlett-Packard');
+insert into company (id,name) values ( 28,'Zemmix');
+insert into company (id,name) values ( 29,'ACVS');
+insert into company (id,name) values ( 30,'Sanyo');
+insert into company (id,name) values ( 31,'Cray');
+insert into company (id,name) values ( 32,'Evans & Sutherland');
+insert into company (id,name) values ( 33,'E.S.R. Inc.');
+insert into company (id,name) values ( 34,'OMRON');
+insert into company (id,name) values ( 35,'BBN Technologies');
+insert into company (id,name) values ( 36,'Lenovo Group');
+insert into company (id,name) values ( 37,'ASUS');
+insert into company (id,name) values ( 38,'Amstrad');
+insert into company (id,name) values ( 39,'Sun Microsystems');
+insert into company (id,name) values ( 40,'Texas Instruments');
+insert into company (id,name) values ( 41,'HTC Corporation');
+insert into company (id,name) values ( 42,'Research In Motion');
+insert into company (id,name) values ( 43,'Samsung Electronics');
 
 insert into computer (id,name,introduced,discontinued,company_id) values (  1,'MacBook Pro 15.4 inch',null,null,1);
 insert into computer (id,name,introduced,discontinued,company_id) values (  2,'CM-2a',null,null,2);
@@ -595,7 +610,7 @@ insert into computer (id,name,introduced,discontinued,company_id) values (527,'B
 insert into computer (id,name,introduced,discontinued,company_id) values (528,'Barnes & Noble nook','2009-10-20',null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (529,'SAM Coupé',null,null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (530,'HTC Dream','2008-10-22',null,41);
-insert into computer (id,name,introduced,discontinued,company_id) values (531,'Samsung Galaxy Tab','2010-09-02',null,42);
+insert into computer (id,name,introduced,discontinued,company_id) values (531,'Samsung Galaxy Tab','2010-09-02',null,43);
 insert into computer (id,name,introduced,discontinued,company_id) values (532,'BlackBerry PlayBook','2010-09-27',null,42);
 insert into computer (id,name,introduced,discontinued,company_id) values (533,'Tianhe-I',null,null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (534,'Kno',null,null,null);

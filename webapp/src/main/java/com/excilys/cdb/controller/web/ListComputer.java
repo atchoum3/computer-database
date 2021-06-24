@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.excilys.cdb.bindingFront.ComputerCompanyNameDTO;
-import com.excilys.cdb.bindingFront.PageDTO;
-import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
-import com.excilys.cdb.bindingFront.mapper.PageMapper;
+import com.excilys.cdb.binding.web.ComputerCompanyNameDTO;
+import com.excilys.cdb.binding.web.PageDTO;
+import com.excilys.cdb.binding.web.mapper.ComputerCompanyNameMapper;
+import com.excilys.cdb.binding.web.mapper.PageMapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Order;
 import com.excilys.cdb.model.OrderBy;

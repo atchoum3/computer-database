@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 import org.springframework.stereotype.Controller;
 
-import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
-import com.excilys.cdb.bindingFront.mapper.ComputerCompanyNameMapper;
+import com.excilys.cdb.binding.web.mapper.CompanyMapper;
+import com.excilys.cdb.binding.web.mapper.ComputerCompanyNameMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;

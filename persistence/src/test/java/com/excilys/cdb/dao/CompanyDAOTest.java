@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import com.excilys.cdb.SpringTestConfig;
+import com.excilys.cdb.config.SpringTestConfig;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 

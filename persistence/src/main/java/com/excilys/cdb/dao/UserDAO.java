@@ -11,8 +11,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.bindingBack.UserEntity;
-import com.excilys.cdb.bindingBack.mapper.UserEntityMapper;
+import com.excilys.cdb.binding.persistence.UserEntity;
+import com.excilys.cdb.binding.persistence.mapper.UserEntityMapper;
 import com.excilys.cdb.model.User;
 
 @Repository

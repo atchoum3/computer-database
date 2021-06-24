@@ -5,12 +5,12 @@
   <artifactId>cdb</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0</version>
-  
+
   <name>cdb</name>
   <url>https://github.com/atchoum3/computer-database</url>
-  
+
   <properties>
-  
+
     <!-- versions -->
     <h2.version>1.4.200</h2.version>
     <HikariCP.version>3.4.5</HikariCP.version>
@@ -21,12 +21,13 @@
     <slf4j.verion>1.7.30</slf4j.verion>
     <spring-framework.version>5.3.8</spring-framework.version>
     <spring-security.version>5.5.0</spring-security.version>
-    
-    
+    <jackson.version>2.12.3</jackson.version>
+
+
     <!-- maven properties -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -44,7 +45,7 @@
         <scope>test</scope>
       </dependency>
   </dependencies>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -110,9 +111,16 @@
 	    <type>pom</type>
 	    <scope>import</scope>
 	  </dependency>
+	  <dependency>
+	    <groupId>com.fasterxml.jackson.module</groupId>
+	    <artifactId>jackson-modules-java8</artifactId>
+	    <version>${jackson.version}</version>
+	    <type>pom</type>
+	    <scope>import</scope>
+	  </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <build>
     <pluginManagement>
       <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -178,7 +186,7 @@
       </plugins>
     </pluginManagement>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
@@ -200,7 +208,7 @@
       </plugin>
     </plugins>
   </reporting>
-  
+
   <modules>
     <module>core</module>
     <module>persistence</module>

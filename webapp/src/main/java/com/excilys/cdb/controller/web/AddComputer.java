@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.cdb.bindingFront.CompanyDTO;
-import com.excilys.cdb.bindingFront.AddComputerDTO;
-import com.excilys.cdb.bindingFront.mapper.AddComputerMapper;
-import com.excilys.cdb.bindingFront.mapper.CompanyMapper;
+import com.excilys.cdb.binding.web.AddComputerDTO;
+import com.excilys.cdb.binding.web.CompanyDTO;
+import com.excilys.cdb.binding.web.mapper.AddComputerMapper;
+import com.excilys.cdb.binding.web.mapper.CompanyMapper;
 import com.excilys.cdb.exception.ComputerCompanyIdException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
