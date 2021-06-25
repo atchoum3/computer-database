@@ -20,8 +20,8 @@ public class PageMapper {
 
 	public PageDTO toPageDTO(Page p) {
 		PageDTO.Builder builder = new PageDTO.Builder();
-		builder.withBeginSlider(p.getBeginSlider());
-		builder.withEndSlider(p.getEndSlider());
+		builder.withBeginSlider(computeBeginSlider(p));
+		builder.withEndSlider(computerEndSlider(p));
 
 		builder.withColumn(p.getColumn());
 		builder.withOrder(p.getOrder());
@@ -57,5 +57,15 @@ public class PageMapper {
 		Page page = builder.build();
 		paginable.updatePage(page);
 		return page;
+	}
+
+	private int computeBeginSlider(Page page) {
+		int halfPageWindow = Page.INDEX_PAGE_WINDOW / 2;
+		return Math.max(page.getCurrentPage() - halfPageWindow, Page.INDEX_FIRST_PAGE);
+	}
+
+	private int computerEndSlider(Page page) {
+		int halfPageWindow = Page.INDEX_PAGE_WINDOW / 2;
+		return Math.min(page.getCurrentPage() + halfPageWindow, page.getIndexLastPage());
 	}
 }

@@ -20,7 +20,11 @@ public class Computer {
 		this.company = builder.company;
 	}
 
-	public static class Builder {
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
+	public static final class Builder {
 		private long id;
 		private String name = "";
 		private LocalDate introduced;

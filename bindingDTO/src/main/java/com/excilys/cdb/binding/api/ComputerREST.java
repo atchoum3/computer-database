@@ -10,14 +10,14 @@ public class ComputerREST {
 	private long id;
 	private String name;
 	private LocalDate introduced;
-	private LocalDate disconduced;
+	private LocalDate discontinued;
 	private CompanyREST company;
 
 	private ComputerREST(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.introduced = builder.introduced;
-		this.disconduced = builder.disconduced;
+		this.discontinued = builder.discontinued;
 		this.company = builder.company;
 	}
 
@@ -51,14 +51,14 @@ public class ComputerREST {
 		this.introduced = introduced;
 	}
 
-	public LocalDate getDisconduced() {
+	public LocalDate getDiscontinued() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
-		return disconduced;
+		return discontinued;
 	}
 
-	public void setDisconduced(LocalDate disconduced) {
-		this.disconduced = disconduced;
+	public void setDiscontinued(LocalDate discontinued) {
+		this.discontinued = discontinued;
 	}
 
 	public CompanyREST getCompany() {
@@ -86,7 +86,7 @@ public class ComputerREST {
 		private long id;
 		private String name;
 		private LocalDate introduced;
-		private LocalDate disconduced;
+		private LocalDate discontinued;
 		private CompanyREST company;
 
 		private Builder() {
@@ -107,8 +107,8 @@ public class ComputerREST {
 			return this;
 		}
 
-		public Builder withDisconduced(LocalDate disconduced) {
-			this.disconduced = disconduced;
+		public Builder withDiscontinued(LocalDate discontinued) {
+			this.discontinued = discontinued;
 			return this;
 		}
 

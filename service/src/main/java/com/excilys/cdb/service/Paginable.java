@@ -29,22 +29,10 @@ public class Paginable {
 	public void updatePage(Page page) {
 		setIndexLastPage(page);
 		changeCurrentPage(page, page.getCurrentPage());
-		setBeginSlider(page);
-		setEndSlider(page);
 	}
 
 	public int getIndexFirstElement(Page page) {
 		return (page.getCurrentPage() - 1) * page.getNbElementByPage();
-	}
-
-	public void setBeginSlider(Page page) {
-		int halfPageWindow = Page.INDEX_PAGE_WINDOW / 2;
-		page.setBeginSlider(Math.max(page.getCurrentPage() - halfPageWindow, Page.INDEX_FIRST_PAGE));
-	}
-
-	public void setEndSlider(Page page) {
-		int halfPageWindow = Page.INDEX_PAGE_WINDOW / 2;
-		page.setEndSlider(Math.min(page.getCurrentPage() + halfPageWindow, page.getIndexLastPage()));
 	}
 
 	public void changeCurrentPage(Page page, int newCurrentPage) {
@@ -57,8 +45,6 @@ public class Paginable {
 		} else {
 			page.setCurrentPage(newCurrentPage);
 		}
-		setBeginSlider(page);
-		setEndSlider(page);
 	}
 
 	public void setNbElementByPage(Page page, int nbElementByPage) {

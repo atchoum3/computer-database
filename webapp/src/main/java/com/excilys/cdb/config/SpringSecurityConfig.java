@@ -45,7 +45,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.mvcMatchers("/login").permitAll()
 				.mvcMatchers("/computer/add", "/computer/edit").hasAuthority("ADMIN")
 				.mvcMatchers("/", "/computer/list").authenticated()
-				.mvcMatchers("/api/**").anonymous()
+				.mvcMatchers("/api/**").permitAll()
 				.and().formLogin().defaultSuccessUrl("/computer/list", false)
 				.and().logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
 				.and().exceptionHandling().accessDeniedPage("/403");

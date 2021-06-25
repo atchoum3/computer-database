@@ -10,8 +10,6 @@ public class Page {
 	private int indexLastPage;
 	private OrderBy column;
 	private Order order;
-	private int endSlider;
-	private int beginSlider;
 
 	private Page(Builder builder) {
 		nbElementTotal = builder.nbElementTotal;
@@ -19,8 +17,6 @@ public class Page {
 		column = builder.column;
 		order = builder.order;
 		currentPage = builder.currentPage;
-		beginSlider = builder.beginSlider;
-		endSlider = builder.endSlider;
 	}
 
 	public static class Builder {
@@ -31,16 +27,12 @@ public class Page {
 		private int nbElementByPage;
 		private OrderBy column;
 		private Order order;
-		private int endSlider;
-		private int beginSlider;
 
 		public Builder() {
-			nbElementByPage = DEFAULT_NB_ELEMENT_BY_PAGE;
-			order = Order.ASC;
 			currentPage = INDEX_FIRST_PAGE;
+			nbElementByPage = DEFAULT_NB_ELEMENT_BY_PAGE;
 			column = OrderBy.COMPUTER_NAME;
-			beginSlider = INDEX_FIRST_PAGE;
-			endSlider = INDEX_FIRST_PAGE;
+			order = Order.ASC;
 		}
 
 		public Builder withCurrentPage(int currentPage) {
@@ -68,16 +60,6 @@ public class Page {
 			return this;
 		}
 
-		public Builder withBeginSlider(int beginSlider) {
-			this.beginSlider = beginSlider;
-			return this;
-		}
-
-		public Builder withEndSlider(int endSlider) {
-			this.endSlider = endSlider;
-			return this;
-		}
-
 		public Page build() {
 			return new Page(this);
 		}
@@ -92,7 +74,7 @@ public class Page {
 	public String toString() {
 		return "Page [currentPage=" + currentPage + ", nbElementTotal=" + nbElementTotal + ", nbElementByPage="
 				+ nbElementByPage + ", indexLastPage=" + indexLastPage + ", column=" + column + ", order=" + order
-				+ ", endSlider=" + endSlider + ", beginSlider=" + beginSlider + "]";
+				+ "]";
 	}
 
 	public void setCurrentPage(int currentPage) {
@@ -145,21 +127,5 @@ public class Page {
 
 	public void setIndexLastPage(int indexLastPage) {
 		this.indexLastPage = indexLastPage;
-	}
-
-	public int getEndSlider() {
-		return endSlider;
-	}
-
-	public void setEndSlider(int endSlider) {
-		this.endSlider = endSlider;
-	}
-
-	public int getBeginSlider() {
-		return beginSlider;
-	}
-
-	public void setBeginSlider(int beginSlider) {
-		this.beginSlider = beginSlider;
 	}
 }

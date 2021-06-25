@@ -34,7 +34,7 @@ public class ComputerEntityMapper {
 	}
 
 	public List<Computer> toListComputer(List<ComputerEntity> listDto) {
-		return listDto.stream().map(c -> toComputer(c)).collect(Collectors.toList());
+		return listDto.stream().map(this::toComputer).collect(Collectors.toList());
 	}
 
 
